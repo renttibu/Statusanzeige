@@ -36,7 +36,7 @@ trait SA2_nightMode
         if (!$State) {
             $this->WriteAttributeBoolean('NightModeTimer', false);
             $this->UpdateUpperLightUnit();
-            $this->UpdateUpperLightUnit();
+            $this->UpdateLowerLightUnit();
         }
         //Night mode on
         if ($State) {
