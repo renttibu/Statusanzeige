@@ -11,5 +11,6 @@ class StatusanzeigeValidationTest extends TestCaseSymconValidation
     public function testValidateStatusanzeigeModule(): void
     {
         $this->validateModule(__DIR__ . '/../Statusanzeige 1');
+        $this->validateModule(__DIR__ . '/../Statusanzeige 2');
     }
 }
