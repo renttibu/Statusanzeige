@@ -291,7 +291,7 @@ trait SA2_control
                 if ($color == -1) { //Without function
                     return false;
                 }
-                return $this->SetColor(0, $color);
+                return $this->SetColor(1, $color);
             }
             //State 1, medium priority
             if (in_array(1, $states)) {
@@ -301,7 +301,7 @@ trait SA2_control
                     if ($color == -1) { //Without function
                         return false;
                     }
-                    return $this->SetColor(0, $color);
+                    return $this->SetColor(1, $color);
                 }
             }
             //State 2, high priority
@@ -311,7 +311,7 @@ trait SA2_control
                 if ($color == -1) { //Without function
                     return false;
                 }
-                return $this->SetColor(0, $color);
+                return $this->SetColor(1, $color);
             }
         }
         return false;
