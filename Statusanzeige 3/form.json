@@ -1,0 +1,455 @@
+{
+  "elements": [
+    {
+      "type": "ExpansionPanel",
+      "caption": "Info",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Mit dieser Instanz kann eine HmIP-MP3P Leuchteinheit gesteuert werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
+        },
+        {
+          "type": "Label",
+          "caption": "ID:"
+        },
+        {
+          "type": "Label",
+          "caption": "Modul:"
+        },
+        {
+          "type": "Label",
+          "caption": "Version:"
+        },
+        {
+          "type": "Label",
+          "caption": "Datum:"
+        },
+        {
+          "type": "Label",
+          "caption": "Uhrzeit:"
+        },
+        {
+          "type": "Label",
+          "caption": "Entwickler:"
+        },
+        {
+          "type": "Label",
+          "caption": "Präfix:"
+        },
+        {
+          "type": "ValidationTextBox",
+          "name": "Note",
+          "caption": "Notiz",
+          "width": "600px"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "CheckBox",
+          "name": "MaintenanceMode",
+          "caption": "Wartungsmodus"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Funktionen",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die Funktionen aus, die Sie verwenden wollen:"
+        },
+        {
+          "type": "CheckBox",
+          "name": "EnableColor",
+          "caption": "Farbe (Farbauswahl)"
+        },
+        {
+          "type": "CheckBox",
+          "name": "EnableBrightness",
+          "caption": "Helligkeit (0-100%)"
+        },
+        {
+          "type": "CheckBox",
+          "name": "EnableNightMode",
+          "caption": "Nachtmodus (Aus/An)"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Leuchteinheit",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die Instanz für die Leuchteinheit (HmIP-MP3P, Kanal 6) aus:"
+        },
+        {
+          "type": "SelectInstance",
+          "name": "LightUnit",
+          "caption": "Leuchteinheit",
+          "width": "600px"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden für die Leuchteinheit an:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "LightUnitSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "ms"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Auslöser",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die auslösenden Variablen aus:"
+        },
+        {
+          "type": "List",
+          "name": "TriggerVariables",
+          "caption": "Variablen",
+          "rowCount": 10,
+          "add": true,
+          "delete": true,
+          "sort": {
+            "column": "Group",
+            "direction": "ascending"
+          },
+          "columns": [
+            {
+              "caption": "Aktiviert",
+              "name": "Use",
+              "width": "100px",
+              "add": true,
+              "edit": {
+                "type": "CheckBox"
+              }
+            },
+            {
+              "caption": "Gruppe",
+              "name": "Group",
+              "width": "100px",
+              "add": 0,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "0",
+                    "value": 0
+                  },
+                  {
+                    "caption": "1",
+                    "value": 1
+                  },
+                  {
+                    "caption": "2",
+                    "value": 2
+                  },
+                  {
+                    "caption": "3",
+                    "value": 3
+                  },
+                  {
+                    "caption": "4",
+                    "value": 4
+                  },
+                  {
+                    "caption": "5",
+                    "value": 5
+                  },
+                  {
+                    "caption": "6",
+                    "value": 6
+                  },
+                  {
+                    "caption": "7",
+                    "value": 7
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Farbe",
+              "name": "Color",
+              "width": "100px",
+              "add": 0,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "Aus",
+                    "value": 0
+                  },
+                  {
+                    "caption": "Blau",
+                    "value": 1
+                  },
+                  {
+                    "caption": "Grün",
+                    "value": 2
+                  },
+                  {
+                    "caption": "Türkis",
+                    "value": 3
+                  },
+                  {
+                    "caption": "Rot",
+                    "value": 4
+                  },
+                  {
+                    "caption": "Violett",
+                    "value": 5
+                  },
+                  {
+                    "caption": "Gelb",
+                    "value": 6
+                  },
+                  {
+                    "caption": "Weiß",
+                    "value": 7
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Helligkeit",
+              "name": "Brightness",
+              "width": "110px",
+              "add": -1,
+              "edit": {
+                "type": "NumberSpinner",
+                    "suffix": "%",
+                    "minimum": -1,
+                    "maximum": 100
+              }
+            },
+            {
+              "caption": "Variable",
+              "name": "ID",
+              "width": "600px",
+              "add": 0,
+              "edit": {
+                "type": "SelectVariable"
+              }
+            },
+            {
+              "caption": "Auslösender Wert",
+              "name": "TriggerValue",
+              "width": "160px",
+              "add": 0,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "0 | false",
+                    "value": 0
+                  },
+                  {
+                    "caption": "1 | true",
+                    "value": 1
+                  },
+                  {
+                    "caption": "2",
+                    "value": 2
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Nachtmodus",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die Farbe für den Nachtmodus aus:"
+        },
+        {
+          "type": "Select",
+          "name": "NightModeColor",
+          "caption": "Farbe",
+          "options": [
+            {
+              "caption": "Keine Farbveränderung",
+              "value": -1
+            },
+            {
+              "caption": "Aus",
+              "value": 0
+            },
+            {
+              "caption": "Blau",
+              "value": 1
+            },
+            {
+              "caption": "Grün",
+              "value": 2
+            },
+            {
+              "caption": "Türkis",
+              "value": 3
+            },
+            {
+              "caption": "Rot",
+              "value": 4
+            },
+            {
+              "caption": "Violett",
+              "value": 5
+            },
+            {
+              "caption": "Gelb",
+              "value": 6
+            },
+            {
+              "caption": "Weiß",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Helligkeit für den Nachtmodus an:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "NightModeBrightness",
+          "caption": "Helligkeit",
+          "suffix": "%",
+          "minimum": 0,
+          "maximum": 100
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte wählen Sie aus, ob Sie den automatischen Nachtmodus verwenden wollen:"
+        },
+        {
+          "type": "CheckBox",
+          "name": "UseAutomaticNightMode",
+          "caption": "Nachtmodus verwenden"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Startzeit für den Nachtmodus an:"
+        },
+        {
+          "type": "SelectTime",
+          "name": "NightModeStartTime",
+          "caption": "Startzeit"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Endzeit für den Nachtmodus an:"
+        },
+        {
+          "type": "SelectTime",
+          "name": "NightModeEndTime",
+          "caption": "Endzeit"
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "ExpansionPanel",
+      "caption": "Registrierte Nachrichten",
+      "items": [
+        {
+          "type": "List",
+          "name": "RegisteredMessages",
+          "rowCount": 11,
+          "sort": {
+            "column": "SenderID",
+            "direction": "ascending"
+          },
+          "columns": [
+            {
+              "caption": "Sender ID",
+              "name": "SenderID",
+              "width": "150px",
+              "onClick": "echo $RegisteredMessages['SenderID'];"
+            },
+            {
+              "caption": "Sender Name",
+              "name": "SenderName",
+              "width": "250px"
+            },
+            {
+              "caption": "Nachrichten ID",
+              "name": "MessageID",
+              "width": "150px"
+            },
+            {
+              "caption": "Nachrichten Bezeichnung",
+              "name": "MessageDescription",
+              "width": "260px"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Attribute",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Letzte Farbe:",
+          "name": "AttributeLastColor"
+        },
+        {
+          "type": "Label",
+          "caption": "Letzte Helligkeit:",
+          "name": "AttributeLastBrightness"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Testbereich",
+      "items": [
+        {
+          "type": "TestCenter"
+        }
+      ]
+    }
+  ],
+  "status": [
+    {
+      "code": 101,
+      "icon": "active",
+      "caption": "Statusanzeige wird erstellt"
+    },
+    {
+      "code": 102,
+      "icon": "active",
+      "caption": "Statusanzeige ist aktiv"
+    },
+    {
+      "code": 103,
+      "icon": "active",
+      "caption": "Statusanzeige wird gelöscht"
+    },
+    {
+      "code": 104,
+      "icon": "inactive",
+      "caption": "Statusanzeige ist inaktiv"
+    },
+    {
+      "code": 200,
+      "icon": "inactive",
+      "caption": "Es ist Fehler aufgetreten, weitere Informationen unter Meldungen, im Log oder Debug!"
+    }
+  ]
+}
