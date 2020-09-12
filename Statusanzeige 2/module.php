@@ -30,6 +30,7 @@ include_once __DIR__ . '/helper/autoload.php';
 class Statusanzeige2 extends IPSModule
 {
     //Helper
+    use SA2_backupRestore;
     use SA2_control;
     use SA2_nightMode;
 
@@ -213,7 +214,7 @@ class Statusanzeige2 extends IPSModule
                 default:
                     $messageDescription = 'keine Bezeichnung';
             }
-            $formData['actions'][0]['items'][0]['values'][] = [
+            $formData['actions'][1]['items'][0]['values'][] = [
                 'SenderID'                                              => $senderID,
                 'SenderName'                                            => $senderName,
                 'MessageID'                                             => $messageID,
@@ -227,14 +228,14 @@ class Statusanzeige2 extends IPSModule
         if (array_key_exists($lastColor, $colorList)) {
             $colorName = $colorList[$lastColor];
         }
-        $formData['actions'][1]['items'][0]['caption'] = 'Obere Leuchteinheit - Letzte Farbe: ' . $lastColor . ', ' . $colorName;
+        $formData['actions'][2]['items'][0]['caption'] = 'Obere Leuchteinheit - Letzte Farbe: ' . $lastColor . ', ' . $colorName;
         $lastColor = $this->ReadAttributeInteger('LowerLightUnitLastColor');
         if (array_key_exists($lastColor, $colorList)) {
             $colorName = $colorList[$lastColor];
         }
-        $formData['actions'][1]['items'][1]['caption'] = 'Untere Leuchteinheit - Letzte Farbe: ' . $lastColor . ', ' . $colorName;
+        $formData['actions'][2]['items'][1]['caption'] = 'Untere Leuchteinheit - Letzte Farbe: ' . $lastColor . ', ' . $colorName;
         $lastBrightness = $this->ReadAttributeInteger('LastBrightness');
-        $formData['actions'][1]['items'][2]['caption'] = 'Letzte Helligkeit: ' . $lastBrightness . ' %';
+        $formData['actions'][2]['items'][2]['caption'] = 'Letzte Helligkeit: ' . $lastBrightness . ' %';
         return json_encode($formData);
     }
 
