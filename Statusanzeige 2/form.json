@@ -6,11 +6,11 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Mit dieser Instanz können Status mittels HmIP-BSL angezeigt werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
+          "caption": "Mit dieser Instanz kann eine HmIP-BSL Leuchteinheit gesteuert werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
         },
         {
           "type": "Label",
-          "caption": "Instanz ID:"
+          "caption": "ID:"
         },
         {
           "type": "Label",
@@ -63,12 +63,12 @@
         },
         {
           "type": "CheckBox",
-          "name": "EnableUpperLightUnit",
+          "name": "EnableUpperLightUnitColor",
           "caption": "Obere Leuchteinheit (Farbauswahl)"
         },
         {
           "type": "CheckBox",
-          "name": "EnableLowerLightUnit",
+          "name": "EnableLowerLightUnitColor",
           "caption": "Untere Leuchteinheit (Farbauswahl)"
         },
         {
@@ -99,7 +99,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden für die obere Leuchteinheit an:"
         },
         {
           "type": "NumberSpinner",
@@ -109,158 +109,17 @@
         },
         {
           "type": "Label",
-          "caption": "\n\nBitte wählen Sie die Farbe für den Statuswert 0 (niedrige Priorität) aus:"
-        },
-        {
-          "type": "Select",
-          "name": "UpperLightUnitColorState0",
-          "caption": "Farbe",
-          "options": [
-            {
-              "caption": "Keine Funktion",
-              "value": -1
-            },
-            {
-              "caption": "Aus",
-              "value": 0
-            },
-            {
-              "caption": "Blau",
-              "value": 1
-            },
-            {
-              "caption": "Grün",
-              "value": 2
-            },
-            {
-              "caption": "Türkis",
-              "value": 3
-            },
-            {
-              "caption": "Rot",
-              "value": 4
-            },
-            {
-              "caption": "Violett",
-              "value": 5
-            },
-            {
-              "caption": "Gelb",
-              "value": 6
-            },
-            {
-              "caption": "Weiß",
-              "value": 7
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte wählen Sie die Farbe für den Statuswert 1 (mittlere Priorität) aus:"
-        },
-        {
-          "type": "Select",
-          "name": "UpperLightUnitColorState1",
-          "caption": "Farbe",
-          "options": [
-            {
-              "caption": "Keine Funktion",
-              "value": -1
-            },
-            {
-              "caption": "Aus",
-              "value": 0
-            },
-            {
-              "caption": "Blau",
-              "value": 1
-            },
-            {
-              "caption": "Grün",
-              "value": 2
-            },
-            {
-              "caption": "Türkis",
-              "value": 3
-            },
-            {
-              "caption": "Rot",
-              "value": 4
-            },
-            {
-              "caption": "Violett",
-              "value": 5
-            },
-            {
-              "caption": "Gelb",
-              "value": 6
-            },
-            {
-              "caption": "Weiß",
-              "value": 7
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte wählen Sie die Farbe für den Statuswert 2 (hohe Priorität) aus:"
-        },
-        {
-          "type": "Select",
-          "name": "UpperLightUnitColorState2",
-          "caption": "Farbe",
-          "options": [
-            {
-              "caption": "Keine Funktion",
-              "value": -1
-            },
-            {
-              "caption": "Aus",
-              "value": 0
-            },
-            {
-              "caption": "Blau",
-              "value": 1
-            },
-            {
-              "caption": "Grün",
-              "value": 2
-            },
-            {
-              "caption": "Türkis",
-              "value": 3
-            },
-            {
-              "caption": "Rot",
-              "value": 4
-            },
-            {
-              "caption": "Violett",
-              "value": 5
-            },
-            {
-              "caption": "Gelb",
-              "value": 6
-            },
-            {
-              "caption": "Weiß",
-              "value": 7
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "\n\nBitte wählen Sie die Variablen für den Status aus:"
+          "caption": "\nBitte wählen Sie die auslösenden Variablen für die obere Leuchteinheit aus:"
         },
         {
           "type": "List",
-          "name": "UpperLightUnitStates",
-          "caption": "Status",
-          "rowCount": 5,
+          "name": "UpperLightUnitTriggerVariables",
+          "caption": "Variablen",
+          "rowCount": 10,
           "add": true,
           "delete": true,
           "sort": {
-            "column": "ID",
+            "column": "Group",
             "direction": "ascending"
           },
           "columns": [
@@ -274,6 +133,104 @@
               }
             },
             {
+              "caption": "Gruppe",
+              "name": "Group",
+              "width": "100px",
+              "add": 0,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "0",
+                    "value": 0
+                  },
+                  {
+                    "caption": "1",
+                    "value": 1
+                  },
+                  {
+                    "caption": "2",
+                    "value": 2
+                  },
+                  {
+                    "caption": "3",
+                    "value": 3
+                  },
+                  {
+                    "caption": "4",
+                    "value": 4
+                  },
+                  {
+                    "caption": "5",
+                    "value": 5
+                  },
+                  {
+                    "caption": "6",
+                    "value": 6
+                  },
+                  {
+                    "caption": "7",
+                    "value": 7
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Farbe",
+              "name": "Color",
+              "width": "100px",
+              "add": 0,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "Aus",
+                    "value": 0
+                  },
+                  {
+                    "caption": "Blau",
+                    "value": 1
+                  },
+                  {
+                    "caption": "Grün",
+                    "value": 2
+                  },
+                  {
+                    "caption": "Türkis",
+                    "value": 3
+                  },
+                  {
+                    "caption": "Rot",
+                    "value": 4
+                  },
+                  {
+                    "caption": "Violett",
+                    "value": 5
+                  },
+                  {
+                    "caption": "Gelb",
+                    "value": 6
+                  },
+                  {
+                    "caption": "Weiß",
+                    "value": 7
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Helligkeit",
+              "name": "Brightness",
+              "width": "110px",
+              "add": -1,
+              "edit": {
+                "type": "NumberSpinner",
+                "suffix": "%",
+                "minimum": -1,
+                "maximum": 100
+              }
+            },
+            {
               "caption": "Variable",
               "name": "ID",
               "width": "600px",
@@ -283,71 +240,13 @@
               }
             },
             {
-              "caption": "Auslöser Statuswert 0",
-              "name": "TriggerValueState0",
-              "width": "200px",
-              "add": -1,
+              "caption": "Auslösender Wert",
+              "name": "TriggerValue",
+              "width": "160px",
+              "add": 0,
               "edit": {
                 "type": "Select",
                 "options": [
-                  {
-                    "caption": "Keine Funktion",
-                    "value": -1
-                  },
-                  {
-                    "caption": "0 | false",
-                    "value": 0
-                  },
-                  {
-                    "caption": "1 | true",
-                    "value": 1
-                  },
-                  {
-                    "caption": "2",
-                    "value": 2
-                  }
-                ]
-              }
-            },
-            {
-              "caption": "Auslöser Statuswert 1",
-              "name": "TriggerValueState1",
-              "width": "200px",
-              "add": -1,
-              "edit": {
-                "type": "Select",
-                "options": [
-                  {
-                    "caption": "Keine Funktion",
-                    "value": -1
-                  },
-                  {
-                    "caption": "0 | false",
-                    "value": 0
-                  },
-                  {
-                    "caption": "1 | true",
-                    "value": 1
-                  },
-                  {
-                    "caption": "2",
-                    "value": 2
-                  }
-                ]
-              }
-            },
-            {
-              "caption": "Auslöser Statuswert 2",
-              "name": "TriggerValueState2",
-              "width": "200px",
-              "add": -1,
-              "edit": {
-                "type": "Select",
-                "options": [
-                  {
-                    "caption": "Keine Funktion",
-                    "value": -1
-                  },
                   {
                     "caption": "0 | false",
                     "value": 0
@@ -383,7 +282,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden für die untere Leuchteinheit an:"
         },
         {
           "type": "NumberSpinner",
@@ -393,158 +292,17 @@
         },
         {
           "type": "Label",
-          "caption": "\n\nBitte wählen Sie die Farbe für den Statuswert 0 (niedrige Priorität) aus:"
-        },
-        {
-          "type": "Select",
-          "name": "LowerLightUnitColorState0",
-          "caption": "Farbe",
-          "options": [
-            {
-              "caption": "Keine Funktion",
-              "value": -1
-            },
-            {
-              "caption": "Aus",
-              "value": 0
-            },
-            {
-              "caption": "Blau",
-              "value": 1
-            },
-            {
-              "caption": "Grün",
-              "value": 2
-            },
-            {
-              "caption": "Türkis",
-              "value": 3
-            },
-            {
-              "caption": "Rot",
-              "value": 4
-            },
-            {
-              "caption": "Violett",
-              "value": 5
-            },
-            {
-              "caption": "Gelb",
-              "value": 6
-            },
-            {
-              "caption": "Weiß",
-              "value": 7
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte wählen Sie die Farbe für den Statuswert 1 (mittlere Priorität) aus:"
-        },
-        {
-          "type": "Select",
-          "name": "LowerLightUnitColorState1",
-          "caption": "Farbe",
-          "options": [
-            {
-              "caption": "Keine Funktion",
-              "value": -1
-            },
-            {
-              "caption": "Aus",
-              "value": 0
-            },
-            {
-              "caption": "Blau",
-              "value": 1
-            },
-            {
-              "caption": "Grün",
-              "value": 2
-            },
-            {
-              "caption": "Türkis",
-              "value": 3
-            },
-            {
-              "caption": "Rot",
-              "value": 4
-            },
-            {
-              "caption": "Violett",
-              "value": 5
-            },
-            {
-              "caption": "Gelb",
-              "value": 6
-            },
-            {
-              "caption": "Weiß",
-              "value": 7
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte wählen Sie die Farbe für den Statuswert 2 (hohe Priorität) aus:"
-        },
-        {
-          "type": "Select",
-          "name": "LowerLightUnitColorState2",
-          "caption": "Farbe",
-          "options": [
-            {
-              "caption": "Keine Funktion",
-              "value": -1
-            },
-            {
-              "caption": "Aus",
-              "value": 0
-            },
-            {
-              "caption": "Blau",
-              "value": 1
-            },
-            {
-              "caption": "Grün",
-              "value": 2
-            },
-            {
-              "caption": "Türkis",
-              "value": 3
-            },
-            {
-              "caption": "Rot",
-              "value": 4
-            },
-            {
-              "caption": "Violett",
-              "value": 5
-            },
-            {
-              "caption": "Gelb",
-              "value": 6
-            },
-            {
-              "caption": "Weiß",
-              "value": 7
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "\n\nBitte wählen Sie die Variablen für den Status aus:"
+          "caption": "\nBitte wählen Sie die auslösenden Variablen für die untere Leuchteinheit aus:"
         },
         {
           "type": "List",
-          "name": "LowerLightUnitStates",
-          "caption": "Status",
-          "rowCount": 5,
+          "name": "LowerLightUnitTriggerVariables",
+          "caption": "Variablen",
+          "rowCount": 10,
           "add": true,
           "delete": true,
           "sort": {
-            "column": "ID",
+            "column": "Group",
             "direction": "ascending"
           },
           "columns": [
@@ -558,6 +316,104 @@
               }
             },
             {
+              "caption": "Gruppe",
+              "name": "Group",
+              "width": "100px",
+              "add": 0,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "0",
+                    "value": 0
+                  },
+                  {
+                    "caption": "1",
+                    "value": 1
+                  },
+                  {
+                    "caption": "2",
+                    "value": 2
+                  },
+                  {
+                    "caption": "3",
+                    "value": 3
+                  },
+                  {
+                    "caption": "4",
+                    "value": 4
+                  },
+                  {
+                    "caption": "5",
+                    "value": 5
+                  },
+                  {
+                    "caption": "6",
+                    "value": 6
+                  },
+                  {
+                    "caption": "7",
+                    "value": 7
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Farbe",
+              "name": "Color",
+              "width": "100px",
+              "add": 0,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "Aus",
+                    "value": 0
+                  },
+                  {
+                    "caption": "Blau",
+                    "value": 1
+                  },
+                  {
+                    "caption": "Grün",
+                    "value": 2
+                  },
+                  {
+                    "caption": "Türkis",
+                    "value": 3
+                  },
+                  {
+                    "caption": "Rot",
+                    "value": 4
+                  },
+                  {
+                    "caption": "Violett",
+                    "value": 5
+                  },
+                  {
+                    "caption": "Gelb",
+                    "value": 6
+                  },
+                  {
+                    "caption": "Weiß",
+                    "value": 7
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Helligkeit",
+              "name": "Brightness",
+              "width": "110px",
+              "add": -1,
+              "edit": {
+                "type": "NumberSpinner",
+                "suffix": "%",
+                "minimum": -1,
+                "maximum": 100
+              }
+            },
+            {
               "caption": "Variable",
               "name": "ID",
               "width": "600px",
@@ -567,71 +423,13 @@
               }
             },
             {
-              "caption": "Auslöser Statuswert 0",
-              "name": "TriggerValueState0",
-              "width": "200px",
-              "add": -1,
+              "caption": "Auslösender Wert",
+              "name": "TriggerValue",
+              "width": "160px",
+              "add": 0,
               "edit": {
                 "type": "Select",
                 "options": [
-                  {
-                    "caption": "Keine Funktion",
-                    "value": -1
-                  },
-                  {
-                    "caption": "0 | false",
-                    "value": 0
-                  },
-                  {
-                    "caption": "1 | true",
-                    "value": 1
-                  },
-                  {
-                    "caption": "2",
-                    "value": 2
-                  }
-                ]
-              }
-            },
-            {
-              "caption": "Auslöser Statuswert 1",
-              "name": "TriggerValueState1",
-              "width": "200px",
-              "add": -1,
-              "edit": {
-                "type": "Select",
-                "options": [
-                  {
-                    "caption": "Keine Funktion",
-                    "value": -1
-                  },
-                  {
-                    "caption": "0 | false",
-                    "value": 0
-                  },
-                  {
-                    "caption": "1 | true",
-                    "value": 1
-                  },
-                  {
-                    "caption": "2",
-                    "value": 2
-                  }
-                ]
-              }
-            },
-            {
-              "caption": "Auslöser Statuswert 2",
-              "name": "TriggerValueState2",
-              "width": "200px",
-              "add": -1,
-              "edit": {
-                "type": "Select",
-                "options": [
-                  {
-                    "caption": "Keine Funktion",
-                    "value": -1
-                  },
                   {
                     "caption": "0 | false",
                     "value": 0
@@ -657,11 +455,117 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie aus, ob Sie den automatischen Nachtmodus verwenden wollen:"
+          "caption": "Bitte wählen Sie die Farbe für die obere Leuchteinheit aus:"
+        },
+        {
+          "type": "Select",
+          "name": "NightModeColorUpperLightUnit",
+          "caption": "Obere Leuchteinheit Farbe",
+          "options": [
+            {
+              "caption": "Keine Farbveränderung",
+              "value": -1
+            },
+            {
+              "caption": "Aus",
+              "value": 0
+            },
+            {
+              "caption": "Blau",
+              "value": 1
+            },
+            {
+              "caption": "Grün",
+              "value": 2
+            },
+            {
+              "caption": "Türkis",
+              "value": 3
+            },
+            {
+              "caption": "Rot",
+              "value": 4
+            },
+            {
+              "caption": "Violett",
+              "value": 5
+            },
+            {
+              "caption": "Gelb",
+              "value": 6
+            },
+            {
+              "caption": "Weiß",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die Farbe für die untere Leuchteinheit aus:"
+        },
+        {
+          "type": "Select",
+          "name": "NightModeColorLowerLightUnit",
+          "caption": "Untere Leuchteinheit Farbe",
+          "options": [
+            {
+              "caption": "Keine Farbveränderung",
+              "value": -1
+            },
+            {
+              "caption": "Aus",
+              "value": 0
+            },
+            {
+              "caption": "Blau",
+              "value": 1
+            },
+            {
+              "caption": "Grün",
+              "value": 2
+            },
+            {
+              "caption": "Türkis",
+              "value": 3
+            },
+            {
+              "caption": "Rot",
+              "value": 4
+            },
+            {
+              "caption": "Violett",
+              "value": 5
+            },
+            {
+              "caption": "Gelb",
+              "value": 6
+            },
+            {
+              "caption": "Weiß",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Helligkeit für den Nachtmodus an:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "NightModeBrightness",
+          "caption": "Helligkeit",
+          "suffix": "%",
+          "minimum": -1,
+          "maximum": 100
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte wählen Sie aus, ob Sie den automatischen Nachtmodus verwenden wollen:"
         },
         {
           "type": "CheckBox",
-          "name": "UseNightMode",
+          "name": "UseAutomaticNightMode",
           "caption": "Nachtmodus verwenden"
         },
         {
@@ -675,7 +579,7 @@
         },
         {
           "type": "Label",
-          "caption": "Bitte geben Sie die Endzeit für den Nachtmodus an:"
+          "caption": "\nBitte geben Sie die Endzeit für den Nachtmodus an:"
         },
         {
           "type": "SelectTime",
@@ -688,72 +592,12 @@
   "actions": [
     {
       "type": "ExpansionPanel",
-      "caption": "Konfiguration",
-      "items": [
-        {
-          "type": "Button",
-          "caption": "Neu einlesen",
-          "onClick": "SA2_ReloadConfiguration($id);"
-        },
-        {
-          "type": "RowLayout",
-          "items": [
-            {
-              "type": "SelectCategory",
-              "name": "BackupCategory",
-              "caption": "Kategorie",
-              "width": "600px"
-            },
-            {
-              "type": "Label",
-              "caption": " "
-            },
-            {
-              "type": "Button",
-              "caption": "Sichern",
-              "onClick": "SA2_CreateBackup($id, $BackupCategory);"
-            }
-          ]
-        },
-        {
-          "type": "RowLayout",
-          "items": [
-            {
-              "type": "SelectScript",
-              "name": "ConfigurationScript",
-              "caption": "Konfiguration",
-              "width": "600px"
-            },
-            {
-              "type": "Label",
-              "caption": " "
-            },
-            {
-              "type": "PopupButton",
-              "caption": "Wiederherstellen",
-              "popup": {
-                "caption": "Konfiguration wirklich wiederherstellen?",
-                "items": [
-                  {
-                    "type": "Button",
-                    "caption": "Wiederherstellen",
-                    "onClick": "SA2_RestoreConfiguration($id, $ConfigurationScript);"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
       "caption": "Registrierte Nachrichten",
       "items": [
         {
           "type": "List",
           "name": "RegisteredMessages",
-          "rowCount": 6,
+          "rowCount": 11,
           "sort": {
             "column": "SenderID",
             "direction": "ascending"
@@ -786,11 +630,22 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Nachtmodus",
+      "caption": "Attribute",
       "items": [
         {
           "type": "Label",
-          "caption": "Nachtmodus:"
+          "caption": "Obere Leuchteinheit - Letzte Farbe:",
+          "name": "AttributeUpperLightUnitLastColor"
+        },
+        {
+          "type": "Label",
+          "caption": "Untere Leuchteinheit - Letzte Farbe:",
+          "name": "AttributeLowerLightUnitLastColor"
+        },
+        {
+          "type": "Label",
+          "caption": "Letzte Helligkeit:",
+          "name": "AttributeLastBrightness"
         }
       ]
     },

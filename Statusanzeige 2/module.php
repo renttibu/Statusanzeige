@@ -1,6 +1,7 @@
 <?php
 
 /** @noinspection PhpUnused */
+/** @noinspection DuplicatedCode */
 
 /*
  * @module      Statusanzeige 2 (HmIP-BSL)
@@ -29,7 +30,6 @@ include_once __DIR__ . '/helper/autoload.php';
 class Statusanzeige2 extends IPSModule
 {
     //Helper
-    use SA2_backupRestore;
     use SA2_control;
     use SA2_nightMode;
 
@@ -44,9 +44,9 @@ class Statusanzeige2 extends IPSModule
         parent::Create();
         $this->RegisterProperties();
         $this->CreateProfiles();
-        $this->RegisterTimer('StartNightMode', 0, 'SA2_StartNightMode(' . $this->InstanceID . ');');
-        $this->RegisterTimer('StopNightMode', 0, 'SA2_StopNightMode(' . $this->InstanceID . ',);');
-        $this->RegisterAttributeBoolean('NightModeTimer', false);
+        $this->RegisterVariables();
+        $this->RegisterTimers();
+        $this->RegisterAttributes();
     }
 
     public function Destroy()
@@ -66,12 +66,11 @@ class Statusanzeige2 extends IPSModule
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
         }
-        $this->MaintainVariables();
         $this->SetOptions();
-        $this->RegisterMessages();
         if ($this->CheckMaintenanceMode()) {
             return;
         }
+        $this->RegisterMessages();
         $this->SetNightModeTimer();
         $this->CheckNightModeTimer();
     }
@@ -101,20 +100,28 @@ class Statusanzeige2 extends IPSModule
                 }
                 //Trigger action
                 if ($Data[1]) {
-                    //Upper light unit states
-                    $upperLightUnitStates = json_decode($this->ReadPropertyString('UpperLightUnitStates'), true);
+                    //Upper light unit
+                    $upperLightUnitStates = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'), true);
                     if (!empty($upperLightUnitStates)) {
-                        if (array_search($SenderID, array_column($upperLightUnitStates, 'ID')) !== false) {
-                            $scriptText = 'SA2_UpdateUpperLightUnit(' . $this->InstanceID . ');';
-                            IPS_RunScriptText($scriptText);
+                        $key = array_search($SenderID, array_column($upperLightUnitStates, 'ID'));
+                        if (is_int($key)) {
+                            $use = $upperLightUnitStates[$key]['Use'];
+                            if ($use) {
+                                $scriptText = 'SA2_UpdateLightUnit(' . $this->InstanceID . ', 0);';
+                                IPS_RunScriptText($scriptText);
+                            }
                         }
                     }
-                    //Lower light unit states
-                    $lowerLightUnitStates = json_decode($this->ReadPropertyString('LowerLightUnitStates'), true);
+                    //Lower light unit
+                    $lowerLightUnitStates = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'), true);
                     if (!empty($lowerLightUnitStates)) {
-                        if (array_search($SenderID, array_column($lowerLightUnitStates, 'ID')) !== false) {
-                            $scriptText = 'SA2_UpdateLowerLightUnit(' . $this->InstanceID . ');';
-                            IPS_RunScriptText($scriptText);
+                        $key = array_search($SenderID, array_column($lowerLightUnitStates, 'ID'));
+                        if (is_int($key)) {
+                            $use = $lowerLightUnitStates[$key]['Use'];
+                            if ($use) {
+                                $scriptText = 'SA2_UpdateLightUnit(' . $this->InstanceID . ', 1);';
+                                IPS_RunScriptText($scriptText);
+                            }
                         }
                     }
                 }
@@ -142,47 +149,46 @@ class Statusanzeige2 extends IPSModule
         $formData['elements'][0]['items'][5]['caption'] = "Uhrzeit:\t\t\t" . $moduleInfo['time'];
         $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'];
         $formData['elements'][0]['items'][7]['caption'] = "Präfix:\t\t\tSA2";
-        //Upper light unit
-        $states = json_decode($this->ReadPropertyString('UpperLightUnitStates'));
-        if (!empty($states)) {
-            foreach ($states as $state) {
+        //Trigger variables
+        $variables = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'));
+        if (!empty($variables)) {
+            foreach ($variables as $variable) {
                 $rowColor = '#C0FFC0'; //light green
-                $use = $state->Use;
+                $use = $variable->Use;
                 if (!$use) {
                     $rowColor = '';
                 }
-                $id = $state->ID;
+                $id = $variable->ID;
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; //light red
                 }
-                $formData['elements'][2]['items'][11]['values'][] = [
+                $formData['elements'][2]['items'][5]['values'][] = [
                     'Use'                                           => $use,
+                    'Group'                                         => $variable->Group,
+                    'Color'                                         => $variable->Color,
                     'ID'                                            => $id,
-                    'TriggerValueState0'                            => $state->TriggerValueState0,
-                    'TriggerValueState1'                            => $state->TriggerValueState1,
-                    'TriggerValueState2'                            => $state->TriggerValueState2,
+                    'TriggerValue'                                  => $variable->TriggerValue,
                     'rowColor'                                      => $rowColor];
             }
         }
-        //Lower light unit
-        $states = json_decode($this->ReadPropertyString('LowerLightUnitStates'));
-        if (!empty($states)) {
-            foreach ($states as $state) {
+        $variables = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'));
+        if (!empty($variables)) {
+            foreach ($variables as $variable) {
                 $rowColor = '#C0FFC0'; //light green
-                $use = $state->Use;
+                $use = $variable->Use;
                 if (!$use) {
                     $rowColor = '';
                 }
-                $id = $state->ID;
+                $id = $variable->ID;
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; //light red
                 }
-                $formData['elements'][3]['items'][11]['values'][] = [
+                $formData['elements'][3]['items'][5]['values'][] = [
                     'Use'                                           => $use,
+                    'Group'                                         => $variable->Group,
+                    'Color'                                         => $variable->Color,
                     'ID'                                            => $id,
-                    'TriggerValueState0'                            => $state->TriggerValueState0,
-                    'TriggerValueState1'                            => $state->TriggerValueState1,
-                    'TriggerValueState2'                            => $state->TriggerValueState2,
+                    'TriggerValue'                                  => $variable->TriggerValue,
                     'rowColor'                                      => $rowColor];
             }
         }
@@ -207,26 +213,28 @@ class Statusanzeige2 extends IPSModule
                 default:
                     $messageDescription = 'keine Bezeichnung';
             }
-            $formData['actions'][1]['items'][0]['values'][] = [
+            $formData['actions'][0]['items'][0]['values'][] = [
                 'SenderID'                                              => $senderID,
                 'SenderName'                                            => $senderName,
                 'MessageID'                                             => $messageID,
                 'MessageDescription'                                    => $messageDescription,
                 'rowColor'                                              => $rowColor];
         }
-        //Night mode
-        $nightModeState = 'Aus';
-        $use = $this->ReadPropertyBoolean('EnableNightMode');
-        if ($use) {
-            if ($this->GetValue('NightMode')) {
-                $nightModeState = 'An';
-            }
+        //Attributes
+        $colorList = [0 => 'Aus', 1 => 'Blau', 2 => 'Grün', 3 => 'Türkis', 4 => 'Rot', 5 => 'Violett', 6 => 'Gelb', 7 => 'Weiß'];
+        $colorName = 'Wert nicht vorhanden!';
+        $lastColor = $this->ReadAttributeInteger('UpperLightUnitLastColor');
+        if (array_key_exists($lastColor, $colorList)) {
+            $colorName = $colorList[$lastColor];
         }
-        $nightModeTimer = $this->ReadAttributeBoolean('NightModeTimer');
-        if ($nightModeTimer) {
-            $nightModeState = 'An';
+        $formData['actions'][1]['items'][0]['caption'] = 'Obere Leuchteinheit - Letzte Farbe: ' . $lastColor . ', ' . $colorName;
+        $lastColor = $this->ReadAttributeInteger('LowerLightUnitLastColor');
+        if (array_key_exists($lastColor, $colorList)) {
+            $colorName = $colorList[$lastColor];
         }
-        $formData['actions'][2]['items'][0]['caption'] = $nightModeState;
+        $formData['actions'][1]['items'][1]['caption'] = 'Untere Leuchteinheit - Letzte Farbe: ' . $lastColor . ', ' . $colorName;
+        $lastBrightness = $this->ReadAttributeInteger('LastBrightness');
+        $formData['actions'][1]['items'][2]['caption'] = 'Letzte Helligkeit: ' . $lastBrightness . ' %';
         return json_encode($formData);
     }
 
@@ -240,11 +248,11 @@ class Statusanzeige2 extends IPSModule
     public function RequestAction($Ident, $Value)
     {
         switch ($Ident) {
-            case 'UpperLightUnit':
+            case 'UpperLightUnitColor':
                 $this->SetColor(0, $Value);
                 break;
 
-            case 'LowerLightUnit':
+            case 'LowerLightUnitColor':
                 $this->SetColor(1, $Value);
                 break;
 
@@ -272,26 +280,23 @@ class Statusanzeige2 extends IPSModule
         $this->RegisterPropertyString('Note', '');
         $this->RegisterPropertyBoolean('MaintenanceMode', false);
         //Functions
-        $this->RegisterPropertyBoolean('EnableUpperLightUnit', true);
-        $this->RegisterPropertyBoolean('EnableLowerLightUnit', true);
+        $this->RegisterPropertyBoolean('EnableUpperLightUnitColor', true);
+        $this->RegisterPropertyBoolean('EnableLowerLightUnitColor', true);
         $this->RegisterPropertyBoolean('EnableBrightness', true);
-        $this->RegisterPropertyBoolean('EnableNightMode', false);
+        $this->RegisterPropertyBoolean('EnableNightMode', true);
         //Upper light unit
         $this->RegisterPropertyInteger('UpperLightUnit', 0);
         $this->RegisterPropertyInteger('UpperLightUnitSwitchingDelay', 0);
-        $this->RegisterPropertyInteger('UpperLightUnitColorState0', -1);
-        $this->RegisterPropertyInteger('UpperLightUnitColorState1', -1);
-        $this->RegisterPropertyInteger('UpperLightUnitColorState2', -1);
-        $this->RegisterPropertyString('UpperLightUnitStates', '[]');
-        // Lower light unit
+        $this->RegisterPropertyString('UpperLightUnitTriggerVariables', '[]');
+        //Lower light unit
         $this->RegisterPropertyInteger('LowerLightUnit', 0);
         $this->RegisterPropertyInteger('LowerLightUnitSwitchingDelay', 0);
-        $this->RegisterPropertyInteger('LowerLightUnitColorState0', -1);
-        $this->RegisterPropertyInteger('LowerLightUnitColorState1', -1);
-        $this->RegisterPropertyInteger('LowerLightUnitColorState2', -1);
-        $this->RegisterPropertyString('LowerLightUnitStates', '[]');
+        $this->RegisterPropertyString('LowerLightUnitTriggerVariables', '[]');
         //Night mode
-        $this->RegisterPropertyBoolean('UseNightMode', false);
+        $this->RegisterPropertyInteger('NightModeColorUpperLightUnit', -1);
+        $this->RegisterPropertyInteger('NightModeColorLowerLightUnit', -1);
+        $this->RegisterPropertyInteger('NightModeBrightness', 0);
+        $this->RegisterPropertyBoolean('UseAutomaticNightMode', false);
         $this->RegisterPropertyString('NightModeStartTime', '{"hour":22,"minute":0,"second":0}');
         $this->RegisterPropertyString('NightModeEndTime', '{"hour":6,"minute":0,"second":0}');
     }
@@ -327,50 +332,45 @@ class Statusanzeige2 extends IPSModule
         }
     }
 
-    private function MaintainVariables(): void
+    private function RegisterVariables(): void
     {
+        $profile = 'SA2.' . $this->InstanceID . '.Color';
         //Upper light unit
-        $profile = 'SA2.' . $this->InstanceID . '.Color';
-        $this->MaintainVariable('UpperLightUnit', 'Obere Leuchteinheit', 1, $profile, 10, true);
-        $this->EnableAction('UpperLightUnit');
-        IPS_SetIcon($this->GetIDForIdent('UpperLightUnit'), 'Bulb');
-        //Lower light unit
-        $profile = 'SA2.' . $this->InstanceID . '.Color';
-        $this->MaintainVariable('LowerLightUnit', 'Untere Leuchteinheit', 1, $profile, 20, true);
-        $this->EnableAction('LowerLightUnit');
-        IPS_SetIcon($this->GetIDForIdent('LowerLightUnit'), 'Bulb');
+        $this->RegisterVariableInteger('UpperLightUnitColor', 'Obere Leuchteinheit', $profile, 10);
+        $this->EnableAction('UpperLightUnitColor');
+        IPS_SetIcon($this->GetIDForIdent('UpperLightUnitColor'), 'Bulb');
+        // Lower light unit
+        $this->RegisterVariableInteger('LowerLightUnitColor', 'Untere Leuchteinheit', $profile, 20);
+        $this->EnableAction('LowerLightUnitColor');
+        IPS_SetIcon($this->GetIDForIdent('LowerLightUnitColor'), 'Bulb');
         //Brightness
-        $this->MaintainVariable('Brightness', 'Helligkeit', 1, '~Intensity.100', 30, true);
+        $this->RegisterVariableInteger('Brightness', 'Helligkeit', '~Intensity.100', 30);
         $this->EnableAction('Brightness');
         //Night mode
-        $keep = $this->ReadPropertyBoolean('EnableNightMode');
-        $this->MaintainVariable('NightMode', 'Nachtmodus', 0, '~Switch', 40, $keep);
-        if ($keep) {
-            $this->EnableAction('NightMode');
-            IPS_SetIcon($this->GetIDForIdent('NightMode'), 'Moon');
-        }
+        $this->RegisterVariableBoolean('NightMode', 'Nachtmodus', '~Switch', 40);
+        $this->EnableAction('NightMode');
+        IPS_SetIcon($this->GetIDForIdent('NightMode'), 'Moon');
     }
 
     private function SetOptions(): void
     {
-        IPS_SetHidden($this->GetIDForIdent('UpperLightUnit'), !$this->ReadPropertyBoolean('EnableUpperLightUnit'));
-        IPS_SetHidden($this->GetIDForIdent('LowerLightUnit'), !$this->ReadPropertyBoolean('EnableLowerLightUnit'));
+        IPS_SetHidden($this->GetIDForIdent('UpperLightUnitColor'), !$this->ReadPropertyBoolean('EnableUpperLightUnitColor'));
+        IPS_SetHidden($this->GetIDForIdent('LowerLightUnitColor'), !$this->ReadPropertyBoolean('EnableLowerLightUnitColor'));
         IPS_SetHidden($this->GetIDForIdent('Brightness'), !$this->ReadPropertyBoolean('EnableBrightness'));
+        IPS_SetHidden($this->GetIDForIdent('NightMode'), !$this->ReadPropertyBoolean('EnableNightMode'));
     }
 
-    private function CheckMaintenanceMode(): bool
+    private function RegisterAttributes(): void
     {
-        $result = false;
-        $status = 102;
-        if ($this->ReadPropertyBoolean('MaintenanceMode')) {
-            $result = true;
-            $status = 104;
-            $this->SendDebug(__FUNCTION__, 'Abbruch, der Wartungsmodus ist aktiv!', 0);
-            $this->LogMessage('ID ' . $this->InstanceID . ', ' . __FUNCTION__ . ', Abbruch, der Wartungsmodus ist aktiv!', KL_WARNING);
-        }
-        $this->SetStatus($status);
-        IPS_SetDisabled($this->InstanceID, $result);
-        return $result;
+        $this->RegisterAttributeInteger('UpperLightUnitLastColor', 0);
+        $this->RegisterAttributeInteger('LowerLightUnitLastColor', 0);
+        $this->RegisterAttributeInteger('LastBrightness', 0);
+    }
+
+    private function RegisterTimers(): void
+    {
+        $this->RegisterTimer('StartNightMode', 0, 'SA2_StartNightMode(' . $this->InstanceID . ');');
+        $this->RegisterTimer('StopNightMode', 0, 'SA2_StopNightMode(' . $this->InstanceID . ',);');
     }
 
     private function RegisterMessages(): void
@@ -387,7 +387,7 @@ class Statusanzeige2 extends IPSModule
             }
         }
         //Register
-        $variables = json_decode($this->ReadPropertyString('UpperLightUnitStates'));
+        $variables = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
                 if ($variable->Use) {
@@ -397,7 +397,7 @@ class Statusanzeige2 extends IPSModule
                 }
             }
         }
-        $variables = json_decode($this->ReadPropertyString('LowerLightUnitStates'));
+        $variables = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
                 if ($variable->Use) {
@@ -407,5 +407,45 @@ class Statusanzeige2 extends IPSModule
                 }
             }
         }
+    }
+
+    private function UpdateParameter(): void
+    {
+        $colorList = [0 => 'Aus', 1 => 'Blau', 2 => 'Grün', 3 => 'Türkis', 4 => 'Rot', 5 => 'Violett', 6 => 'Gelb', 7 => 'Weiß'];
+        $colorName = 'Wert nicht vorhanden!';
+        //Upper light unit color
+        $lastColor = $this->ReadAttributeInteger('UpperLightUnitLastColor');
+        if (array_key_exists($lastColor, $colorList)) {
+            $colorName = $colorList[$lastColor];
+        }
+        $caption = 'Obere Leuchteinheit - Letzte Farbe: ' . $lastColor . ', ' . $colorName;
+        $this->UpdateFormField('AttributeUpperLightUnitLastColor', 'caption', $caption);
+        //Lower light unit color
+        $lastColor = $this->ReadAttributeInteger('LowerLightUnitLastColor');
+        if (array_key_exists($lastColor, $colorList)) {
+            $colorName = $colorList[$lastColor];
+        }
+        $caption = 'Untere Leuchteinheit - Letzte Farbe: ' . $lastColor . ', ' . $colorName;
+        $this->UpdateFormField('AttributeLowerLightUnitLastColor', 'caption', $caption);
+        //Brightness
+        $lastBrightness = $this->ReadAttributeInteger('LastBrightness');
+        $caption = 'Letzte Helligkeit: ' . $lastBrightness . ' %';
+        $this->UpdateFormField('AttributeLastBrightness', 'caption', $caption);
+    }
+
+    private function CheckMaintenanceMode(): bool
+    {
+        $result = false;
+        $status = 102;
+        if ($this->ReadPropertyBoolean('MaintenanceMode')) {
+            $result = true;
+            $status = 104;
+            $message = 'Abbruch, der Wartungsmodus ist aktiv!';
+            $this->SendDebug(__FUNCTION__, $message, 0);
+            $this->LogMessage('ID ' . $this->InstanceID . ', ' . __FUNCTION__ . ', ' . $message, KL_WARNING);
+        }
+        $this->SetStatus($status);
+        IPS_SetDisabled($this->InstanceID, $result);
+        return $result;
     }
 }

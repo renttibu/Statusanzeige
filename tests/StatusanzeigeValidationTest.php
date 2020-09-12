@@ -8,9 +8,18 @@ class StatusanzeigeValidationTest extends TestCaseSymconValidation
     {
         $this->validateLibrary(__DIR__ . '/..');
     }
-    public function testValidateStatusanzeigeModule(): void
+    public function testValidateStatusanzeige1Module(): void
     {
         $this->validateModule(__DIR__ . '/../Statusanzeige 1');
+    }
+
+    public function testValidateStatusanzeige2Module(): void
+    {
         $this->validateModule(__DIR__ . '/../Statusanzeige 2');
+    }
+
+    public function testValidateStatusanzeige3Module(): void
+    {
+        $this->validateModule(__DIR__ . '/../Statusanzeige 3');
     }
 }

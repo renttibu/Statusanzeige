@@ -5,7 +5,9 @@
     </php>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../Statusanzeige</directory>
+            <directory suffix=".php">../Statusanzeige 1</directory>
+            <directory suffix=".php">../Statusanzeige 2</directory>
+            <directory suffix=".php">../Statusanzeige 3</directory>
         </whitelist>
     </filter>
 </phpunit>

@@ -10,7 +10,7 @@ trait SA2_control
     #################### Public
 
     /**
-     * Sets the color of a light unit.
+     * Sets the color.
      *
      * @param int $LightUnit
      * 0    = upper light unit
@@ -34,6 +34,385 @@ trait SA2_control
      */
     public function SetColor(int $LightUnit, int $Color): bool
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        if ($this->CheckMaintenanceMode()) {
+            return false;
+        }
+        $setColor = $this->SetDeviceColor($LightUnit, $Color);
+        if ($setColor) {
+            $attribute = 'UpperLightUnitLastColor';
+            if ($LightUnit == 1) {
+                $attribute = 'LowerLightUnitLastColor';
+            }
+            $this->WriteAttributeInteger($attribute, $Color);
+            $this->UpdateParameter();
+        }
+        return $setColor;
+    }
+
+    /**
+     * Sets the brightness.
+     *
+     * @param int $Brightness
+     *
+     * @return bool
+     * false    = an error occurred
+     * true     = successful
+     *
+     * @throws Exception
+     */
+    public function SetBrightness(int $Brightness): bool
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        if ($this->CheckMaintenanceMode()) {
+            return false;
+        }
+        $setBrightness = $this->SetDeviceBrightness($Brightness);
+        if ($setBrightness) {
+            $this->WriteAttributeInteger('LastBrightness', $Brightness);
+            $this->UpdateParameter();
+        }
+        return $setBrightness;
+    }
+
+    /**
+     * Updates both light units.
+     *
+     * @return bool
+     * false    = an error occurred
+     * true     = successful
+     *
+     * @throws Exception
+     */
+    public function UpdateLightUnits(): bool
+    {
+        $result = false;
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        if ($this->CheckMaintenanceMode()) {
+            return $result;
+        }
+        if ($this->GetValue('NightMode')) {
+            return $result;
+        }
+        $upperLightUnit = $this->UpdateLightUnit(0);
+        $lowerLightUnit = $this->UpdateLightUnit(1);
+        if ($upperLightUnit && $lowerLightUnit) {
+            $result = true;
+        }
+        return $result;
+    }
+
+    /**
+     * Updates the color of the light unit.
+     *
+     * @param int $LightUnit
+     * 0    = upper light unit
+     * 1    = lower light unit
+     *
+     * @return bool
+     * false    = an error occurred
+     * true     = successful
+     *
+     * @throws Exception
+     */
+    public function UpdateLightUnit(int $LightUnit): bool
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        if ($this->CheckMaintenanceMode()) {
+            return false;
+        }
+        if ($this->GetValue('NightMode')) {
+            return false;
+        }
+        $unit = 'UpperLightUnit';
+        if ($LightUnit == 1) {
+            $unit = 'LowerLightUnit';
+        }
+        $groups = [];
+        $variables = json_decode($this->ReadPropertyString($unit . 'TriggerVariables'));
+        if (!empty($variables)) {
+            foreach ($variables as $variable) {
+                if ($variable->Use) {
+                    $id = $variable->ID;
+                    if ($id != 0 && @IPS_ObjectExists($id)) {
+                        $actualValue = intval(GetValue($id));
+                        if ($actualValue == $variable->TriggerValue) {
+                            $group = $variable->Group;
+                            $color = $variable->Color;
+                            $brightness = $variable->Brightness;
+                            array_push($groups, ['group' => $group, 'color' => $color, 'brightness' => $brightness]);
+                        }
+                    }
+                }
+            }
+        }
+        if (!empty($groups)) {
+            $this->SendDebug(__FUNCTION__, 'Array: ' . json_encode($groups), 0);
+            $colorList = [0 => 'Aus', 1 => 'Blau', 2 => 'Grün', 3 => 'Türkis', 4 => 'Rot', 5 => 'Violett', 6 => 'Gelb', 7 => 'Weiß'];
+            $colorName = 'Wert nicht vorhanden!';
+            $lastBrightness = $this->ReadAttributeInteger('LastBrightness');
+            //Group 0
+            $key = array_search(0, array_column($groups, 'group'));
+            if (is_int($key)) {
+                $validate = true;
+                $values = [1, 2, 3, 4, 5, 6, 7];
+                foreach ($values as $value) {
+                    if (in_array($value, array_column($groups, 'group'))) {
+                        $validate = false;
+                    }
+                }
+                if ($validate) {
+                    $color = $groups[$key]['color'];
+                    if (array_key_exists($color, $colorList)) {
+                        $colorName = $colorList[$color];
+                    }
+                    $brightness = $groups[$key]['brightness'];
+                    $this->SendDebug(__FUNCTION__, 'Gruppe: 0, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
+                    $setColor = $this->SetColor($LightUnit, $color);
+                    if ($brightness != -1) {
+                        $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
+                    }
+                    if ($setColor || $setBrightness) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            //Group 1
+            $key = array_search(1, array_column($groups, 'group'));
+            if (is_int($key)) {
+                $validate = true;
+                $values = [2, 3, 4, 5, 6, 7];
+                foreach ($values as $value) {
+                    if (in_array($value, array_column($groups, 'group'))) {
+                        $validate = false;
+                    }
+                }
+                if ($validate) {
+                    $color = $groups[$key]['color'];
+                    if (array_key_exists($color, $colorList)) {
+                        $colorName = $colorList[$color];
+                    }
+                    $brightness = $groups[$key]['brightness'];
+                    $this->SendDebug(__FUNCTION__, 'Gruppe: 1, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
+                    $setColor = $this->SetColor($LightUnit, $color);
+                    if ($brightness != -1) {
+                        $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
+                    }
+                    if ($setColor || $setBrightness) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            //Group 2
+            $key = array_search(2, array_column($groups, 'group'));
+            if (is_int($key)) {
+                $validate = true;
+                $values = [3, 4, 5, 6, 7];
+                foreach ($values as $value) {
+                    if (in_array($value, array_column($groups, 'group'))) {
+                        $validate = false;
+                    }
+                }
+                if ($validate) {
+                    $color = $groups[$key]['color'];
+                    if (array_key_exists($color, $colorList)) {
+                        $colorName = $colorList[$color];
+                    }
+                    $brightness = $groups[$key]['brightness'];
+                    $this->SendDebug(__FUNCTION__, 'Gruppe: 2, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
+                    $setColor = $this->SetColor($LightUnit, $color);
+                    if ($brightness != -1) {
+                        $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
+                    }
+                    if ($setColor || $setBrightness) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            //Group 3
+            $key = array_search(3, array_column($groups, 'group'));
+            if (is_int($key)) {
+                $validate = true;
+                $values = [4, 5, 6, 7];
+                foreach ($values as $value) {
+                    if (in_array($value, array_column($groups, 'group'))) {
+                        $validate = false;
+                    }
+                }
+                if ($validate) {
+                    $color = $groups[$key]['color'];
+                    if (array_key_exists($color, $colorList)) {
+                        $colorName = $colorList[$color];
+                    }
+                    $brightness = $groups[$key]['brightness'];
+                    $this->SendDebug(__FUNCTION__, 'Gruppe: 3, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
+                    $setColor = $this->SetColor($LightUnit, $color);
+                    if ($brightness != -1) {
+                        $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
+                    }
+                    if ($setColor || $setBrightness) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            //Group 4
+            $key = array_search(4, array_column($groups, 'group'));
+            if (is_int($key)) {
+                $validate = true;
+                $values = [5, 6, 7];
+                foreach ($values as $value) {
+                    if (in_array($value, array_column($groups, 'group'))) {
+                        $validate = false;
+                    }
+                }
+                if ($validate) {
+                    $color = $groups[$key]['color'];
+                    if (array_key_exists($color, $colorList)) {
+                        $colorName = $colorList[$color];
+                    }
+                    $brightness = $groups[$key]['brightness'];
+                    $this->SendDebug(__FUNCTION__, 'Gruppe: 4, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
+                    $setColor = $this->SetColor($LightUnit, $color);
+                    if ($brightness != -1) {
+                        $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
+                    }
+                    if ($setColor || $setBrightness) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            //Group 5
+            $key = array_search(5, array_column($groups, 'group'));
+            if (is_int($key)) {
+                $validate = true;
+                $values = [6, 7];
+                foreach ($values as $value) {
+                    if (in_array($value, array_column($groups, 'group'))) {
+                        $validate = false;
+                    }
+                }
+                if ($validate) {
+                    $color = $groups[$key]['color'];
+                    if (array_key_exists($color, $colorList)) {
+                        $colorName = $colorList[$color];
+                    }
+                    $brightness = $groups[$key]['brightness'];
+                    $this->SendDebug(__FUNCTION__, 'Gruppe: 5, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
+                    $setColor = $this->SetColor($LightUnit, $color);
+                    if ($brightness != -1) {
+                        $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
+                    }
+                    if ($setColor || $setBrightness) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            //Group 6
+            $key = array_search(6, array_column($groups, 'group'));
+            if (is_int($key)) {
+                $validate = true;
+                $values = [7];
+                foreach ($values as $value) {
+                    if (in_array($value, array_column($groups, 'group'))) {
+                        $validate = false;
+                    }
+                }
+                if ($validate) {
+                    $color = $groups[$key]['color'];
+                    if (array_key_exists($color, $colorList)) {
+                        $colorName = $colorList[$color];
+                    }
+                    $brightness = $groups[$key]['brightness'];
+                    $this->SendDebug(__FUNCTION__, 'Gruppe: 6, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
+                    $setColor = $this->SetColor($LightUnit, $color);
+                    if ($brightness != -1) {
+                        $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
+                    }
+                    if ($setColor || $setBrightness) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            //Group 7
+            $key = array_search(6, array_column($groups, 'group'));
+            if (is_int($key)) {
+                $color = $groups[$key]['color'];
+                if (array_key_exists($color, $colorList)) {
+                    $colorName = $colorList[$color];
+                }
+                $brightness = $groups[$key]['brightness'];
+                $this->SendDebug(__FUNCTION__, 'Gruppe: 7, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
+                $setColor = $this->SetColor($LightUnit, $color);
+                if ($brightness != -1) {
+                    $setBrightness = $this->SetBrightness($brightness);
+                } else {
+                    $setBrightness = $this->SetBrightness($lastBrightness);
+                }
+                if ($setColor || $setBrightness) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    #################### Private
+
+    /**
+     * Sets the color of the device.
+     *
+     * @param int $LightUnit
+     * 0    = upper light unit
+     * 1    = lower light unit
+     *
+     * @param int $Color
+     * 0    = off
+     * 1    = blue
+     * 2    = green
+     * 3    = turquoise
+     * 4    = red
+     * 5    = violet
+     * 6    = yellow
+     * 7    = white
+     *
+     * @return bool
+     * false    = an error occurred
+     * true     = successful
+     *
+     * @throws Exception
+     */
+    private function SetDeviceColor(int $LightUnit, int $Color): bool
+    {
         $result = false;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($this->CheckMaintenanceMode()) {
@@ -43,24 +422,24 @@ trait SA2_control
         if (!IPS_SemaphoreEnter($this->InstanceID . '.SetColor', 5000)) {
             return $result;
         }
-        $name = 'UpperLightUnit';
+        $unit = 'UpperLightUnit';
         if ($LightUnit == 1) {
-            $name = 'LowerLightUnit';
+            $unit = 'LowerLightUnit';
         }
-        $actualColor = $this->GetValue($name);
-        $this->SetValue($name, $Color);
-        $id = $this->ReadPropertyInteger($name);
+        $actualColor = $this->GetValue($unit . 'Color');
+        $this->SetValue($unit . 'Color', $Color);
+        $id = $this->ReadPropertyInteger($unit);
         if ($id != 0 && @IPS_ObjectExists($id)) {
             $colorDifference = $this->CheckColorDifference($id, $Color);
             if ($colorDifference) {
-                IPS_Sleep($this->ReadPropertyInteger($name . 'SwitchingDelay'));
+                IPS_Sleep($this->ReadPropertyInteger($unit . 'SwitchingDelay'));
                 $setColor = @HM_WriteValueInteger($id, 'COLOR', $Color);
                 if (!$setColor) {
                     IPS_Sleep(self::DELAY_MILLISECONDS);
                     $setColorAgain = @HM_WriteValueInteger($id, 'COLOR', $Color);
                     if (!$setColorAgain) {
                         //Revert color
-                        $this->SetValue($name, $actualColor);
+                        $this->SetValue($unit . 'Color', $actualColor);
                         $errorMessage = 'Farbwert ' . $Color . ' konnte nicht gesetzt werden!';
                         $this->SendDebug(__FUNCTION__, $errorMessage, 0);
                         $errorMessage = 'ID ' . $id . ' ,' . $errorMessage;
@@ -78,7 +457,7 @@ trait SA2_control
     }
 
     /**
-     * Sets the brightness of both light units.
+     * Sets the brightness of the device.
      *
      * @param int $Brightness
      *
@@ -88,7 +467,7 @@ trait SA2_control
      *
      * @throws Exception
      */
-    public function SetBrightness(int $Brightness): bool
+    private function SetDeviceBrightness(int $Brightness): bool
     {
         $result = false;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -104,220 +483,58 @@ trait SA2_control
         $Brightness = floatval($this->GetValue('Brightness') / 100);
         $this->SendDebug(__FUNCTION__, 'Helligkeitswert: ' . $Brightness, 0);
         //Upper light unit
-        $unit1 = false;
-        $upperLightUnit = $this->ReadPropertyInteger('UpperLightUnit');
-        if ($upperLightUnit != 0 && @IPS_ObjectExists($upperLightUnit)) {
-            $BrightnessDifference = $this->CheckBrightnessDifference($upperLightUnit, $Brightness);
+        $upperLightUnit = true;
+        $id = $this->ReadPropertyInteger('UpperLightUnit');
+        if ($id != 0 && @IPS_ObjectExists($id)) {
+            $BrightnessDifference = $this->CheckBrightnessDifference($id, $Brightness);
             if ($BrightnessDifference) {
                 IPS_Sleep($this->ReadPropertyInteger('UpperLightUnitSwitchingDelay'));
-                $setBrightness = @HM_WriteValueFloat($upperLightUnit, 'LEVEL', $Brightness);
+                $setBrightness = @HM_WriteValueFloat($id, 'LEVEL', $Brightness);
                 if (!$setBrightness) {
                     IPS_Sleep(self::DELAY_MILLISECONDS);
-                    $setBrightnessAgain = @HM_WriteValueFloat($upperLightUnit, 'LEVEL', $Brightness);
+                    $setBrightnessAgain = @HM_WriteValueFloat($id, 'LEVEL', $Brightness);
                     if (!$setBrightnessAgain) {
-                        $this->SendDebug(__FUNCTION__, 'Helligkeit konnte nicht gesetzt werden!', 0);
-                        $errorMessage = 'ID ' . $upperLightUnit . ' ,die Helligkeit konnte nicht auf den Wert ' . $Brightness . ' gesetzt werden!';
+                        $upperLightUnit = false;
+                        //Revert brightness
+                        $this->SetValue('Brightness', $actualBrightness);
+                        $errorMessage = 'Helligkeit ' . $Brightness . ' konnte nicht gesetzt werden!';
+                        $this->SendDebug(__FUNCTION__, $errorMessage, 0);
+                        $errorMessage = 'ID ' . $id . ' , ' . $errorMessage;
                         $this->LogMessage($errorMessage, KL_ERROR);
                     }
-                }
-                if ($setBrightness || $setBrightnessAgain) {
-                    $unit1 = true;
                 }
             }
         }
         //Lower light unit
-        $unit2 = false;
-        $lowerLightUnit = $this->ReadPropertyInteger('LowerLightUnit');
-        if ($lowerLightUnit != 0 && @IPS_ObjectExists($lowerLightUnit)) {
-            $BrightnessDifference = $this->CheckBrightnessDifference($lowerLightUnit, $Brightness);
+        $lowerLightUnit = true;
+        $id = $this->ReadPropertyInteger('LowerLightUnit');
+        if ($id != 0 && @IPS_ObjectExists($id)) {
+            $BrightnessDifference = $this->CheckBrightnessDifference($id, $Brightness);
             if ($BrightnessDifference) {
                 IPS_Sleep($this->ReadPropertyInteger('LowerLightUnitSwitchingDelay'));
-                $setBrightness = @HM_WriteValueFloat($lowerLightUnit, 'LEVEL', $Brightness);
+                $setBrightness = @HM_WriteValueFloat($id, 'LEVEL', $Brightness);
                 if (!$setBrightness) {
                     IPS_Sleep(self::DELAY_MILLISECONDS);
-                    $setBrightnessAgain = @HM_WriteValueFloat($lowerLightUnit, 'LEVEL', $Brightness);
+                    $setBrightnessAgain = @HM_WriteValueFloat($id, 'LEVEL', $Brightness);
                     if (!$setBrightnessAgain) {
-                        $errorMessage = 'ID ' . $lowerLightUnit . ' ,die Helligkeit konnte nicht auf den Wert ' . $Brightness . ' gesetzt werden!';
+                        $lowerLightUnit = false;
+                        //Revert brightness
+                        $this->SetValue('Brightness', $actualBrightness);
+                        $errorMessage = 'Helligkeit ' . $Brightness . ' konnte nicht gesetzt werden!';
                         $this->SendDebug(__FUNCTION__, $errorMessage, 0);
+                        $errorMessage = 'ID ' . $id . ' , ' . $errorMessage;
                         $this->LogMessage($errorMessage, KL_ERROR);
-                    }
-                    if ($setBrightness || $setBrightnessAgain) {
-                        $unit2 = true;
                     }
                 }
             }
         }
         //Semaphore leave
         IPS_SemaphoreLeave($this->InstanceID . '.SetBrightness');
-        if ($unit1 && $unit2) {
+        if ($upperLightUnit && $lowerLightUnit) {
             $result = true;
-        }
-        if (!$unit1 && !$unit2) {
-            //Revert brightness
-            $this->SetValue('Brightness', $actualBrightness);
         }
         return $result;
     }
-
-    /**
-     * Updates the state for the upper light unit.
-     *
-     * @return bool
-     * false    = an error occurred
-     * true     = successful
-     *
-     * @throws Exception
-     */
-    public function UpdateUpperLightUnit(): bool
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        if ($this->CheckMaintenanceMode()) {
-            return false;
-        }
-        if ($this->ReadAttributeBoolean('NightModeTimer')) {
-            return false;
-        }
-        $use = $this->ReadPropertyBoolean('EnableNightMode');
-        if ($use) {
-            if ($this->GetValue('NightMode')) {
-                return false;
-            }
-        }
-        $states = [];
-        $variables = json_decode($this->ReadPropertyString('UpperLightUnitStates'));
-        if (!empty($variables)) {
-            foreach ($variables as $variable) {
-                if ($variable->Use) {
-                    $id = $variable->ID;
-                    if ($id != 0 && @IPS_ObjectExists($id)) {
-                        $actualValue = intval(GetValue($id));
-                        if ($actualValue == $variable->TriggerValueState0) {
-                            array_push($states, 0);
-                        }
-                        if ($actualValue == $variable->TriggerValueState1) {
-                            array_push($states, 1);
-                        }
-                        if ($actualValue == $variable->TriggerValueState2) {
-                            array_push($states, 2);
-                        }
-                    }
-                }
-            }
-        }
-        if (!empty($states)) {
-            $this->SendDebug(__FUNCTION__, 'Statusarray: ' . json_encode($states), 0);
-            //State 0, low priority
-            if (count(array_count_values($states)) == 1 && $states[0] == 0) {
-                $this->SendDebug(__FUNCTION__, 'Aktueller Status: 0, niedrige Priorität', 0);
-                $color = $this->ReadPropertyInteger('UpperLightUnitColorState0');
-                if ($color == -1) { //Without function
-                    return false;
-                }
-                return $this->SetColor(0, $color);
-            }
-            //State 1, medium priority
-            if (in_array(1, $states)) {
-                if (!in_array(2, $states)) {
-                    $this->SendDebug(__FUNCTION__, 'Aktueller Status: 1, mittlere Priorität', 0);
-                    $color = $this->ReadPropertyInteger('UpperLightUnitColorState1');
-                    if ($color == -1) { //Without function
-                        return false;
-                    }
-                    return $this->SetColor(0, $color);
-                }
-            }
-            //State 2, high priority
-            if (in_array(2, $states)) {
-                $color = $this->ReadPropertyInteger('UpperLightUnitColorState2');
-                $this->SendDebug(__FUNCTION__, 'Aktueller Status: 2, hohe Priorität', 0);
-                if ($color == -1) { //Without function
-                    return false;
-                }
-                return $this->SetColor(0, $color);
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Updates the state for the lower light unit.
-     *
-     * @return bool
-     * false    = an error occurred
-     * true     = successful
-     *
-     * @throws Exception
-     */
-    public function UpdateLowerLightUnit(): bool
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
-        if ($this->CheckMaintenanceMode()) {
-            return false;
-        }
-        if ($this->ReadAttributeBoolean('NightModeTimer')) {
-            return false;
-        }
-        $use = $this->ReadPropertyBoolean('EnableNightMode');
-        if ($use) {
-            if ($this->GetValue('NightMode')) {
-                return false;
-            }
-        }
-        $states = [];
-        $variables = json_decode($this->ReadPropertyString('LowerLightUnitStates'));
-        if (!empty($variables)) {
-            foreach ($variables as $variable) {
-                if ($variable->Use) {
-                    $id = $variable->ID;
-                    $actualValue = intval(GetValue($id));
-                    if ($actualValue == $variable->TriggerValueState0) {
-                        array_push($states, 0);
-                    }
-                    if ($actualValue == $variable->TriggerValueState1) {
-                        array_push($states, 1);
-                    }
-                    if ($actualValue == $variable->TriggerValueState2) {
-                        array_push($states, 2);
-                    }
-                }
-            }
-        }
-        if (!empty($states)) {
-            $this->SendDebug(__FUNCTION__, 'Statusarray: ' . json_encode($states), 0);
-            //State 0, low priority
-            if (count(array_count_values($states)) == 1 && $states[0] == 0) {
-                $this->SendDebug(__FUNCTION__, 'Aktueller Status: 0, niedrige Priorität', 0);
-                $color = $this->ReadPropertyInteger('LowerLightUnitColorState0');
-                if ($color == -1) { //Without function
-                    return false;
-                }
-                return $this->SetColor(1, $color);
-            }
-            //State 1, medium priority
-            if (in_array(1, $states)) {
-                if (!in_array(2, $states)) {
-                    $this->SendDebug(__FUNCTION__, 'Aktueller Status: 1, mittlere Priorität', 0);
-                    $color = $this->ReadPropertyInteger('LowerLightUnitColorState1');
-                    if ($color == -1) { //Without function
-                        return false;
-                    }
-                    return $this->SetColor(1, $color);
-                }
-            }
-            //State 2, high priority
-            if (in_array(2, $states)) {
-                $color = $this->ReadPropertyInteger('LowerLightUnitColorState2');
-                $this->SendDebug(__FUNCTION__, 'Aktueller Status: 2, hohe Priorität', 0);
-                if ($color == -1) { //Without function
-                    return false;
-                }
-                return $this->SetColor(1, $color);
-            }
-        }
-        return false;
-    }
-
-    #################### Private
 
     /**
      * Checks for a different color.

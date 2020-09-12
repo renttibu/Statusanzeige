@@ -1,7 +1,6 @@
 <?php
 
 /** @noinspection PhpUnused */
-/** @noinspection PhpUndefinedMethodInspection */
 /** @noinspection DuplicatedCode */
 
 declare(strict_types=1);
@@ -28,34 +27,105 @@ trait SA2_nightMode
         if ($this->CheckMaintenanceMode()) {
             return $result;
         }
-        $use = $this->ReadPropertyBoolean('EnableNightMode');
-        if ($use) {
-            $this->SetValue('NightMode', $State);
-        }
+        $this->SetValue('NightMode', $State);
         //Night mode off
         if (!$State) {
-            $this->WriteAttributeBoolean('NightModeTimer', false);
-            $this->UpdateUpperLightUnit();
-            $this->UpdateLowerLightUnit();
+            //Upper light unit
+            $resultUpperLightUnit = true;
+            $upperLightUnitTriggerVariables = false;
+            $variables = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'));
+            if (!empty($variables)) {
+                foreach ($variables as $variable) {
+                    $id = $variable->ID;
+                    if ($id != 0 && @IPS_ObjectExists($id)) {
+                        $use = $variable->Use;
+                        if ($use) {
+                            $upperLightUnitTriggerVariables = true;
+                        }
+                    }
+                }
+                if ($upperLightUnitTriggerVariables) {
+                    $resultUpperLightUnit = $this->UpdateLightUnit(0);
+                }
+            }
+            if (!$upperLightUnitTriggerVariables) {
+                $lastColor = $this->ReadAttributeInteger('UpperLightUnitLastColor');
+                $resultUpperLightUnit = $this->SetColor(0, $lastColor);
+            }
+            // Lower light unit
+            $resultLowerLightUnit = true;
+            $lowerLightUnitTriggerVariables = false;
+            $variables = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'));
+            if (!empty($variables)) {
+                foreach ($variables as $variable) {
+                    $id = $variable->ID;
+                    if ($id != 0 && @IPS_ObjectExists($id)) {
+                        $use = $variable->Use;
+                        if ($use) {
+                            $lowerLightUnitTriggerVariables = true;
+                        }
+                    }
+                }
+                if ($lowerLightUnitTriggerVariables) {
+                    $resultLowerLightUnit = $this->UpdateLightUnit(1);
+                }
+            }
+            if (!$lowerLightUnitTriggerVariables) {
+                $lastColor = $this->ReadAttributeInteger('LowerLightUnitLastColor');
+                $resultLowerLightUnit = $this->SetColor(1, $lastColor);
+            }
+            // Brightness
+            $resultBrightness = true;
+            if (!$upperLightUnitTriggerVariables && !$lowerLightUnitTriggerVariables) {
+                $lastBrightness = $this->ReadAttributeInteger('LastBrightness');
+                $resultBrightness = $this->SetBrightness($lastBrightness);
+            }
+            if ($resultUpperLightUnit && $resultLowerLightUnit && $resultBrightness) {
+                $result = true;
+            }
         }
         //Night mode on
         if ($State) {
-            $upperLightUnitActualColor = $this->GetValue('UpperLightUnit');
-            $this->SetValue('UpperLightUnit', 0);
-            $upperLightUnitNewColor = $this->SetColor(0, 0);
-            if (!$upperLightUnitNewColor) {
-                //Revert
-                $this->SetValue('UpperLightUnit', $upperLightUnitActualColor);
+            //Upper light unit
+            $resultUpperLightUnit = true;
+            $actualColor = $this->GetValue('UpperLightUnitColor');
+            $newColor = $this->ReadPropertyInteger('NightModeColorUpperLightUnit');
+            if ($newColor != -1) {
+                $this->SetValue('UpperLightUnitColor', $newColor);
+                $setDeviceColor = $this->SetDeviceColor(0, $newColor);
+                if (!$setDeviceColor) {
+                    $resultUpperLightUnit = false;
+                    //Revert
+                    $this->SetValue('UpperLightUnitColor', $actualColor);
+                }
             }
             //Lower light unit
-            $lowerLightUnitActualColor = $this->GetValue('LowerLightUnit');
-            $this->SetValue('LowerLightUnit', 0);
-            $lowerLightUnitNewColor = $this->SetColor(1, 0);
-            if (!$lowerLightUnitNewColor) {
-                //Revert
-                $this->SetValue('LowerLightUnit', $lowerLightUnitActualColor);
+            $resultLowerLightUnit = true;
+            $actualColor = $this->GetValue('LowerLightUnitColor');
+            $newColor = $this->ReadPropertyInteger('NightModeColorLowerLightUnit');
+            if ($newColor != -1) {
+                $this->SetValue('LowerLightUnitColor', $newColor);
+                $setDeviceColor = $this->SetDeviceColor(1, $newColor);
+                if (!$setDeviceColor) {
+                    $resultLowerLightUnit = false;
+                    //Revert
+                    $this->SetValue('LowerLightUnitColor', $actualColor);
+                }
             }
-            if ($upperLightUnitNewColor && $lowerLightUnitNewColor) {
+            // Brightness
+            $resultBrightness = true;
+            $newBrightness = $this->ReadPropertyInteger('NightModeBrightness');
+            if ($newBrightness != -1) {
+                $actualBrightness = $this->GetValue('Brightness');
+                $this->SetValue('Brightness', $newBrightness);
+                $setBrightness = $this->SetDeviceBrightness($newBrightness);
+                if (!$setBrightness) {
+                    $resultBrightness = false;
+                    //Revert
+                    $this->SetValue('Brightness', $actualBrightness);
+                }
+            }
+            if ($resultUpperLightUnit && $resultLowerLightUnit && $resultBrightness) {
                 $result = true;
             }
         }
@@ -67,7 +137,6 @@ trait SA2_nightMode
      */
     public function StartNightMode(): void
     {
-        $this->WriteAttributeBoolean('NightModeTimer', true);
         $this->ToggleNightMode(true);
         $this->SetNightModeTimer();
     }
@@ -88,7 +157,7 @@ trait SA2_nightMode
      */
     private function SetNightModeTimer(): void
     {
-        $use = $this->ReadPropertyBoolean('UseNightMode');
+        $use = $this->ReadPropertyBoolean('UseAutomaticNightMode');
         //Start
         $milliseconds = 0;
         if ($use) {
@@ -134,10 +203,8 @@ trait SA2_nightMode
         $start = $this->GetTimerInterval('StartNightMode');
         $stop = $this->GetTimerInterval('StopNightMode');
         if ($start > $stop) {
-            $this->WriteAttributeBoolean('NightModeTimer', true);
             $this->ToggleNightMode(true);
         } else {
-            $this->WriteAttributeBoolean('NightModeTimer', false);
             $this->ToggleNightMode(false);
         }
     }
