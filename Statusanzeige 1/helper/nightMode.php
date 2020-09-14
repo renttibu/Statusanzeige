@@ -1,70 +1,82 @@
 <?php
 
-/** @noinspection PhpUndefinedMethodInspection */
 /** @noinspection PhpUnused */
+/** @noinspection DuplicatedCode */
 
 declare(strict_types=1);
 
 trait SA1_nightMode
 {
-    public function ToggleNightMode(bool $State): void
+    /**
+     * Toggles the night mode off or on.
+     *
+     * @param bool $State
+     * false    = off
+     * true     = on
+     *
+     * @return bool
+     * false    = an error occurred
+     * true     = successful
+     */
+    public function ToggleNightMode(bool $State): bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($this->CheckMaintenanceMode()) {
-            return;
+            return false;
         }
-        $use = $this->ReadPropertyBoolean('EnableNightMode');
-        if ($use) {
-            $this->SetValue('NightMode', $State);
-        }
+        $actualNightMode = $this->GetValue('NightMode');
+        $this->SetValue('NightMode', $State);
+        $result = true;
+        //Night mode off
         if (!$State) {
-            $this->UpdateState();
-        }
-        if ($State) {
-            $use = $this->ReadPropertyBoolean('EnableSignalling');
-            if ($use) {
-                $this->SetValue('Signalling', false);
+            $result = $this->UpdateState();
+            if (!$result) {
+                //Revert
+                $this->SetValue('NightMode', $actualNightMode);
             }
-            $this->TriggerSignalling(false);
-            $this->TriggerInvertedSignalling(false);
         }
+        //Night mode on
+        if ($State) {
+            $actualSignalling = $this->GetValue('Signalling');
+            $this->SetValue('Signalling', false);
+            $signalling = $this->TriggerSignalling(false);
+            $invertedSignalling = $this->TriggerInvertedSignalling(false);
+            if (!$signalling || !$invertedSignalling) {
+                $result = false;
+                //Revert value
+                $this->SetValue('Signalling', $actualSignalling);
+                $this->SetValue('NightMode', $actualNightMode);
+            }
+        }
+        return $result;
     }
 
+    /**
+     * Starts the night mode, used by timer.
+     */
     public function StartNightMode(): void
     {
-        $this->WriteAttributeBoolean('NightModeTimer', true);
         $this->ToggleNightMode(true);
         $this->SetNightModeTimer();
     }
 
+    /**
+     * Stops the night mode, used by timer.
+     */
     public function StopNightMode(): void
     {
-        $this->WriteAttributeBoolean('NightModeTimer', false);
         $this->ToggleNightMode(false);
         $this->SetNightModeTimer();
     }
 
-    public function ShowNightModeState(): void
-    {
-        $state = 'Aus';
-        $use = $this->ReadPropertyBoolean('EnableNightMode');
-        if ($use) {
-            if ($this->GetValue('NightMode')) {
-                $state = 'An';
-            }
-        }
-        $nightModeTimer = $this->ReadAttributeBoolean('NightModeTimer');
-        if ($nightModeTimer) {
-            $state = 'An';
-        }
-        echo 'Nachtmodus: ' . $state;
-    }
-
     #################### Private
 
+    /**
+     * Sets the timer interval for the automatic night mode.
+     */
     private function SetNightModeTimer(): void
     {
-        $use = $this->ReadPropertyBoolean('UseNightMode');
+        $use = $this->ReadPropertyBoolean('UseAutomaticNightMode');
         //Start
         $milliseconds = 0;
         if ($use) {
@@ -79,6 +91,13 @@ trait SA1_nightMode
         $this->SetTimerInterval('StopNightMode', $milliseconds);
     }
 
+    /**
+     * Gets the interval for a timer.
+     *
+     * @param string $TimerName
+     *
+     * @return int
+     */
     private function GetInterval(string $TimerName): int
     {
         $timer = json_decode($this->ReadPropertyString($TimerName));
@@ -95,15 +114,16 @@ trait SA1_nightMode
         return ($timestamp - $now) * 1000;
     }
 
+    /**
+     * Checks the state of the automatic night mode.
+     */
     private function CheckNightModeTimer(): void
     {
         $start = $this->GetTimerInterval('StartNightMode');
         $stop = $this->GetTimerInterval('StopNightMode');
         if ($start > $stop) {
-            $this->WriteAttributeBoolean('NightModeTimer', true);
             $this->ToggleNightMode(true);
         } else {
-            $this->WriteAttributeBoolean('NightModeTimer', false);
             $this->ToggleNightMode(false);
         }
     }

@@ -1,9 +1,10 @@
 <?php
 
 /** @noinspection PhpUnused */
+/** @noinspection DuplicatedCode */
 
 /*
- * @module      Statusanzeige 1
+ * @module      Statusanzeige 1 (RequestAction)
  *
  * @prefix      SA1
  *
@@ -43,9 +44,9 @@ class Statusanzeige1 extends IPSModule
         //Never delete this line!
         parent::Create();
         $this->RegisterProperties();
+        $this->RegisterVariables();
         $this->RegisterTimer('StartNightMode', 0, 'SA1_StartNightMode(' . $this->InstanceID . ');');
         $this->RegisterTimer('StopNightMode', 0, 'SA1_StopNightMode(' . $this->InstanceID . ',);');
-        $this->RegisterAttributeBoolean('NightModeTimer', false);
     }
 
     public function Destroy()
@@ -64,7 +65,7 @@ class Statusanzeige1 extends IPSModule
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
         }
-        $this->MaintainVariables();
+        $this->SetOptions();
         $this->RegisterMessages();
         if ($this->CheckMaintenanceMode()) {
             return;
@@ -144,46 +145,6 @@ class Statusanzeige1 extends IPSModule
                     'rowColor' => $rowColor];
             }
         }
-        //Signalling
-        $signalling = json_decode($this->ReadPropertyString('Signalling'));
-        if (!empty($signalling)) {
-            foreach ($signalling as $signal) {
-                $rowColor = '#C0FFC0'; //light green
-                $use = $signal->Use;
-                if (!$use) {
-                    $rowColor = '';
-                }
-                $id = $signal->ID;
-                if ($id == 0 || @!IPS_ObjectExists($id)) {
-                    $rowColor = '#FFC0C0'; //light red
-                }
-                $formData['elements'][3]['items'][1]['values'][] = [
-                    'Use'      => $use,
-                    'ID'       => $id,
-                    'Delay'    => $signal->Delay,
-                    'rowColor' => $rowColor];
-            }
-        }
-        //Inverted signalling
-        $invertedSignalling = json_decode($this->ReadPropertyString('InvertedSignalling'));
-        if (!empty($invertedSignalling)) {
-            foreach ($invertedSignalling as $invertedSignal) {
-                $rowColor = '#C0FFC0'; //light green
-                $use = $invertedSignal->Use;
-                if (!$use) {
-                    $rowColor = '';
-                }
-                $id = $invertedSignal->ID;
-                if ($id == 0 || @!IPS_ObjectExists($id)) {
-                    $rowColor = '#FFC0C0'; //light red
-                }
-                $formData['elements'][3]['items'][3]['values'][] = [
-                    'Use'      => $use,
-                    'ID'       => $id,
-                    'Delay'    => $invertedSignal->Delay,
-                    'rowColor' => $rowColor];
-            }
-        }
         //Registered messages
         $messages = $this->GetMessageList();
         foreach ($messages as $senderID => $messageID) {
@@ -250,43 +211,36 @@ class Statusanzeige1 extends IPSModule
         $this->RegisterPropertyBoolean('MaintenanceMode', false);
         //Functions
         $this->RegisterPropertyBoolean('EnableSignalling', true);
-        $this->RegisterPropertyBoolean('EnableState', false);
         $this->RegisterPropertyBoolean('EnableNightMode', false);
         //States
         $this->RegisterPropertyString('States', '[]');
         //Signalling
-        $this->RegisterPropertyString('Signalling', '[]');
-        $this->RegisterPropertyString('InvertedSignalling', '[]');
-        $this->RegisterPropertyBoolean('UseScript', false);
-        $this->RegisterPropertyInteger('Script', 0);
+        $this->RegisterPropertyInteger('Signalling', 0);
+        $this->RegisterPropertyInteger('SignallingSwitchingDelay', 0);
+        $this->RegisterPropertyInteger('InvertedSignalling', 0);
+        $this->RegisterPropertyInteger('InvertedSignallingSwitchingDelay', 0);
         //Night mode
-        $this->RegisterPropertyBoolean('UseNightMode', false);
+        $this->RegisterPropertyBoolean('UseAutomaticNightMode', false);
         $this->RegisterPropertyString('NightModeStartTime', '{"hour":22,"minute":0,"second":0}');
         $this->RegisterPropertyString('NightModeEndTime', '{"hour":6,"minute":0,"second":0}');
     }
 
-    private function MaintainVariables(): void
+    private function RegisterVariables(): void
     {
         //Signalling
-        $keep = $this->ReadPropertyBoolean('EnableSignalling');
-        $this->MaintainVariable('Signalling', 'Anzeige', 0, '~Switch', 10, $keep);
-        if ($keep) {
-            $this->EnableAction('Signalling');
-            IPS_SetIcon($this->GetIDForIdent('Signalling'), 'Bulb');
-        }
-        //State
-        $keep = $this->ReadPropertyBoolean('EnableState');
-        $this->MaintainVariable('State', 'Status', 0, '~Switch', 20, $keep);
-        if ($keep) {
-            IPS_SetIcon($this->GetIDForIdent('State'), 'Information');
-        }
+        $this->RegisterVAriableBoolean('Signalling', 'Anzeige', '~Switch', 10);
+        $this->EnableAction('Signalling');
+        IPS_SetIcon($this->GetIDForIdent('Signalling'), 'Bulb');
         //Night mode
-        $keep = $this->ReadPropertyBoolean('EnableNightMode');
-        $this->MaintainVariable('NightMode', 'Nachtmodus', 0, '~Switch', 30, $keep);
-        if ($keep) {
-            $this->EnableAction('NightMode');
-            IPS_SetIcon($this->GetIDForIdent('NightMode'), 'Moon');
-        }
+        $this->RegisterVAriableBoolean('NightMode', 'Nachtmodus', '~Switch', 20);
+        $this->EnableAction('NightMode');
+        IPS_SetIcon($this->GetIDForIdent('NightMode'), 'Moon');
+    }
+
+    private function SetOptions(): void
+    {
+        IPS_SetHidden($this->GetIDForIdent('Signalling'), !$this->ReadPropertyBoolean('EnableSignalling'));
+        IPS_SetHidden($this->GetIDForIdent('NightMode'), !$this->ReadPropertyBoolean('EnableNightMode'));
     }
 
     private function CheckMaintenanceMode(): bool

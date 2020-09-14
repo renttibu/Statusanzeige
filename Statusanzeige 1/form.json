@@ -6,7 +6,7 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Mit dieser Instanz kann ein Status angezeigt werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
+          "caption": "Mit dieser Instanz kann ein Status mittels RequestAction angezeigt werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
         },
         {
           "type": "Label",
@@ -68,11 +68,6 @@
         },
         {
           "type": "CheckBox",
-          "name": "EnableState",
-          "caption": "Status (Information)"
-        },
-        {
-          "type": "CheckBox",
           "name": "EnableNightMode",
           "caption": "Nachtmodus (Aus/An)"
         }
@@ -116,36 +111,24 @@
               }
             },
             {
-              "caption": "Auslösender Wert (An)",
+              "caption": "Auslösender Wert",
               "name": "TriggerValue",
-              "width": "200px",
-              "add": 1,
+              "width": "160px",
+              "add": 0,
               "edit": {
                 "type": "Select",
                 "options": [
                   {
-                    "caption": "0, false",
+                    "caption": "0 | false",
                     "value": 0
                   },
                   {
-                    "caption": "1, true",
+                    "caption": "1 | true",
                     "value": 1
                   },
                   {
-                    "caption": "2, true",
+                    "caption": "2",
                     "value": 2
-                  },
-                  {
-                    "caption": "0, 1, false, true",
-                    "value": 3
-                  },
-                  {
-                    "caption": "0, 2, false",
-                    "value": 4
-                  },
-                  {
-                    "caption": "1, 2, true",
-                    "value": 5
                   }
                 ]
               }
@@ -160,112 +143,43 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die Variablen für die Anzeige aus:"
+          "caption": "Bitte wählen Sie die Variable für die Anzeige aus:"
         },
         {
-          "type": "List",
+          "type": "SelectVariable",
           "name": "Signalling",
-          "rowCount": 5,
-          "add": true,
-          "delete": true,
-          "sort": {
-            "column": "ID",
-            "direction": "ascending"
-          },
-          "columns": [
-            {
-              "caption": "Aktiviert",
-              "name": "Use",
-              "width": "100px",
-              "add": true,
-              "edit": {
-                "type": "CheckBox"
-              }
-            },
-            {
-              "caption": "Variable",
-              "name": "ID",
-              "width": "500px",
-              "add": 0,
-              "edit": {
-                "type": "SelectVariable"
-              }
-            },
-            {
-              "caption": "Verzögerung",
-              "name": "Delay",
-              "width": "130px",
-              "add": 250,
-              "edit": {
-                "type": "NumberSpinner",
-                "suffix": " ms"
-              }
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte wählen Sie die Variablen für die korrespondierende, invertierte Anzeige aus:"
-        },
-        {
-          "type": "List",
-          "name": "InvertedSignalling",
-          "rowCount": 5,
-          "add": true,
-          "delete": true,
-          "sort": {
-            "column": "ID",
-            "direction": "ascending"
-          },
-          "columns": [
-            {
-              "caption": "Aktiviert",
-              "name": "Use",
-              "width": "100px",
-              "add": true,
-              "edit": {
-                "type": "CheckBox"
-              }
-            },
-            {
-              "caption": "Variable",
-              "name": "ID",
-              "width": "500px",
-              "add": 0,
-              "edit": {
-                "type": "SelectVariable"
-              }
-            },
-            {
-              "caption": "Verzögerung",
-              "name": "Delay",
-              "width": "130px",
-              "add": 250,
-              "edit": {
-                "type": "NumberSpinner",
-                "suffix": " ms"
-              }
-            }
-          ]
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte wählen Sie aus, ob alternativ ein Skript ausgeführt werden soll:"
-        },
-        {
-          "type": "CheckBox",
-          "name": "UseScript",
-          "caption": "Skript ausführen"
-        },
-        {
-          "type": "SelectScript",
-          "name": "Script",
-          "caption": "Skript",
+          "caption": "Anzeige",
           "width": "600px"
         },
         {
           "type": "Label",
-          "caption": "Wird ein Skript verwendet, so wird der Status dem Skript mit $_IPS['State'] übergeben."
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "SignallingSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "ms"
+        },
+        {
+          "type": "Label",
+          "caption": "\n\nBitte wählen Sie die Variable für die korrespondierende, invertierte Anzeige aus:"
+        },
+        {
+          "type": "SelectVariable",
+          "name": "InvertedSignalling",
+          "caption": "Anzeige",
+          "width": "600px"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "InvertedSignallingSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "ms"
         }
       ]
     },
@@ -279,7 +193,7 @@
         },
         {
           "type": "CheckBox",
-          "name": "UseNightMode",
+          "name": "UseAutomaticNightMode",
           "caption": "Nachtmodus verwenden"
         },
         {
@@ -399,28 +313,6 @@
               "width": "260px"
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Skript",
-      "items": [
-        {
-          "type": "Button",
-          "caption": "Skript erstellen",
-          "onClick": "SA1_CreateScript($id);"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Nachtmodus",
-      "items": [
-        {
-          "type": "Button",
-          "caption": "Status anzeigen",
-          "onClick": "SA1_ShowNightModeState($id);"
         }
       ]
     },
