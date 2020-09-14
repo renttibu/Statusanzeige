@@ -76,7 +76,7 @@ trait SA3_control
      *
      * @throws Exception
      */
-    public function UpdateColor(): bool
+    public function UpdateLightUnit(): bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($this->CheckMaintenanceMode()) {
@@ -107,6 +107,7 @@ trait SA3_control
             $this->SendDebug(__FUNCTION__, 'Array: ' . json_encode($groups), 0);
             $colorList = [0 => 'Aus', 1 => 'Blau', 2 => 'Grün', 3 => 'Türkis', 4 => 'Rot', 5 => 'Violett', 6 => 'Gelb', 7 => 'Weiß'];
             $colorName = 'Wert nicht vorhanden!';
+            $lastBrightness = $this->ReadAttributeInteger('LastBrightness');
             //Group 0
             $key = array_search(0, array_column($groups, 'group'));
             if (is_int($key)) {
@@ -125,9 +126,10 @@ trait SA3_control
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 0, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
                     $setColor = $this->SetColor($color);
-                    $setBrightness = true;
                     if ($brightness != -1) {
                         $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -154,9 +156,10 @@ trait SA3_control
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 1, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
                     $setColor = $this->SetColor($color);
-                    $setBrightness = true;
                     if ($brightness != -1) {
                         $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -183,9 +186,10 @@ trait SA3_control
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 2, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
                     $setColor = $this->SetColor($color);
-                    $setBrightness = true;
                     if ($brightness != -1) {
                         $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -212,9 +216,10 @@ trait SA3_control
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 3, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
                     $setColor = $this->SetColor($color);
-                    $setBrightness = true;
                     if ($brightness != -1) {
                         $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -241,9 +246,10 @@ trait SA3_control
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 4, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
                     $setColor = $this->SetColor($color);
-                    $setBrightness = true;
                     if ($brightness != -1) {
                         $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -270,9 +276,10 @@ trait SA3_control
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 5, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
                     $setColor = $this->SetColor($color);
-                    $setBrightness = true;
                     if ($brightness != -1) {
                         $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -299,9 +306,10 @@ trait SA3_control
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 6, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
                     $setColor = $this->SetColor($color);
-                    $setBrightness = true;
                     if ($brightness != -1) {
                         $setBrightness = $this->SetBrightness($brightness);
+                    } else {
+                        $setBrightness = $this->SetBrightness($lastBrightness);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -320,9 +328,10 @@ trait SA3_control
                 $brightness = $groups[$key]['brightness'];
                 $this->SendDebug(__FUNCTION__, 'Gruppe: 7, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
                 $setColor = $this->SetColor($color);
-                $setBrightness = true;
                 if ($brightness != -1) {
                     $setBrightness = $this->SetBrightness($brightness);
+                } else {
+                    $setBrightness = $this->SetBrightness($lastBrightness);
                 }
                 if ($setColor || $setBrightness) {
                     return true;

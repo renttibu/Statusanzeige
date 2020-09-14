@@ -44,14 +44,17 @@ trait SA3_nightMode
                     }
                 }
                 if ($triggerVariables) {
-                    $this->UpdateColor();
+                    $result = $this->UpdateLightUnit();
                 }
             }
             if (!$triggerVariables) {
                 $lastColor = $this->ReadAttributeInteger('LastColor');
-                $this->SetColor($lastColor);
+                $resultColor = $this->SetColor($lastColor);
                 $lastBrightness = $this->ReadAttributeInteger('LastBrightness');
-                $this->SetBrightness($lastBrightness);
+                $resultBrightness = $this->SetBrightness($lastBrightness);
+                if ($resultColor && $resultBrightness) {
+                    $result = true;
+                }
             }
         }
         //Night mode on
@@ -59,6 +62,7 @@ trait SA3_nightMode
             // Color
             $actualColor = $this->GetValue('Color');
             $color = $this->ReadPropertyInteger('NightModeColor');
+            $lightUnitNewColor = true;
             if ($color != -1) {
                 $this->SetValue('Color', $color);
                 $lightUnitNewColor = $this->SetDeviceColor($color);
@@ -75,6 +79,9 @@ trait SA3_nightMode
             if (!$lightUnitNewBrightness) {
                 //Revert
                 $this->SetValue('Brightness', $actualBrightness);
+            }
+            if ($lightUnitNewColor && $lightUnitNewBrightness) {
+                $result = true;
             }
         }
         return $result;

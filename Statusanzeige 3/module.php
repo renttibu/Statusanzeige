@@ -30,6 +30,7 @@ include_once __DIR__ . '/helper/autoload.php';
 class Statusanzeige3 extends IPSModule
 {
     //Helper
+    use SA3_backupRestore;
     use SA3_control;
     use SA3_nightMode;
 
@@ -100,9 +101,18 @@ class Statusanzeige3 extends IPSModule
                 }
                 //Trigger action
                 if ($Data[1]) {
-                    //Light unit states
-                    $scriptText = 'SA3_UpdateColor(' . $this->InstanceID . ');';
-                    IPS_RunScriptText($scriptText);
+                    //Trigger variables
+                    $triggerVariables = json_decode($this->ReadPropertyString('TriggerVariables'), true);
+                    if (!empty($triggerVariables)) {
+                        $key = array_search($SenderID, array_column($triggerVariables, 'ID'));
+                        if (is_int($key)) {
+                            $use = $triggerVariables[$key]['Use'];
+                            if ($use) {
+                                $scriptText = 'SA3_UpdateLightUnit(' . $this->InstanceID . ');';
+                                IPS_RunScriptText($scriptText);
+                            }
+                        }
+                    }
                 }
                 break;
 
@@ -171,7 +181,7 @@ class Statusanzeige3 extends IPSModule
                 default:
                     $messageDescription = 'keine Bezeichnung';
             }
-            $formData['actions'][0]['items'][0]['values'][] = [
+            $formData['actions'][1]['items'][0]['values'][] = [
                 'SenderID'                                              => $senderID,
                 'SenderName'                                            => $senderName,
                 'MessageID'                                             => $messageID,
@@ -185,9 +195,9 @@ class Statusanzeige3 extends IPSModule
         if (array_key_exists($lastColor, $colorList)) {
             $colorName = $colorList[$lastColor];
         }
-        $formData['actions'][1]['items'][0]['caption'] = 'Letzte Farbe: ' . $lastColor . ', ' . $colorName;
+        $formData['actions'][2]['items'][0]['caption'] = 'Letzte Farbe: ' . $lastColor . ', ' . $colorName;
         $lastBrightness = $this->ReadAttributeInteger('LastBrightness');
-        $formData['actions'][1]['items'][1]['caption'] = 'Letzte Helligkeit: ' . $lastBrightness . ' %';
+        $formData['actions'][2]['items'][1]['caption'] = 'Letzte Helligkeit: ' . $lastBrightness . ' %';
         return json_encode($formData);
     }
 
