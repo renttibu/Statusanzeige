@@ -118,7 +118,7 @@ class Statusanzeige2 extends IPSModule
                         }
                     }
                     //Lower light unit
-                    $lowerLightUnitStates = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'), true);
+                    $lowerLightUnitStates = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'));
                     if (!empty($lowerLightUnitStates)) {
                         foreach ($lowerLightUnitStates as $lowerLightUnitState) {
                             $id = $lowerLightUnitState->ID;
