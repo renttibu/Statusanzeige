@@ -126,7 +126,7 @@ class Statusanzeige2 extends IPSModule
                                 if ($id != 0 && @IPS_ObjectExists($id)) {
                                     $use = $lowerLightUnitState->Use;
                                     if ($use) {
-                                        $scriptText = 'SA2_UpdateLightUnit(' . $this->InstanceID . ', 0);';
+                                        $scriptText = 'SA2_UpdateLightUnit(' . $this->InstanceID . ', 1);';
                                         IPS_RunScriptText($scriptText);
                                     }
                                 }
