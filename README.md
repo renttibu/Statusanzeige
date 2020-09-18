@@ -10,7 +10,10 @@
 Folgende Module beinhaltet dieses Repository:
 
 - __Statusanzeige 1__ ([Dokumentation](Statusanzeige%201))  
+    Dieses Modul kann eine Variable zur Anzeige eines Status schalten.
 
-- __Statusanzeige 2__ ([Dokumentation](Statusanzeige%202))
+- __Statusanzeige 2__ ([Dokumentation](Statusanzeige%202))  
+    Dieses Modul kann verschiedene Status mittels einer HmIP-BSL Leuchteinheit anzeigen.
 
-- __Statusanzeige 3__ ([Dokumentation](Statusanzeige%203))
+- __Statusanzeige 3__ ([Dokumentation](Statusanzeige%203))  
+    Dieses Modul kann verschiedene Status mittels einer HmIP-MP3P Leuchteinheit anzeigen.

@@ -6,7 +6,7 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Mit dieser Instanz kann ein Status mittels RequestAction angezeigt werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
+          "caption": "Mit dieser Instanz kann eine Variable zur Statusanzeige geschaltet werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
         },
         {
           "type": "Label",
@@ -75,15 +75,61 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Status",
+      "caption": "Anzeige",
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die Variablen für den Status (z.B. System-, Alarm-, Tür-, Fenster-, Batterie-, Sabotagestatus) aus:"
+          "caption": "Bitte wählen Sie die zu schaltende Variable für die Anzeige aus:"
+        },
+        {
+          "type": "SelectVariable",
+          "name": "SignallingVariable",
+          "caption": "Variable",
+          "width": "600px"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "SignallingSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "ms"
+        },
+        {
+          "type": "Label",
+          "caption": "\n\nBitte wählen Sie die zu schaltende Variable für die korrespondierende, invertierte Anzeige aus:"
+        },
+        {
+          "type": "SelectVariable",
+          "name": "InvertedSignallingVariable",
+          "caption": "Anzeige",
+          "width": "600px"
+        },
+        {
+          "type": "Label",
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "InvertedSignallingSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "ms"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Auslöser",
+      "items": [
+        {
+          "type": "Label",
+          "caption": "Bitte fügen Sie die auslösenden Variablen (z.B. System-, Alarm-, Tür-, Fenster-, Batterie-, Sabotagestatus) hinzu:"
         },
         {
           "type": "List",
-          "name": "States",
+          "name": "TriggerVariables",
           "rowCount": 5,
           "add": true,
           "delete": true,
@@ -106,6 +152,7 @@
               "name": "ID",
               "width": "500px",
               "add": 0,
+              "onClick": "echo 'ID: ' . $TriggerVariables['ID'];",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -139,62 +186,16 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Anzeige",
-      "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die Variable für die Anzeige aus:"
-        },
-        {
-          "type": "SelectVariable",
-          "name": "Signalling",
-          "caption": "Anzeige",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "SignallingSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "ms"
-        },
-        {
-          "type": "Label",
-          "caption": "\n\nBitte wählen Sie die Variable für die korrespondierende, invertierte Anzeige aus:"
-        },
-        {
-          "type": "SelectVariable",
-          "name": "InvertedSignalling",
-          "caption": "Anzeige",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "InvertedSignallingSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "ms"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
       "caption": "Nachtmodus",
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie aus, ob Sie den automatischen Nachtmodus verwenden wollen:"
+          "caption": "Bitte wählen Sie aus, ob Sie einen automatischen Nachtmodus verwenden wollen:"
         },
         {
           "type": "CheckBox",
           "name": "UseAutomaticNightMode",
-          "caption": "Nachtmodus verwenden"
+          "caption": "Automatischer Nachtmodus"
         },
         {
           "type": "Label",
@@ -294,8 +295,7 @@
             {
               "caption": "Sender ID",
               "name": "SenderID",
-              "width": "150px",
-              "onClick": "echo $RegisteredMessages['SenderID'];"
+              "width": "150px"
             },
             {
               "caption": "Sender Name",

@@ -6,7 +6,7 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Mit dieser Instanz kann eine HmIP-BSL Leuchteinheit gesteuert werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
+          "caption": "Mit dieser Instanz kann eine Statusanzeige mittels einer Leuchteinheit (HmIP-BSL) gesteuert werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
         },
         {
           "type": "Label",
@@ -99,7 +99,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden für die obere Leuchteinheit an:"
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
         },
         {
           "type": "NumberSpinner",
@@ -109,7 +109,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte wählen Sie die auslösenden Variablen für die obere Leuchteinheit aus:"
+          "caption": "\nBitte fügen Sie die auslösenden Variablen hinzu:"
         },
         {
           "type": "List",
@@ -235,6 +235,7 @@
               "name": "ID",
               "width": "600px",
               "add": 0,
+              "onClick": "echo 'ID: ' . $UpperLightUnitTriggerVariables['ID'];",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -282,7 +283,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden für die untere Leuchteinheit an:"
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
         },
         {
           "type": "NumberSpinner",
@@ -292,7 +293,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte wählen Sie die auslösenden Variablen für die untere Leuchteinheit aus:"
+          "caption": "\nBitte fügen Sie die auslösenden Variablen hinzu:"
         },
         {
           "type": "List",
@@ -418,6 +419,7 @@
               "name": "ID",
               "width": "600px",
               "add": 0,
+              "onClick": "echo 'ID: ' . $LowerLightUnitTriggerVariables['ID'];",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -455,7 +457,7 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die Farbe für die obere Leuchteinheit aus:"
+          "caption": "Bitte wählen Sie eine Farbe für die obere Leuchteinheit aus:"
         },
         {
           "type": "Select",
@@ -502,7 +504,7 @@
         },
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die Farbe für die untere Leuchteinheit aus:"
+          "caption": "\nBitte wählen Sie eine Farbe für die untere Leuchteinheit aus:"
         },
         {
           "type": "Select",
@@ -561,12 +563,12 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte wählen Sie aus, ob Sie den automatischen Nachtmodus verwenden wollen:"
+          "caption": "\nBitte wählen Sie aus, ob Sie einen automatischen Nachtmodus verwenden wollen:"
         },
         {
           "type": "CheckBox",
           "name": "UseAutomaticNightMode",
-          "caption": "Nachtmodus verwenden"
+          "caption": "Automatischer Nachtmodus"
         },
         {
           "type": "Label",
@@ -666,8 +668,7 @@
             {
               "caption": "Sender ID",
               "name": "SenderID",
-              "width": "150px",
-              "onClick": "echo $RegisteredMessages['SenderID'];"
+              "width": "150px"
             },
             {
               "caption": "Sender Name",

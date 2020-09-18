@@ -6,7 +6,7 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Mit dieser Instanz kann eine HmIP-MP3P Leuchteinheit gesteuert werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
+          "caption": "Mit dieser Instanz kann eine Statusanzeige mittels einer Leuchteinheit (HmIP-MP3P) gesteuert werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
         },
         {
           "type": "Label",
@@ -94,7 +94,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden für die Leuchteinheit an:"
+          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
         },
         {
           "type": "NumberSpinner",
@@ -110,7 +110,7 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die auslösenden Variablen aus:"
+          "caption": "Bitte fügen Sie die auslösenden Variablen hinzu:"
         },
         {
           "type": "List",
@@ -236,6 +236,7 @@
               "name": "ID",
               "width": "600px",
               "add": 0,
+              "onClick": "echo 'ID: ' . $TriggerVariables['ID'];",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -273,7 +274,7 @@
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die Farbe für den Nachtmodus aus:"
+          "caption": "Bitte wählen Sie eine Farbe für den Nachtmodus aus:"
         },
         {
           "type": "Select",
@@ -320,7 +321,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte geben Sie die Helligkeit für den Nachtmodus an:"
+          "caption": "\nBitte geben Sie eine Helligkeit für den Nachtmodus an:"
         },
         {
           "type": "NumberSpinner",
@@ -332,12 +333,12 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte wählen Sie aus, ob Sie den automatischen Nachtmodus verwenden wollen:"
+          "caption": "\nBitte wählen Sie aus, ob Sie einen automatischen Nachtmodus verwenden wollen:"
         },
         {
           "type": "CheckBox",
           "name": "UseAutomaticNightMode",
-          "caption": "Nachtmodus verwenden"
+          "caption": "Automatischer Nachtmodus"
         },
         {
           "type": "Label",
@@ -437,8 +438,7 @@
             {
               "caption": "Sender ID",
               "name": "SenderID",
-              "width": "150px",
-              "onClick": "echo $RegisteredMessages['SenderID'];"
+              "width": "150px"
             },
             {
               "caption": "Sender Name",

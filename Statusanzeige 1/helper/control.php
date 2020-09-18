@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 trait SA1_control
 {
-    #################### Public
-
     /**
      * Toggles the signalling off or on.
      *
@@ -16,26 +14,33 @@ trait SA1_control
      * false    = off
      * true     = on
      *
+     * @param bool $UseSwitchingDelay
+     * false    = no delay
+     * true     = use delay
+     *
      * @return bool
      * false    = an error occurred
      * true     = successful
      *
      * @throws Exception
      */
-    public function ToggleSignalling(bool $State): bool
+    public function ToggleSignalling(bool $State, bool $UseSwitchingDelay = false): bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($this->CheckMaintenanceMode()) {
             return false;
         }
+        if ($this->CheckNightMode()) {
+            return false;
+        }
         $actualValue = $this->GetValue('Signalling');
         $this->SetValue('Signalling', $State);
         if ($State) {
-            $invertedSignalling = $this->TriggerInvertedSignalling(!$State);
-            $signalling = $this->TriggerSignalling($State);
+            $invertedSignalling = $this->TriggerInvertedSignalling(!$State, $UseSwitchingDelay);
+            $signalling = $this->TriggerSignalling($State, $UseSwitchingDelay);
         } else {
-            $signalling = $this->TriggerSignalling($State);
-            $invertedSignalling = $this->TriggerInvertedSignalling(!$State);
+            $signalling = $this->TriggerSignalling($State, $UseSwitchingDelay);
+            $invertedSignalling = $this->TriggerInvertedSignalling(!$State, $UseSwitchingDelay);
         }
         $result = true;
         if (!$signalling || !$invertedSignalling) {
@@ -61,11 +66,11 @@ trait SA1_control
         if ($this->CheckMaintenanceMode()) {
             return false;
         }
-        if ($this->GetValue('NightMode')) {
+        if ($this->CheckNightMode()) {
             return false;
         }
         $state = $this->GetState();
-        return $this->ToggleSignalling($state);
+        return $this->ToggleSignalling($state, true);
     }
 
     #################### Private
@@ -83,7 +88,7 @@ trait SA1_control
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         $state = false;
-        $variables = json_decode($this->ReadPropertyString('States'));
+        $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
                 if ($variable->Use) {
@@ -108,22 +113,28 @@ trait SA1_control
      * false    = off
      * true     = on
      *
+     * @param bool $UseSwitchingDelay
+     * false    = no delay
+     * true     = use delay
+     *
      * @return bool
      * false    = an error occurred
      * true     = successful
      *
      * @throws Exception
      */
-    private function TriggerSignalling(bool $State): bool
+    private function TriggerSignalling(bool $State, bool $UseSwitchingDelay = false): bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($this->CheckMaintenanceMode()) {
             return false;
         }
         $result = true;
-        $id = $this->ReadPropertyInteger('Signalling');
+        $id = $this->ReadPropertyInteger('SignallingVariable');
         if ($id != 0 && @IPS_ObjectExists($id)) {
-            IPS_Sleep($this->ReadPropertyInteger('SignallingSwitchingDelay'));
+            if ($UseSwitchingDelay) {
+                IPS_Sleep($this->ReadPropertyInteger('SignallingSwitchingDelay'));
+            }
             $result = @RequestAction($id, $State);
             if (!$result) {
                 IPS_Sleep(self::DELAY_MILLISECONDS);
@@ -147,22 +158,28 @@ trait SA1_control
      * false    = off
      * true     = on
      *
+     * @param bool $UseSwitchingDelay
+     * false    = no delay
+     * true     = use delay
+     *
      * @return bool
      * false    = an error occurred
      * true     = successful
      *
      * @throws Exception
      */
-    private function TriggerInvertedSignalling(bool $State): bool
+    private function TriggerInvertedSignalling(bool $State, bool $UseSwitchingDelay = false): bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($this->CheckMaintenanceMode()) {
             return false;
         }
         $result = true;
-        $id = $this->ReadPropertyInteger('InvertedSignalling');
+        $id = $this->ReadPropertyInteger('InvertedSignallingVariable');
         if ($id != 0 && @IPS_ObjectExists($id)) {
-            IPS_Sleep($this->ReadPropertyInteger('InvertedSignallingSwitchingDelay'));
+            if ($UseSwitchingDelay) {
+                IPS_Sleep($this->ReadPropertyInteger('InvertedSignallingSwitchingDelay'));
+            }
             $result = @RequestAction($id, $State);
             if (!$result) {
                 IPS_Sleep(self::DELAY_MILLISECONDS);

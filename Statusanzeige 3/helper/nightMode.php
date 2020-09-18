@@ -1,15 +1,13 @@
 <?php
 
 /** @noinspection PhpUnused */
-/** @noinspection PhpUndefinedMethodInspection */
+/** @noinspection PhpUnusedPrivateMethodInspection */
 /** @noinspection DuplicatedCode */
 
 declare(strict_types=1);
 
 trait SA3_nightMode
 {
-    #################### Public
-
     /**
      * Toggles the night mode off or on.
      *
@@ -162,5 +160,23 @@ trait SA3_nightMode
         } else {
             $this->ToggleNightMode(false);
         }
+    }
+
+    /**
+     * Checks if the night mode is off or on.
+     *
+     * @return bool
+     * false    = off
+     * true     = on
+     */
+    private function CheckNightMode(): bool
+    {
+        $nightMode = boolval($this->GetValue('NightMode'));
+        if ($nightMode) {
+            $message = 'Abbruch, der Nachtmodus ist aktiv!';
+            $this->SendDebug(__FUNCTION__, $message, 0);
+            $this->LogMessage('ID ' . $this->InstanceID . ', ' . __FUNCTION__ . ', ' . $message, KL_WARNING);
+        }
+        return $nightMode;
     }
 }

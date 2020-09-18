@@ -4,7 +4,7 @@
 /** @noinspection DuplicatedCode */
 
 /*
- * @module      Statusanzeige 1 (RequestAction)
+ * @module      Statusanzeige 1 (Variable)
  *
  * @prefix      SA1
  *
@@ -124,22 +124,22 @@ class Statusanzeige1 extends IPSModule
         $formData['elements'][0]['items'][3]['caption'] = "Version:\t\t\t" . $moduleInfo['version'];
         $formData['elements'][0]['items'][4]['caption'] = "Datum:\t\t\t" . $moduleInfo['date'];
         $formData['elements'][0]['items'][5]['caption'] = "Uhrzeit:\t\t\t" . $moduleInfo['time'];
-        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'];
+        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'] . ', Normen Thiel';
         $formData['elements'][0]['items'][7]['caption'] = "Präfix:\t\t\tSA1";
-        //States
-        $states = json_decode($this->ReadPropertyString('States'));
-        if (!empty($states)) {
-            foreach ($states as $state) {
+        //Trigger
+        $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
+        if (!empty($variables)) {
+            foreach ($variables as $variable) {
                 $rowColor = '#C0FFC0'; //light green
-                $use = $state->Use;
+                $use = $variable->Use;
                 if (!$use) {
                     $rowColor = '';
                 }
-                $id = $state->ID;
+                $id = $variable->ID;
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; //light red
                 }
-                $formData['elements'][2]['items'][1]['values'][] = [
+                $formData['elements'][3]['items'][1]['values'][] = [
                     'Use'      => $use,
                     'ID'       => $id,
                     'rowColor' => $rowColor];
@@ -211,14 +211,14 @@ class Statusanzeige1 extends IPSModule
         $this->RegisterPropertyBoolean('MaintenanceMode', false);
         //Functions
         $this->RegisterPropertyBoolean('EnableSignalling', true);
-        $this->RegisterPropertyBoolean('EnableNightMode', false);
-        //States
-        $this->RegisterPropertyString('States', '[]');
+        $this->RegisterPropertyBoolean('EnableNightMode', true);
         //Signalling
-        $this->RegisterPropertyInteger('Signalling', 0);
+        $this->RegisterPropertyInteger('SignallingVariable', 0);
         $this->RegisterPropertyInteger('SignallingSwitchingDelay', 0);
-        $this->RegisterPropertyInteger('InvertedSignalling', 0);
+        $this->RegisterPropertyInteger('InvertedSignallingVariable', 0);
         $this->RegisterPropertyInteger('InvertedSignallingSwitchingDelay', 0);
+        //Trigger
+        $this->RegisterPropertyString('TriggerVariables', '[]');
         //Night mode
         $this->RegisterPropertyBoolean('UseAutomaticNightMode', false);
         $this->RegisterPropertyString('NightModeStartTime', '{"hour":22,"minute":0,"second":0}');
@@ -228,7 +228,7 @@ class Statusanzeige1 extends IPSModule
     private function RegisterVariables(): void
     {
         //Signalling
-        $this->RegisterVAriableBoolean('Signalling', 'Anzeige', '~Switch', 10);
+        $this->RegisterVariableBoolean('Signalling', 'Anzeige', '~Switch', 10);
         $this->EnableAction('Signalling');
         IPS_SetIcon($this->GetIDForIdent('Signalling'), 'Bulb');
         //Night mode
@@ -272,7 +272,7 @@ class Statusanzeige1 extends IPSModule
             }
         }
         //Register
-        $variables = json_decode($this->ReadPropertyString('States'));
+        $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
                 if ($variable->Use) {

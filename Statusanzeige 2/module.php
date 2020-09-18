@@ -102,26 +102,34 @@ class Statusanzeige2 extends IPSModule
                 //Trigger action
                 if ($Data[1]) {
                     //Upper light unit
-                    $upperLightUnitStates = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'), true);
+                    $upperLightUnitStates = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'));
                     if (!empty($upperLightUnitStates)) {
-                        $key = array_search($SenderID, array_column($upperLightUnitStates, 'ID'));
-                        if (is_int($key)) {
-                            $use = $upperLightUnitStates[$key]['Use'];
-                            if ($use) {
-                                $scriptText = 'SA2_UpdateLightUnit(' . $this->InstanceID . ', 0);';
-                                IPS_RunScriptText($scriptText);
+                        foreach ($upperLightUnitStates as $upperLightUnitState) {
+                            $id = $upperLightUnitState->ID;
+                            if ($SenderID == $id) {
+                                if ($id != 0 && @IPS_ObjectExists($id)) {
+                                    $use = $upperLightUnitState->Use;
+                                    if ($use) {
+                                        $scriptText = 'SA2_UpdateLightUnit(' . $this->InstanceID . ', 0);';
+                                        IPS_RunScriptText($scriptText);
+                                    }
+                                }
                             }
                         }
                     }
                     //Lower light unit
                     $lowerLightUnitStates = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'), true);
                     if (!empty($lowerLightUnitStates)) {
-                        $key = array_search($SenderID, array_column($lowerLightUnitStates, 'ID'));
-                        if (is_int($key)) {
-                            $use = $lowerLightUnitStates[$key]['Use'];
-                            if ($use) {
-                                $scriptText = 'SA2_UpdateLightUnit(' . $this->InstanceID . ', 1);';
-                                IPS_RunScriptText($scriptText);
+                        foreach ($lowerLightUnitStates as $lowerLightUnitState) {
+                            $id = $lowerLightUnitState->ID;
+                            if ($SenderID == $id) {
+                                if ($id != 0 && @IPS_ObjectExists($id)) {
+                                    $use = $lowerLightUnitState->Use;
+                                    if ($use) {
+                                        $scriptText = 'SA2_UpdateLightUnit(' . $this->InstanceID . ', 0);';
+                                        IPS_RunScriptText($scriptText);
+                                    }
+                                }
                             }
                         }
                     }
@@ -148,7 +156,7 @@ class Statusanzeige2 extends IPSModule
         $formData['elements'][0]['items'][3]['caption'] = "Version:\t\t\t" . $moduleInfo['version'];
         $formData['elements'][0]['items'][4]['caption'] = "Datum:\t\t\t" . $moduleInfo['date'];
         $formData['elements'][0]['items'][5]['caption'] = "Uhrzeit:\t\t\t" . $moduleInfo['time'];
-        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'];
+        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'] . ', Normen Thiel';
         $formData['elements'][0]['items'][7]['caption'] = "Präfix:\t\t\tSA2";
         //Trigger variables
         $variables = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'));

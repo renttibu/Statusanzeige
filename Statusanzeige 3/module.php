@@ -102,17 +102,8 @@ class Statusanzeige3 extends IPSModule
                 //Trigger action
                 if ($Data[1]) {
                     //Trigger variables
-                    $triggerVariables = json_decode($this->ReadPropertyString('TriggerVariables'), true);
-                    if (!empty($triggerVariables)) {
-                        $key = array_search($SenderID, array_column($triggerVariables, 'ID'));
-                        if (is_int($key)) {
-                            $use = $triggerVariables[$key]['Use'];
-                            if ($use) {
-                                $scriptText = 'SA3_UpdateLightUnit(' . $this->InstanceID . ');';
-                                IPS_RunScriptText($scriptText);
-                            }
-                        }
-                    }
+                    $scriptText = 'SA3_UpdateLightUnit(' . $this->InstanceID . ');';
+                    IPS_RunScriptText($scriptText);
                 }
                 break;
 
@@ -136,7 +127,7 @@ class Statusanzeige3 extends IPSModule
         $formData['elements'][0]['items'][3]['caption'] = "Version:\t\t\t" . $moduleInfo['version'];
         $formData['elements'][0]['items'][4]['caption'] = "Datum:\t\t\t" . $moduleInfo['date'];
         $formData['elements'][0]['items'][5]['caption'] = "Uhrzeit:\t\t\t" . $moduleInfo['time'];
-        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'];
+        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'] . ', Normen Thiel';
         $formData['elements'][0]['items'][7]['caption'] = "Präfix:\t\t\tSA3";
         //Trigger variables
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));

@@ -7,8 +7,6 @@ declare(strict_types=1);
 
 trait SA2_control
 {
-    #################### Public
-
     /**
      * Sets the color.
      *
@@ -26,19 +24,26 @@ trait SA2_control
      * 6    = yellow
      * 7    = white
      *
+     * @param bool $UseSwitchingDelay
+     * false    = no delay
+     * true     = use delay
+     *
      * @return bool
      * false    = an error occurred
      * true     = successful
      *
      * @throws Exception
      */
-    public function SetColor(int $LightUnit, int $Color): bool
+    public function SetColor(int $LightUnit, int $Color, bool $UseSwitchingDelay = false): bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($this->CheckMaintenanceMode()) {
             return false;
         }
-        $setColor = $this->SetDeviceColor($LightUnit, $Color);
+        if ($this->CheckNightMode()) {
+            return false;
+        }
+        $setColor = $this->SetDeviceColor($LightUnit, $Color, $UseSwitchingDelay);
         if ($setColor) {
             $attribute = 'UpperLightUnitLastColor';
             if ($LightUnit == 1) {
@@ -55,19 +60,26 @@ trait SA2_control
      *
      * @param int $Brightness
      *
+     * @param bool $UseSwitchingDelay
+     * false    = no delay
+     * true     = use delay
+     *
      * @return bool
      * false    = an error occurred
      * true     = successful
      *
      * @throws Exception
      */
-    public function SetBrightness(int $Brightness): bool
+    public function SetBrightness(int $Brightness, bool $UseSwitchingDelay = false): bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
         if ($this->CheckMaintenanceMode()) {
             return false;
         }
-        $setBrightness = $this->SetDeviceBrightness($Brightness);
+        if ($this->CheckNightMode()) {
+            return false;
+        }
+        $setBrightness = $this->SetDeviceBrightness($Brightness, $UseSwitchingDelay);
         if ($setBrightness) {
             $this->WriteAttributeInteger('LastBrightness', $Brightness);
             $this->UpdateParameter();
@@ -91,7 +103,7 @@ trait SA2_control
         if ($this->CheckMaintenanceMode()) {
             return $result;
         }
-        if ($this->GetValue('NightMode')) {
+        if ($this->CheckNightMode()) {
             return $result;
         }
         $upperLightUnit = $this->UpdateLightUnit(0);
@@ -121,7 +133,7 @@ trait SA2_control
         if ($this->CheckMaintenanceMode()) {
             return false;
         }
-        if ($this->GetValue('NightMode')) {
+        if ($this->CheckNightMode()) {
             return false;
         }
         $unit = 'UpperLightUnit';
@@ -168,11 +180,11 @@ trait SA2_control
                     }
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 0, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
-                    $setColor = $this->SetColor($LightUnit, $color);
+                    $setColor = $this->SetColor($LightUnit, $color, true);
                     if ($brightness != -1) {
-                        $setBrightness = $this->SetBrightness($brightness);
+                        $setBrightness = $this->SetBrightness($brightness, true);
                     } else {
-                        $setBrightness = $this->SetBrightness($lastBrightness);
+                        $setBrightness = $this->SetBrightness($lastBrightness, true);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -198,11 +210,11 @@ trait SA2_control
                     }
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 1, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
-                    $setColor = $this->SetColor($LightUnit, $color);
+                    $setColor = $this->SetColor($LightUnit, $color, true);
                     if ($brightness != -1) {
-                        $setBrightness = $this->SetBrightness($brightness);
+                        $setBrightness = $this->SetBrightness($brightness, true);
                     } else {
-                        $setBrightness = $this->SetBrightness($lastBrightness);
+                        $setBrightness = $this->SetBrightness($lastBrightness, true);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -228,11 +240,11 @@ trait SA2_control
                     }
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 2, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
-                    $setColor = $this->SetColor($LightUnit, $color);
+                    $setColor = $this->SetColor($LightUnit, $color, true);
                     if ($brightness != -1) {
-                        $setBrightness = $this->SetBrightness($brightness);
+                        $setBrightness = $this->SetBrightness($brightness, true);
                     } else {
-                        $setBrightness = $this->SetBrightness($lastBrightness);
+                        $setBrightness = $this->SetBrightness($lastBrightness, true);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -258,11 +270,11 @@ trait SA2_control
                     }
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 3, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
-                    $setColor = $this->SetColor($LightUnit, $color);
+                    $setColor = $this->SetColor($LightUnit, $color, true);
                     if ($brightness != -1) {
-                        $setBrightness = $this->SetBrightness($brightness);
+                        $setBrightness = $this->SetBrightness($brightness, true);
                     } else {
-                        $setBrightness = $this->SetBrightness($lastBrightness);
+                        $setBrightness = $this->SetBrightness($lastBrightness, true);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -288,11 +300,11 @@ trait SA2_control
                     }
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 4, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
-                    $setColor = $this->SetColor($LightUnit, $color);
+                    $setColor = $this->SetColor($LightUnit, $color, true);
                     if ($brightness != -1) {
-                        $setBrightness = $this->SetBrightness($brightness);
+                        $setBrightness = $this->SetBrightness($brightness, true);
                     } else {
-                        $setBrightness = $this->SetBrightness($lastBrightness);
+                        $setBrightness = $this->SetBrightness($lastBrightness, true);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -318,11 +330,11 @@ trait SA2_control
                     }
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 5, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
-                    $setColor = $this->SetColor($LightUnit, $color);
+                    $setColor = $this->SetColor($LightUnit, $color, true);
                     if ($brightness != -1) {
-                        $setBrightness = $this->SetBrightness($brightness);
+                        $setBrightness = $this->SetBrightness($brightness, true);
                     } else {
-                        $setBrightness = $this->SetBrightness($lastBrightness);
+                        $setBrightness = $this->SetBrightness($lastBrightness, true);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -348,11 +360,11 @@ trait SA2_control
                     }
                     $brightness = $groups[$key]['brightness'];
                     $this->SendDebug(__FUNCTION__, 'Gruppe: 6, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
-                    $setColor = $this->SetColor($LightUnit, $color);
+                    $setColor = $this->SetColor($LightUnit, $color, true);
                     if ($brightness != -1) {
-                        $setBrightness = $this->SetBrightness($brightness);
+                        $setBrightness = $this->SetBrightness($brightness, true);
                     } else {
-                        $setBrightness = $this->SetBrightness($lastBrightness);
+                        $setBrightness = $this->SetBrightness($lastBrightness, true);
                     }
                     if ($setColor || $setBrightness) {
                         return true;
@@ -370,11 +382,11 @@ trait SA2_control
                 }
                 $brightness = $groups[$key]['brightness'];
                 $this->SendDebug(__FUNCTION__, 'Gruppe: 7, Farbe: ' . $color . ' - ' . $colorName . ', Helligkeit: ' . $brightness . '%', 0);
-                $setColor = $this->SetColor($LightUnit, $color);
+                $setColor = $this->SetColor($LightUnit, $color, true);
                 if ($brightness != -1) {
-                    $setBrightness = $this->SetBrightness($brightness);
+                    $setBrightness = $this->SetBrightness($brightness, true);
                 } else {
-                    $setBrightness = $this->SetBrightness($lastBrightness);
+                    $setBrightness = $this->SetBrightness($lastBrightness, true);
                 }
                 if ($setColor || $setBrightness) {
                     return true;
@@ -405,13 +417,17 @@ trait SA2_control
      * 6    = yellow
      * 7    = white
      *
+     * @param bool $UseSwitchingDelay
+     * false    = no delay
+     * true     = use delay
+     *
      * @return bool
      * false    = an error occurred
      * true     = successful
      *
      * @throws Exception
      */
-    private function SetDeviceColor(int $LightUnit, int $Color): bool
+    private function SetDeviceColor(int $LightUnit, int $Color, bool $UseSwitchingDelay = false): bool
     {
         $result = false;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -432,7 +448,9 @@ trait SA2_control
         if ($id != 0 && @IPS_ObjectExists($id)) {
             $colorDifference = $this->CheckColorDifference($id, $Color);
             if ($colorDifference) {
-                IPS_Sleep($this->ReadPropertyInteger($unit . 'SwitchingDelay'));
+                if ($UseSwitchingDelay) {
+                    IPS_Sleep($this->ReadPropertyInteger($unit . 'SwitchingDelay'));
+                }
                 $setColor = @HM_WriteValueInteger($id, 'COLOR', $Color);
                 if (!$setColor) {
                     IPS_Sleep(self::DELAY_MILLISECONDS);
@@ -461,13 +479,17 @@ trait SA2_control
      *
      * @param int $Brightness
      *
+     * @param bool $UseSwitchingDelay
+     * false    = no delay
+     * true     = use delay
+     *
      * @return bool
      * false    = an error occurred
      * true     = successful
      *
      * @throws Exception
      */
-    private function SetDeviceBrightness(int $Brightness): bool
+    private function SetDeviceBrightness(int $Brightness, bool $UseSwitchingDelay = false): bool
     {
         $result = false;
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -488,7 +510,9 @@ trait SA2_control
         if ($id != 0 && @IPS_ObjectExists($id)) {
             $BrightnessDifference = $this->CheckBrightnessDifference($id, $Brightness);
             if ($BrightnessDifference) {
-                IPS_Sleep($this->ReadPropertyInteger('UpperLightUnitSwitchingDelay'));
+                if ($UseSwitchingDelay) {
+                    IPS_Sleep($this->ReadPropertyInteger('UpperLightUnitSwitchingDelay'));
+                }
                 $setBrightness = @HM_WriteValueFloat($id, 'LEVEL', $Brightness);
                 if (!$setBrightness) {
                     IPS_Sleep(self::DELAY_MILLISECONDS);
@@ -511,7 +535,9 @@ trait SA2_control
         if ($id != 0 && @IPS_ObjectExists($id)) {
             $BrightnessDifference = $this->CheckBrightnessDifference($id, $Brightness);
             if ($BrightnessDifference) {
-                IPS_Sleep($this->ReadPropertyInteger('LowerLightUnitSwitchingDelay'));
+                if ($UseSwitchingDelay) {
+                    IPS_Sleep($this->ReadPropertyInteger('LowerLightUnitSwitchingDelay'));
+                }
                 $setBrightness = @HM_WriteValueFloat($id, 'LEVEL', $Brightness);
                 if (!$setBrightness) {
                     IPS_Sleep(self::DELAY_MILLISECONDS);
