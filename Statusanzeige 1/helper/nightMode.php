@@ -142,7 +142,6 @@ trait SA1_nightMode
         if ($nightMode) {
             $message = 'Abbruch, der Nachtmodus ist aktiv!';
             $this->SendDebug(__FUNCTION__, $message, 0);
-            $this->LogMessage('ID ' . $this->InstanceID . ', ' . __FUNCTION__ . ', ' . $message, KL_WARNING);
         }
         return $nightMode;
     }
