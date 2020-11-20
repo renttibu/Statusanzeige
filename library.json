@@ -4,9 +4,9 @@
   "name": "Statusanzeige",
   "url": "https://github.com/ubittner/Statusanzeige",
   "compatibility": {
-    "version": "5.2"
+    "version": "5.5"
   },
   "version": "1.00",
-  "build": 2,
-  "date": 1604430273
+  "build": 1,
+  "date": 1605879297
 }

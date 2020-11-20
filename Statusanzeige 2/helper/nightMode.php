@@ -1,8 +1,8 @@
 <?php
 
-/** @noinspection PhpUnused */
 /** @noinspection PhpUnusedPrivateMethodInspection */
 /** @noinspection DuplicatedCode */
+/** @noinspection PhpUnused */
 
 declare(strict_types=1);
 

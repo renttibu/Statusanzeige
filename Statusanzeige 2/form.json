@@ -2,64 +2,16 @@
   "elements": [
     {
       "type": "ExpansionPanel",
-      "caption": "Info",
+      "caption": "Funktionen",
       "items": [
-        {
-          "type": "Label",
-          "caption": "Mit dieser Instanz kann eine Statusanzeige mittels einer Leuchteinheit (HmIP-BSL) gesteuert werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
-        },
-        {
-          "type": "Label",
-          "caption": "ID:"
-        },
-        {
-          "type": "Label",
-          "caption": "Modul:"
-        },
-        {
-          "type": "Label",
-          "caption": "Version:"
-        },
-        {
-          "type": "Label",
-          "caption": "Datum:"
-        },
-        {
-          "type": "Label",
-          "caption": "Uhrzeit:"
-        },
-        {
-          "type": "Label",
-          "caption": "Entwickler:"
-        },
-        {
-          "type": "Label",
-          "caption": "Präfix:"
-        },
-        {
-          "type": "ValidationTextBox",
-          "name": "Note",
-          "caption": "Notiz",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
         {
           "type": "CheckBox",
           "name": "MaintenanceMode",
           "caption": "Wartungsmodus"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Funktionen",
-      "items": [
+        },
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die Funktionen aus, die Sie verwenden wollen:"
+          "caption": " "
         },
         {
           "type": "CheckBox",
@@ -88,33 +40,9 @@
       "caption": "Obere Leuchteinheit",
       "items": [
         {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die Instanz für die obere Leuchteinheit (HmIP-BSL, Kanal 8) aus:"
-        },
-        {
-          "type": "SelectInstance",
-          "name": "UpperLightUnit",
-          "caption": "Obere Leuchteinheit",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "UpperLightUnitSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "ms"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte fügen Sie die auslösenden Variablen hinzu:"
-        },
-        {
           "type": "List",
           "name": "UpperLightUnitTriggerVariables",
-          "caption": "Variablen",
+          "caption": "Auslösende Variablen",
           "rowCount": 10,
           "add": true,
           "delete": true,
@@ -259,11 +187,31 @@
                   {
                     "caption": "2",
                     "value": 2
+                  },
+                  {
+                    "caption": "3",
+                    "value": 3
                   }
                 ]
               }
             }
           ]
+        },
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die Instanz für die obere Leuchteinheit (HmIP-BSL, Kanal 8) aus"
+        },
+        {
+          "type": "SelectInstance",
+          "name": "UpperLightUnit",
+          "caption": "Obere Leuchteinheit",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "UpperLightUnitSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
         }
       ]
     },
@@ -272,33 +220,9 @@
       "caption": "Untere Leuchteinheit",
       "items": [
         {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die Instanz für die untere Leuchteinheit (HmIP-BSL, Kanal 12) aus:"
-        },
-        {
-          "type": "SelectInstance",
-          "name": "LowerLightUnit",
-          "caption": "Untere Leuchteinheit",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "LowerLightUnitSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "ms"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte fügen Sie die auslösenden Variablen hinzu:"
-        },
-        {
           "type": "List",
           "name": "LowerLightUnitTriggerVariables",
-          "caption": "Variablen",
+          "caption": "Auslösende Variablen",
           "rowCount": 10,
           "add": true,
           "delete": true,
@@ -443,11 +367,31 @@
                   {
                     "caption": "2",
                     "value": 2
+                  },
+                  {
+                    "caption": "3",
+                    "value": 3
                   }
                 ]
               }
             }
           ]
+        },
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die Instanz für die untere Leuchteinheit (HmIP-BSL, Kanal 12) aus"
+        },
+        {
+          "type": "SelectInstance",
+          "name": "LowerLightUnit",
+          "caption": "Untere Leuchteinheit",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "LowerLightUnitSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
         }
       ]
     },
@@ -455,10 +399,6 @@
       "type": "ExpansionPanel",
       "caption": "Nachtmodus",
       "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie eine Farbe für die obere Leuchteinheit aus:"
-        },
         {
           "type": "Select",
           "name": "NightModeColorUpperLightUnit",
@@ -501,10 +441,6 @@
               "value": 7
             }
           ]
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte wählen Sie eine Farbe für die untere Leuchteinheit aus:"
         },
         {
           "type": "Select",
@@ -550,10 +486,6 @@
           ]
         },
         {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Helligkeit für den Nachtmodus an:"
-        },
-        {
           "type": "NumberSpinner",
           "name": "NightModeBrightness",
           "caption": "Helligkeit",
@@ -563,7 +495,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte wählen Sie aus, ob Sie einen automatischen Nachtmodus verwenden wollen:"
+          "caption": " "
         },
         {
           "type": "CheckBox",
@@ -571,17 +503,9 @@
           "caption": "Automatischer Nachtmodus"
         },
         {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Startzeit für den Nachtmodus an:"
-        },
-        {
           "type": "SelectTime",
           "name": "NightModeStartTime",
           "caption": "Startzeit"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Endzeit für den Nachtmodus an:"
         },
         {
           "type": "SelectTime",
@@ -712,7 +636,7 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Testbereich",
+      "caption": "Schaltfunktionen",
       "items": [
         {
           "type": "TestCenter"
@@ -724,22 +648,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Statusanzeige wird erstellt"
+      "caption": "Statusanzeige 2 (HmIP-BSL) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Statusanzeige ist aktiv"
+      "caption": "Statusanzeige 2 (HmIP-BSL) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Statusanzeige wird gelöscht"
+      "caption": "Statusanzeige 2 (HmIP-BSL) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Statusanzeige ist inaktiv"
+      "caption": "Statusanzeige 2 (HmIP-BSL) ist inaktiv"
     },
     {
       "code": 200,

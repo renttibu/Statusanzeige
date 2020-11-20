@@ -2,64 +2,16 @@
   "elements": [
     {
       "type": "ExpansionPanel",
-      "caption": "Info",
+      "caption": "Funktionen",
       "items": [
-        {
-          "type": "Label",
-          "caption": "Mit dieser Instanz kann eine Statusanzeige mittels einer Leuchteinheit (HmIP-MP3P) gesteuert werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
-        },
-        {
-          "type": "Label",
-          "caption": "ID:"
-        },
-        {
-          "type": "Label",
-          "caption": "Modul:"
-        },
-        {
-          "type": "Label",
-          "caption": "Version:"
-        },
-        {
-          "type": "Label",
-          "caption": "Datum:"
-        },
-        {
-          "type": "Label",
-          "caption": "Uhrzeit:"
-        },
-        {
-          "type": "Label",
-          "caption": "Entwickler:"
-        },
-        {
-          "type": "Label",
-          "caption": "Präfix:"
-        },
-        {
-          "type": "ValidationTextBox",
-          "name": "Note",
-          "caption": "Notiz",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
         {
           "type": "CheckBox",
           "name": "MaintenanceMode",
           "caption": "Wartungsmodus"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Funktionen",
-      "items": [
+        },
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die Funktionen aus, die Sie verwenden wollen:"
+          "caption": " "
         },
         {
           "type": "CheckBox",
@@ -80,38 +32,8 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Leuchteinheit",
-      "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die Instanz für die Leuchteinheit (HmIP-MP3P, Kanal 6) aus:"
-        },
-        {
-          "type": "SelectInstance",
-          "name": "LightUnit",
-          "caption": "Leuchteinheit",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "LightUnitSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "ms"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
       "caption": "Auslöser",
       "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte fügen Sie die auslösenden Variablen hinzu:"
-        },
         {
           "type": "List",
           "name": "TriggerVariables",
@@ -226,9 +148,9 @@
               "add": -1,
               "edit": {
                 "type": "NumberSpinner",
-                    "suffix": "%",
-                    "minimum": -1,
-                    "maximum": 100
+                "suffix": "%",
+                "minimum": -1,
+                "maximum": 100
               }
             },
             {
@@ -260,6 +182,10 @@
                   {
                     "caption": "2",
                     "value": 2
+                  },
+                  {
+                    "caption": "3",
+                    "value": 3
                   }
                 ]
               }
@@ -270,12 +196,30 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Nachtmodus",
+      "caption": "Leuchteinheit",
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie eine Farbe für den Nachtmodus aus:"
+          "caption": "Bitte wählen Sie die Instanz für die Leuchteinheit (HmIP-MP3P, Kanal 6) aus"
         },
+        {
+          "type": "SelectInstance",
+          "name": "LightUnit",
+          "caption": "Leuchteinheit",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "LightUnitSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Nachtmodus",
+      "items": [
         {
           "type": "Select",
           "name": "NightModeColor",
@@ -320,10 +264,6 @@
           ]
         },
         {
-          "type": "Label",
-          "caption": "\nBitte geben Sie eine Helligkeit für den Nachtmodus an:"
-        },
-        {
           "type": "NumberSpinner",
           "name": "NightModeBrightness",
           "caption": "Helligkeit",
@@ -333,7 +273,7 @@
         },
         {
           "type": "Label",
-          "caption": "\nBitte wählen Sie aus, ob Sie einen automatischen Nachtmodus verwenden wollen:"
+          "caption": " "
         },
         {
           "type": "CheckBox",
@@ -341,17 +281,9 @@
           "caption": "Automatischer Nachtmodus"
         },
         {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Startzeit für den Nachtmodus an:"
-        },
-        {
           "type": "SelectTime",
           "name": "NightModeStartTime",
           "caption": "Startzeit"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Endzeit für den Nachtmodus an:"
         },
         {
           "type": "SelectTime",
@@ -477,7 +409,7 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Testbereich",
+      "caption": "Schaltfunktionen",
       "items": [
         {
           "type": "TestCenter"
@@ -489,22 +421,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Statusanzeige wird erstellt"
+      "caption": "Statusanzeige 3 (HmIP-MP3P) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Statusanzeige ist aktiv"
+      "caption": "Statusanzeige 3 (HmIP-MP3P) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Statusanzeige wird gelöscht"
+      "caption": "Statusanzeige 3 (HmIP-MP3P) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Statusanzeige ist inaktiv"
+      "caption": "Statusanzeige 3 (HmIP-MP3P) ist inaktiv"
     },
     {
       "code": 200,

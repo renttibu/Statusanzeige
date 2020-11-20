@@ -1,7 +1,7 @@
 <?php
 
-/** @noinspection PhpUnused */
 /** @noinspection DuplicatedCode */
+/** @noinspection PhpUnused */
 
 /*
  * @module      Statusanzeige 3 (HmIP-MP3P)
@@ -35,8 +35,6 @@ class Statusanzeige3 extends IPSModule
     use SA3_nightMode;
 
     //Constants
-    private const STATUSANZEIGE_LIBRARY_GUID = '{0EA1B1BE-8B7C-9C22-3EC0-1F023AD8F542}';
-    private const STATUSANZEIGE3_MODULE_GUID = '{6FC92B2D-827D-284D-06BE-5DC7A966607A}';
     private const DELAY_MILLISECONDS = 100;
 
     public function Create()
@@ -113,36 +111,20 @@ class Statusanzeige3 extends IPSModule
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        //Info
-        $moduleInfo = [];
-        $library = IPS_GetLibrary(self::STATUSANZEIGE_LIBRARY_GUID);
-        $module = IPS_GetModule(self::STATUSANZEIGE3_MODULE_GUID);
-        $moduleInfo['name'] = $module['ModuleName'];
-        $moduleInfo['version'] = $library['Version'] . '-' . $library['Build'];
-        $moduleInfo['date'] = date('d.m.Y', $library['Date']);
-        $moduleInfo['time'] = date('H:i', $library['Date']);
-        $moduleInfo['developer'] = $library['Author'];
-        $formData['elements'][0]['items'][1]['caption'] = "ID:\t\t\t\t" . $this->InstanceID;
-        $formData['elements'][0]['items'][2]['caption'] = "Modul:\t\t\t" . $moduleInfo['name'];
-        $formData['elements'][0]['items'][3]['caption'] = "Version:\t\t\t" . $moduleInfo['version'];
-        $formData['elements'][0]['items'][4]['caption'] = "Datum:\t\t\t" . $moduleInfo['date'];
-        $formData['elements'][0]['items'][5]['caption'] = "Uhrzeit:\t\t\t" . $moduleInfo['time'];
-        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'] . ', Normen Thiel';
-        $formData['elements'][0]['items'][7]['caption'] = "Präfix:\t\t\tSA3";
         //Trigger variables
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
-                $rowColor = '#C0FFC0'; //light green
+                $rowColor = '#C0FFC0'; # light green
                 $use = $variable->Use;
                 if (!$use) {
                     $rowColor = '';
                 }
                 $id = $variable->ID;
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
-                    $rowColor = '#FFC0C0'; //light red
+                    $rowColor = '#FFC0C0'; # red
                 }
-                $formData['elements'][3]['items'][1]['values'][] = [
+                $formData['elements'][1]['items'][0]['values'][] = [
                     'Use'                                           => $use,
                     'Group'                                         => $variable->Group,
                     'Color'                                         => $variable->Color,
@@ -155,10 +137,10 @@ class Statusanzeige3 extends IPSModule
         $messages = $this->GetMessageList();
         foreach ($messages as $senderID => $messageID) {
             $senderName = 'Objekt #' . $senderID . ' existiert nicht';
-            $rowColor = '#FFC0C0'; //light red
+            $rowColor = '#FFC0C0'; # red
             if (@IPS_ObjectExists($senderID)) {
                 $senderName = IPS_GetName($senderID);
-                $rowColor = '#C0FFC0'; //light green
+                $rowColor = ''; # '#C0FFC0' # light green
             }
             switch ($messageID) {
                 case [10001]:
@@ -226,10 +208,8 @@ class Statusanzeige3 extends IPSModule
 
     private function RegisterProperties(): void
     {
-        //Info
-        $this->RegisterPropertyString('Note', '');
-        $this->RegisterPropertyBoolean('MaintenanceMode', false);
         //Functions
+        $this->RegisterPropertyBoolean('MaintenanceMode', false);
         $this->RegisterPropertyBoolean('EnableColor', true);
         $this->RegisterPropertyBoolean('EnableBrightness', true);
         $this->RegisterPropertyBoolean('EnableNightMode', true);

@@ -2,64 +2,16 @@
   "elements": [
     {
       "type": "ExpansionPanel",
-      "caption": "Info",
+      "caption": "Funktionen",
       "items": [
-        {
-          "type": "Label",
-          "caption": "Mit dieser Instanz kann eine Variable zur Statusanzeige geschaltet werden.\nWeitere Informationen entnehmen Sie bitte der Dokumentation.\n"
-        },
-        {
-          "type": "Label",
-          "caption": "Instanz ID:"
-        },
-        {
-          "type": "Label",
-          "caption": "Modul:"
-        },
-        {
-          "type": "Label",
-          "caption": "Version:"
-        },
-        {
-          "type": "Label",
-          "caption": "Datum:"
-        },
-        {
-          "type": "Label",
-          "caption": "Uhrzeit:"
-        },
-        {
-          "type": "Label",
-          "caption": "Entwickler:"
-        },
-        {
-          "type": "Label",
-          "caption": "Präfix:"
-        },
-        {
-          "type": "ValidationTextBox",
-          "name": "Note",
-          "caption": "Notiz",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
         {
           "type": "CheckBox",
           "name": "MaintenanceMode",
           "caption": "Wartungsmodus"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Funktionen",
-      "items": [
+        },
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie die Funktionen aus, die Sie verwenden wollen:"
+          "caption": " "
         },
         {
           "type": "CheckBox",
@@ -75,58 +27,8 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Anzeige",
-      "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die zu schaltende Variable für die Anzeige aus:"
-        },
-        {
-          "type": "SelectVariable",
-          "name": "SignallingVariable",
-          "caption": "Variable",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "SignallingSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "ms"
-        },
-        {
-          "type": "Label",
-          "caption": "\n\nBitte wählen Sie die zu schaltende Variable für die korrespondierende, invertierte Anzeige aus:"
-        },
-        {
-          "type": "SelectVariable",
-          "name": "InvertedSignallingVariable",
-          "caption": "Anzeige",
-          "width": "600px"
-        },
-        {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Schaltverzögerung in Millisekunden an:"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "InvertedSignallingSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "ms"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
       "caption": "Auslöser",
       "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte fügen Sie die auslösenden Variablen (z.B. System-, Alarm-, Tür-, Fenster-, Batterie-, Sabotagestatus) hinzu:"
-        },
         {
           "type": "List",
           "name": "TriggerVariables",
@@ -176,6 +78,10 @@
                   {
                     "caption": "2",
                     "value": 2
+                  },
+                  {
+                    "caption": "3",
+                    "value": 3
                   }
                 ]
               }
@@ -186,29 +92,59 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Nachtmodus",
+      "caption": "Anzeige",
       "items": [
         {
           "type": "Label",
-          "caption": "Bitte wählen Sie aus, ob Sie einen automatischen Nachtmodus verwenden wollen:"
+          "caption": "Bitte wählen Sie die zu schaltende Variable für die Anzeige aus"
         },
+        {
+          "type": "SelectVariable",
+          "name": "SignallingVariable",
+          "caption": "Variable",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "SignallingSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "Label",
+          "caption": "Bitte wählen Sie die zu schaltende Variable für die korrespondierende, invertierte Anzeige aus"
+        },
+        {
+          "type": "SelectVariable",
+          "name": "InvertedSignallingVariable",
+          "caption": "Invertierte Anzeige",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "InvertedSignallingSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Nachtmodus",
+      "items": [
         {
           "type": "CheckBox",
           "name": "UseAutomaticNightMode",
           "caption": "Automatischer Nachtmodus"
         },
         {
-          "type": "Label",
-          "caption": "\nBitte geben Sie die Startzeit für den Nachtmodus an:"
-        },
-        {
           "type": "SelectTime",
           "name": "NightModeStartTime",
           "caption": "Startzeit"
-        },
-        {
-          "type": "Label",
-          "caption": "Bitte geben Sie die Endzeit für den Nachtmodus an:"
         },
         {
           "type": "SelectTime",
@@ -286,7 +222,7 @@
         {
           "type": "List",
           "name": "RegisteredMessages",
-          "rowCount": 5,
+          "rowCount": 11,
           "sort": {
             "column": "SenderID",
             "direction": "ascending"
@@ -300,7 +236,7 @@
             {
               "caption": "Sender Name",
               "name": "SenderName",
-              "width": "250px"
+              "width": "450px"
             },
             {
               "caption": "Nachrichten ID",
@@ -310,7 +246,7 @@
             {
               "caption": "Nachrichten Bezeichnung",
               "name": "MessageDescription",
-              "width": "260px"
+              "width": "250px"
             }
           ]
         }
@@ -318,7 +254,7 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Testbereich",
+      "caption": "Schaltfunktionen",
       "items": [
         {
           "type": "TestCenter"
@@ -330,22 +266,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Statusanzeige wird erstellt"
+      "caption": "Statusanzeige 1 (Variable) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Statusanzeige ist aktiv"
+      "caption": "Statusanzeige 1 (Variable) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Statusanzeige wird gelöscht"
+      "caption": "Statusanzeige 1 (Variable) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Statusanzeige ist inaktiv"
+      "caption": "Statusanzeige 1 (Variable) ist inaktiv"
     },
     {
       "code": 200,

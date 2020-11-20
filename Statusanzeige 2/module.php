@@ -1,7 +1,7 @@
 <?php
 
-/** @noinspection PhpUnused */
 /** @noinspection DuplicatedCode */
+/** @noinspection PhpUnused */
 
 /*
  * @module      Statusanzeige 2 (HmIP-BSL)
@@ -17,11 +17,6 @@
  *
  * @see         https://github.com/ubittner/Statusanzeige
  *
- * @guids       Library
- *              {0EA1B1BE-8B7C-9C22-3EC0-1F023AD8F542}
- *
- *              Statusanzeige 2
- *              {DA434C88-0460-59A2-5048-0C1724AD9698}
  */
 
 declare(strict_types=1);
@@ -35,8 +30,6 @@ class Statusanzeige2 extends IPSModule
     use SA2_nightMode;
 
     //Constants
-    private const STATUSANZEIGE_LIBRARY_GUID = '{0EA1B1BE-8B7C-9C22-3EC0-1F023AD8F542}';
-    private const STATUSANZEIGE2_MODULE_GUID = '{DA434C88-0460-59A2-5048-0C1724AD9698}';
     private const DELAY_MILLISECONDS = 100;
 
     public function Create()
@@ -142,36 +135,20 @@ class Statusanzeige2 extends IPSModule
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        //Info
-        $moduleInfo = [];
-        $library = IPS_GetLibrary(self::STATUSANZEIGE_LIBRARY_GUID);
-        $module = IPS_GetModule(self::STATUSANZEIGE2_MODULE_GUID);
-        $moduleInfo['name'] = $module['ModuleName'];
-        $moduleInfo['version'] = $library['Version'] . '-' . $library['Build'];
-        $moduleInfo['date'] = date('d.m.Y', $library['Date']);
-        $moduleInfo['time'] = date('H:i', $library['Date']);
-        $moduleInfo['developer'] = $library['Author'];
-        $formData['elements'][0]['items'][1]['caption'] = "ID:\t\t\t\t" . $this->InstanceID;
-        $formData['elements'][0]['items'][2]['caption'] = "Modul:\t\t\t" . $moduleInfo['name'];
-        $formData['elements'][0]['items'][3]['caption'] = "Version:\t\t\t" . $moduleInfo['version'];
-        $formData['elements'][0]['items'][4]['caption'] = "Datum:\t\t\t" . $moduleInfo['date'];
-        $formData['elements'][0]['items'][5]['caption'] = "Uhrzeit:\t\t\t" . $moduleInfo['time'];
-        $formData['elements'][0]['items'][6]['caption'] = "Entwickler:\t\t" . $moduleInfo['developer'] . ', Normen Thiel';
-        $formData['elements'][0]['items'][7]['caption'] = "Präfix:\t\t\tSA2";
         //Trigger variables
         $variables = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
-                $rowColor = '#C0FFC0'; //light green
+                $rowColor = '#C0FFC0'; # light green
                 $use = $variable->Use;
                 if (!$use) {
                     $rowColor = '';
                 }
                 $id = $variable->ID;
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
-                    $rowColor = '#FFC0C0'; //light red
+                    $rowColor = '#FFC0C0'; # red
                 }
-                $formData['elements'][2]['items'][5]['values'][] = [
+                $formData['elements'][1]['items'][0]['values'][] = [
                     'Use'                                           => $use,
                     'Group'                                         => $variable->Group,
                     'Color'                                         => $variable->Color,
@@ -183,16 +160,16 @@ class Statusanzeige2 extends IPSModule
         $variables = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
-                $rowColor = '#C0FFC0'; //light green
+                $rowColor = '#C0FFC0'; # light green
                 $use = $variable->Use;
                 if (!$use) {
                     $rowColor = '';
                 }
                 $id = $variable->ID;
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
-                    $rowColor = '#FFC0C0'; //light red
+                    $rowColor = '#FFC0C0'; # red
                 }
-                $formData['elements'][3]['items'][5]['values'][] = [
+                $formData['elements'][2]['items'][0]['values'][] = [
                     'Use'                                           => $use,
                     'Group'                                         => $variable->Group,
                     'Color'                                         => $variable->Color,
@@ -205,10 +182,10 @@ class Statusanzeige2 extends IPSModule
         $messages = $this->GetMessageList();
         foreach ($messages as $senderID => $messageID) {
             $senderName = 'Objekt #' . $senderID . ' existiert nicht';
-            $rowColor = '#FFC0C0'; //light red
+            $rowColor = '#FFC0C0'; # red
             if (@IPS_ObjectExists($senderID)) {
                 $senderName = IPS_GetName($senderID);
-                $rowColor = '#C0FFC0'; //light green
+                $rowColor = ''; # '#C0FFC0' # light green
             }
             switch ($messageID) {
                 case [10001]:
@@ -284,11 +261,8 @@ class Statusanzeige2 extends IPSModule
     }
 
     private function RegisterProperties(): void
-    {
-        //Info
-        $this->RegisterPropertyString('Note', '');
+    {   //Functions
         $this->RegisterPropertyBoolean('MaintenanceMode', false);
-        //Functions
         $this->RegisterPropertyBoolean('EnableUpperLightUnitColor', true);
         $this->RegisterPropertyBoolean('EnableLowerLightUnitColor', true);
         $this->RegisterPropertyBoolean('EnableBrightness', true);
