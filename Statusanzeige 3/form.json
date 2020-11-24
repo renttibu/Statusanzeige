@@ -421,22 +421,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Statusanzeige 3 (HmIP-MP3P) wird erstellt"
+      "caption": "Statusanzeige (HmIP-MP3P) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Statusanzeige 3 (HmIP-MP3P) ist aktiv"
+      "caption": "Statusanzeige (HmIP-MP3P) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Statusanzeige 3 (HmIP-MP3P) wird gelöscht"
+      "caption": "Statusanzeige (HmIP-MP3P) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Statusanzeige 3 (HmIP-MP3P) ist inaktiv"
+      "caption": "Statusanzeige (HmIP-MP3P) ist inaktiv"
     },
     {
       "code": 200,

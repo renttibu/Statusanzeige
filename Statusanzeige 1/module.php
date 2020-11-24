@@ -116,10 +116,11 @@ class Statusanzeige1 extends IPSModule
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; # red
                 }
-                $formData['elements'][1]['items'][1]['values'][] = [
-                    'Use'      => $use,
-                    'ID'       => $id,
-                    'rowColor' => $rowColor];
+                $formData['elements'][1]['items'][0]['values'][] = [
+                    'Use'           => $use,
+                    'ID'            => $id,
+                    'TriggerValue'  => $variable->TriggerValue,
+                    'rowColor'      => $rowColor];
             }
         }
         //Registered messages

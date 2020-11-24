@@ -648,22 +648,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Statusanzeige 2 (HmIP-BSL) wird erstellt"
+      "caption": "Statusanzeige (HmIP-BSL) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Statusanzeige 2 (HmIP-BSL) ist aktiv"
+      "caption": "Statusanzeige (HmIP-BSL) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Statusanzeige 2 (HmIP-BSL) wird gelöscht"
+      "caption": "Statusanzeige (HmIP-BSL) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Statusanzeige 2 (HmIP-BSL) ist inaktiv"
+      "caption": "Statusanzeige (HmIP-BSL) ist inaktiv"
     },
     {
       "code": 200,

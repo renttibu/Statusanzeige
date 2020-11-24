@@ -266,22 +266,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Statusanzeige 1 (Variable) wird erstellt"
+      "caption": "Statusanzeige (Variable) wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Statusanzeige 1 (Variable) ist aktiv"
+      "caption": "Statusanzeige (Variable) ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Statusanzeige 1 (Variable) wird gelöscht"
+      "caption": "Statusanzeige (Variable) wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Statusanzeige 1 (Variable) ist inaktiv"
+      "caption": "Statusanzeige (Variable) ist inaktiv"
     },
     {
       "code": 200,
