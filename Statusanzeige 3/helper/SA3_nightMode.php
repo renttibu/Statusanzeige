@@ -153,6 +153,9 @@ trait SA3_nightMode
      */
     private function CheckNightModeTimer(): void
     {
+        if (!$this->ReadPropertyBoolean('UseAutomaticNightMode')) {
+            return;
+        }
         $start = $this->GetTimerInterval('StartNightMode');
         $stop = $this->GetTimerInterval('StopNightMode');
         if ($start > $stop) {
