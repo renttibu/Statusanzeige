@@ -1,28 +1,14 @@
 <?php
 
+/*
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020, 2021
+ * @license    	CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Statusanzeige
+ */
+
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
-
-/*
- * @module      Statusanzeige 3 (HmIP-MP3P)
- *
- * @prefix      SA3
- *
- * @file        module.php
- *
- * @author      Ulrich Bittner
- * @copyright   (c) 2020
- * @license    	CC BY-NC-SA 4.0
- *              https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @see         https://github.com/ubittner/Statusanzeige
- *
- * @guids       Library
- *              {0EA1B1BE-8B7C-9C22-3EC0-1F023AD8F542}
- *
- *              Statusanzeige 3
- *              {6FC92B2D-827D-284D-06BE-5DC7A966607A}
- */
 
 declare(strict_types=1);
 include_once __DIR__ . '/helper/autoload.php';

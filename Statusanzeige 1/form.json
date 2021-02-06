@@ -52,38 +52,63 @@
             {
               "caption": "Variable",
               "name": "ID",
-              "width": "500px",
+              "width": "300px",
               "add": 0,
-              "onClick": "echo 'ID: ' . $TriggerVariables['ID'];",
+              "onClick": "echo 'ID ' . $TriggeringVariables['ID'];",
               "edit": {
                 "type": "SelectVariable"
               }
             },
             {
-              "caption": "Auslösender Wert",
-              "name": "TriggerValue",
-              "width": "160px",
-              "add": 0,
+              "caption": "Auslöser",
+              "name": "Trigger",
+              "width": "250px",
+              "add": 6,
               "edit": {
                 "type": "Select",
                 "options": [
                   {
-                    "caption": "0 | false",
+                    "caption": "Bei Änderung",
                     "value": 0
                   },
                   {
-                    "caption": "1 | true",
+                    "caption": "Bei Aktualisierung",
                     "value": 1
                   },
                   {
-                    "caption": "2",
+                    "caption": "Bei Grenzunterschreitung (einmalig)",
                     "value": 2
                   },
                   {
-                    "caption": "3",
+                    "caption": "Bei Grenzunterschreitung (mehrmalig)",
                     "value": 3
+                  },
+                  {
+                    "caption": "Bei Grenzüberschreitung (einmalig)",
+                    "value": 4
+                  },
+                  {
+                    "caption": "Bei Grenzüberschreitung (mehrmalig)",
+                    "value": 5
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (einmalig)",
+                    "value": 6
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (mehrmalig)",
+                    "value": 7
                   }
                 ]
+              }
+            },
+            {
+              "caption": "Auslösender Wert",
+              "name": "Value",
+              "width": "140px",
+              "add": "true",
+              "edit": {
+                "type": "ValidationTextBox"
               }
             }
           ]

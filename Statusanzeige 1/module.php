@@ -1,23 +1,14 @@
 <?php
 
+/*
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020, 2021
+ * @license    	CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Statusanzeige
+ */
+
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
-
-/*
- * @module      Statusanzeige 1 (Variable)
- *
- * @prefix      SA1
- *
- * @file        module.php
- *
- * @author      Ulrich Bittner
- * @copyright   (c) 2020
- * @license    	CC BY-NC-SA 4.0
- *              https://creativecommons.org/licenses/by-nc-sa/4.0/
- *
- * @see         https://github.com/ubittner/Statusanzeige
- *
- */
 
 declare(strict_types=1);
 include_once __DIR__ . '/helper/autoload.php';
@@ -91,10 +82,12 @@ class Statusanzeige1 extends IPSModule
                     return;
                 }
                 //Trigger action
+                $valueChanged = 'false';
                 if ($Data[1]) {
-                    $scriptText = 'SA1_UpdateState(' . $this->InstanceID . ');';
-                    IPS_RunScriptText($scriptText);
+                    $valueChanged = 'true';
                 }
+                $scriptText = 'SA1_CheckTrigger(' . $this->InstanceID . ', ' . $SenderID . ', ' . $valueChanged . ');';
+                IPS_RunScriptText($scriptText);
                 break;
 
         }
@@ -117,10 +110,11 @@ class Statusanzeige1 extends IPSModule
                     $rowColor = '#FFC0C0'; # red
                 }
                 $formData['elements'][1]['items'][0]['values'][] = [
-                    'Use'           => $use,
-                    'ID'            => $id,
-                    'TriggerValue'  => $variable->TriggerValue,
-                    'rowColor'      => $rowColor];
+                    'Use'       => $use,
+                    'ID'        => $id,
+                    'Trigger'   => $variable->Trigger,
+                    'Value'     => $variable->Value,
+                    'rowColor'  => $rowColor];
             }
         }
         //Registered messages
