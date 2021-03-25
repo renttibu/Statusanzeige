@@ -14,24 +14,45 @@
           "caption": " "
         },
         {
+          "type": "Label",
+          "caption": "Obere Leuchteinheit "
+        },
+        {
           "type": "CheckBox",
           "name": "EnableUpperLightUnitColor",
-          "caption": "Obere Leuchteinheit (Farbauswahl)"
+          "caption": "Farbauswahl"
+        },
+        {
+          "type": "CheckBox",
+          "name": "EnableUpperLightUnitBrightness",
+          "caption": "Helligkeit"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "Label",
+          "caption": "Untere Leuchteinheit "
         },
         {
           "type": "CheckBox",
           "name": "EnableLowerLightUnitColor",
-          "caption": "Untere Leuchteinheit (Farbauswahl)"
+          "caption": "Farbauswahl"
         },
         {
           "type": "CheckBox",
-          "name": "EnableBrightness",
-          "caption": "Helligkeit (0-100%)"
+          "name": "EnableLowerLightUnitBrightness",
+          "caption": "Helligkeit"
+        },
+        {
+          "type": "Label",
+          "caption": " "
         },
         {
           "type": "CheckBox",
           "name": "EnableNightMode",
-          "caption": "Nachtmodus (Aus/An)"
+          "caption": "Nachtmodus"
         }
       ]
     },
@@ -39,6 +60,22 @@
       "type": "ExpansionPanel",
       "caption": "Obere Leuchteinheit",
       "items": [
+        {
+          "type": "SelectInstance",
+          "name": "UpperLightUnit",
+          "caption": "HmIP-BSL Instanz, Kanal 8",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "UpperLightUnitSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
         {
           "type": "List",
           "name": "UpperLightUnitTriggerVariables",
@@ -61,17 +98,13 @@
               }
             },
             {
-              "caption": "Gruppe",
+              "caption": "Prioritätsgruppe",
               "name": "Group",
-              "width": "100px",
-              "add": 0,
+              "width": "150px",
+              "add": 1,
               "edit": {
                 "type": "Select",
                 "options": [
-                  {
-                    "caption": "0",
-                    "value": 0
-                  },
                   {
                     "caption": "1",
                     "value": 1
@@ -99,8 +132,66 @@
                   {
                     "caption": "7",
                     "value": 7
+                  },
+                  {
+                    "caption": "0",
+                    "value": 8
                   }
                 ]
+              }
+            },
+            {
+              "caption": "Auslösende Variable",
+              "name": "ID",
+              "width": "600px",
+              "add": 0,
+              "onClick": "echo 'ID: ' . $UpperLightUnitTriggerVariables['ID'];",
+              "edit": {
+                "type": "SelectVariable"
+              }
+            },
+            {
+              "caption": "Auslöseart",
+              "name": "Trigger",
+              "width": "280px",
+              "add": 4,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "Bei Grenzunterschreitung (einmalig)",
+                    "value": 0
+                  },
+                  {
+                    "caption": "Bei Grenzunterschreitung (mehrmalig)",
+                    "value": 1
+                  },
+                  {
+                    "caption": "Bei Grenzüberschreitung (einmalig)",
+                    "value": 2
+                  },
+                  {
+                    "caption": "Bei Grenzüberschreitung (mehrmalig)",
+                    "value": 3
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (einmalig)",
+                    "value": 4
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (mehrmalig)",
+                    "value": 5
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Auslösewert",
+              "name": "Value",
+              "width": "160px",
+              "add": "",
+              "edit": {
+                "type": "ValidationTextBox"
               }
             },
             {
@@ -150,68 +241,15 @@
               "caption": "Helligkeit",
               "name": "Brightness",
               "width": "110px",
-              "add": -1,
+              "add": 50,
               "edit": {
                 "type": "NumberSpinner",
                 "suffix": "%",
-                "minimum": -1,
+                "minimum": 0,
                 "maximum": 100
-              }
-            },
-            {
-              "caption": "Variable",
-              "name": "ID",
-              "width": "600px",
-              "add": 0,
-              "onClick": "echo 'ID: ' . $UpperLightUnitTriggerVariables['ID'];",
-              "edit": {
-                "type": "SelectVariable"
-              }
-            },
-            {
-              "caption": "Auslösender Wert",
-              "name": "TriggerValue",
-              "width": "160px",
-              "add": 0,
-              "edit": {
-                "type": "Select",
-                "options": [
-                  {
-                    "caption": "0 | false",
-                    "value": 0
-                  },
-                  {
-                    "caption": "1 | true",
-                    "value": 1
-                  },
-                  {
-                    "caption": "2",
-                    "value": 2
-                  },
-                  {
-                    "caption": "3",
-                    "value": 3
-                  }
-                ]
               }
             }
           ]
-        },
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die Instanz für die obere Leuchteinheit (HmIP-BSL, Kanal 8) aus"
-        },
-        {
-          "type": "SelectInstance",
-          "name": "UpperLightUnit",
-          "caption": "Obere Leuchteinheit",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "UpperLightUnitSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
         }
       ]
     },
@@ -219,6 +257,22 @@
       "type": "ExpansionPanel",
       "caption": "Untere Leuchteinheit",
       "items": [
+        {
+          "type": "SelectInstance",
+          "name": "LowerLightUnit",
+          "caption": "HmIP-BSL Instanz, Kanal 12",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "LowerLightUnitSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
         {
           "type": "List",
           "name": "LowerLightUnitTriggerVariables",
@@ -241,17 +295,13 @@
               }
             },
             {
-              "caption": "Gruppe",
+              "caption": "Prioritätsgruppe",
               "name": "Group",
-              "width": "100px",
-              "add": 0,
+              "width": "150px",
+              "add": 1,
               "edit": {
                 "type": "Select",
                 "options": [
-                  {
-                    "caption": "0",
-                    "value": 0
-                  },
                   {
                     "caption": "1",
                     "value": 1
@@ -279,8 +329,66 @@
                   {
                     "caption": "7",
                     "value": 7
+                  },
+                  {
+                    "caption": "8",
+                    "value": 8
                   }
                 ]
+              }
+            },
+            {
+              "caption": "Variable",
+              "name": "ID",
+              "width": "600px",
+              "add": 0,
+              "onClick": "echo 'ID: ' . $LowerLightUnitTriggerVariables['ID'];",
+              "edit": {
+                "type": "SelectVariable"
+              }
+            },
+            {
+              "caption": "Auslöseart",
+              "name": "Trigger",
+              "width": "280px",
+              "add": 4,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "Bei Grenzunterschreitung (einmalig)",
+                    "value": 0
+                  },
+                  {
+                    "caption": "Bei Grenzunterschreitung (mehrmalig)",
+                    "value": 1
+                  },
+                  {
+                    "caption": "Bei Grenzüberschreitung (einmalig)",
+                    "value": 2
+                  },
+                  {
+                    "caption": "Bei Grenzüberschreitung (mehrmalig)",
+                    "value": 3
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (einmalig)",
+                    "value": 4
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (mehrmalig)",
+                    "value": 5
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Auslösewert",
+              "name": "Value",
+              "width": "160px",
+              "add": "",
+              "edit": {
+                "type": "ValidationTextBox"
               }
             },
             {
@@ -330,68 +438,15 @@
               "caption": "Helligkeit",
               "name": "Brightness",
               "width": "110px",
-              "add": -1,
+              "add": 50,
               "edit": {
                 "type": "NumberSpinner",
                 "suffix": "%",
-                "minimum": -1,
+                "minimum": 0,
                 "maximum": 100
-              }
-            },
-            {
-              "caption": "Variable",
-              "name": "ID",
-              "width": "600px",
-              "add": 0,
-              "onClick": "echo 'ID: ' . $LowerLightUnitTriggerVariables['ID'];",
-              "edit": {
-                "type": "SelectVariable"
-              }
-            },
-            {
-              "caption": "Auslösender Wert",
-              "name": "TriggerValue",
-              "width": "160px",
-              "add": 0,
-              "edit": {
-                "type": "Select",
-                "options": [
-                  {
-                    "caption": "0 | false",
-                    "value": 0
-                  },
-                  {
-                    "caption": "1 | true",
-                    "value": 1
-                  },
-                  {
-                    "caption": "2",
-                    "value": 2
-                  },
-                  {
-                    "caption": "3",
-                    "value": 3
-                  }
-                ]
               }
             }
           ]
-        },
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die Instanz für die untere Leuchteinheit (HmIP-BSL, Kanal 12) aus"
-        },
-        {
-          "type": "SelectInstance",
-          "name": "LowerLightUnit",
-          "caption": "Untere Leuchteinheit",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "LowerLightUnitSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
         }
       ]
     },
@@ -399,104 +454,6 @@
       "type": "ExpansionPanel",
       "caption": "Nachtmodus",
       "items": [
-        {
-          "type": "Select",
-          "name": "NightModeColorUpperLightUnit",
-          "caption": "Obere Leuchteinheit Farbe",
-          "options": [
-            {
-              "caption": "Keine Farbveränderung",
-              "value": -1
-            },
-            {
-              "caption": "Aus",
-              "value": 0
-            },
-            {
-              "caption": "Blau",
-              "value": 1
-            },
-            {
-              "caption": "Grün",
-              "value": 2
-            },
-            {
-              "caption": "Türkis",
-              "value": 3
-            },
-            {
-              "caption": "Rot",
-              "value": 4
-            },
-            {
-              "caption": "Violett",
-              "value": 5
-            },
-            {
-              "caption": "Gelb",
-              "value": 6
-            },
-            {
-              "caption": "Weiß",
-              "value": 7
-            }
-          ]
-        },
-        {
-          "type": "Select",
-          "name": "NightModeColorLowerLightUnit",
-          "caption": "Untere Leuchteinheit Farbe",
-          "options": [
-            {
-              "caption": "Keine Farbveränderung",
-              "value": -1
-            },
-            {
-              "caption": "Aus",
-              "value": 0
-            },
-            {
-              "caption": "Blau",
-              "value": 1
-            },
-            {
-              "caption": "Grün",
-              "value": 2
-            },
-            {
-              "caption": "Türkis",
-              "value": 3
-            },
-            {
-              "caption": "Rot",
-              "value": 4
-            },
-            {
-              "caption": "Violett",
-              "value": 5
-            },
-            {
-              "caption": "Gelb",
-              "value": 6
-            },
-            {
-              "caption": "Weiß",
-              "value": 7
-            }
-          ]
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "NightModeBrightness",
-          "caption": "Helligkeit",
-          "suffix": "%",
-          "minimum": -1,
-          "maximum": 100
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
         {
           "type": "CheckBox",
           "name": "UseAutomaticNightMode",
@@ -511,6 +468,116 @@
           "type": "SelectTime",
           "name": "NightModeEndTime",
           "caption": "Endzeit"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "Label",
+          "caption": "Obere Leuchteinheit"
+        },
+        {
+          "type": "Select",
+          "name": "NightModeColorUpperLightUnit",
+          "caption": "Farbe",
+          "options": [
+            {
+              "caption": "Aus",
+              "value": 0
+            },
+            {
+              "caption": "Blau",
+              "value": 1
+            },
+            {
+              "caption": "Grün",
+              "value": 2
+            },
+            {
+              "caption": "Türkis",
+              "value": 3
+            },
+            {
+              "caption": "Rot",
+              "value": 4
+            },
+            {
+              "caption": "Violett",
+              "value": 5
+            },
+            {
+              "caption": "Gelb",
+              "value": 6
+            },
+            {
+              "caption": "Weiß",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "NightModeBrightnessUpperLightUnit",
+          "caption": "Helligkeit",
+          "suffix": "%",
+          "minimum": 0,
+          "maximum": 100
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "Label",
+          "caption": "Untere Leuchteinheit"
+        },
+        {
+          "type": "Select",
+          "name": "NightModeColorLowerLightUnit",
+          "caption": "Farbe",
+          "options": [
+            {
+              "caption": "Aus",
+              "value": 0
+            },
+            {
+              "caption": "Blau",
+              "value": 1
+            },
+            {
+              "caption": "Grün",
+              "value": 2
+            },
+            {
+              "caption": "Türkis",
+              "value": 3
+            },
+            {
+              "caption": "Rot",
+              "value": 4
+            },
+            {
+              "caption": "Violett",
+              "value": 5
+            },
+            {
+              "caption": "Gelb",
+              "value": 6
+            },
+            {
+              "caption": "Weiß",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "NightModeBrightnessLowerLightUnit",
+          "caption": "Helligkeit",
+          "suffix": "%",
+          "minimum": 0,
+          "maximum": 100
         }
       ]
     }
@@ -615,22 +682,12 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Attribute",
+      "caption": "Status",
       "items": [
         {
-          "type": "Label",
-          "caption": "Obere Leuchteinheit - Letzte Farbe:",
-          "name": "AttributeUpperLightUnitLastColor"
-        },
-        {
-          "type": "Label",
-          "caption": "Untere Leuchteinheit - Letzte Farbe:",
-          "name": "AttributeLowerLightUnitLastColor"
-        },
-        {
-          "type": "Label",
-          "caption": "Letzte Helligkeit:",
-          "name": "AttributeLastBrightness"
+          "type": "Button",
+          "caption": "Status aktualisieren",
+          "onClick": "SA2_CheckActualStatus($id);"
         }
       ]
     },
