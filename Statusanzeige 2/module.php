@@ -4,7 +4,7 @@
  * @author      Ulrich Bittner
  * @copyright   (c) 2020, 2021
  * @license    	CC BY-NC-SA 4.0
- * @see         https://github.com/ubittner/Statusanzeige
+ * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige%202
  */
 
 /** @noinspection DuplicatedCode */
@@ -187,7 +187,14 @@ class Statusanzeige2 extends IPSModule # HmIP-BSL
                 if ($this->CheckMaintenanceMode()) {
                     return;
                 }
-                $this->CheckTriggerUpdate($SenderID, $Data[1]);
+
+                // Check trigger
+                $valueChanged = 'false';
+                if ($Data[1]) {
+                    $valueChanged = 'true';
+                }
+                $scriptText = 'SA2_CheckTriggerUpdate(' . $this->InstanceID . ', ' . $SenderID . ', ' . $valueChanged . ');';
+                IPS_RunScriptText($scriptText);
                 break;
 
         }

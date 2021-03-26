@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020, 2021
+ * @license    	CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige%203
+ */
+
+/** @noinspection PhpUnusedPrivateMethodInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
@@ -9,14 +17,6 @@ trait SA3_control
 {
     public function SetColor(int $Color, bool $UseSwitchingDelay = false): bool
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
-        if ($this->CheckMaintenanceMode()) {
-            return false;
-        }
-        if ($this->CheckNightMode()) {
-            return false;
-        }
-
         /*
          * $Color
          * 0    = off
@@ -29,6 +29,13 @@ trait SA3_control
          * 7    = white
          */
 
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
+        if ($this->CheckMaintenanceMode()) {
+            return false;
+        }
+        if ($this->CheckNightMode()) {
+            return false;
+        }
         if (!$this->CheckExistingTrigger()) {
             $this->WriteAttributeInteger('LightUnitLastColor', $Color);
         }
@@ -52,7 +59,7 @@ trait SA3_control
 
     public function CheckActualStatus(): void
     {
-        $this->SendDebug(__FUNCTION__, 'Methode wird ausgeführt.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         if ($this->CheckMaintenanceMode()) {
             return;
         }
@@ -66,7 +73,7 @@ trait SA3_control
 
     private function UpdateLightUnit(): void
     {
-        $this->SendDebug(__FUNCTION__, 'Methode wird ausgeführt.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         if ($this->CheckMaintenanceMode()) {
             return;
         }
@@ -78,7 +85,7 @@ trait SA3_control
 
     private function CheckExistingTrigger(): bool
     {
-        $this->SendDebug(__FUNCTION__, 'Methode wird ausgeführt.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         $result = false;
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
@@ -97,7 +104,7 @@ trait SA3_control
 
     private function CheckTriggerUpdate(int $SenderID, bool $ValueChanged): void
     {
-        $this->SendDebug(__FUNCTION__, 'Methode wird ausgeführt.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             $update = false;
@@ -131,7 +138,7 @@ trait SA3_control
 
     private function CheckTrigger(): void
     {
-        $this->SendDebug(__FUNCTION__, 'Methode wird ausgeführt.', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         if ($this->CheckMaintenanceMode()) {
             return;
         }
@@ -357,7 +364,7 @@ trait SA3_control
                     IPS_Sleep(self::DELAY_MILLISECONDS);
                     $setBrightnessAgain = @HM_WriteValueFloat($id, 'LEVEL', $deviceBrightness);
                     if (!$setBrightnessAgain) {
-                        //Revert brightness
+                        // Revert brightness
                         $this->SetValue('Brightness', $actualBrightness);
                         $errorMessage = 'Helligkeit ' . $deviceBrightness . ' konnte nicht gesetzt werden!';
                         $this->SendDebug(__FUNCTION__, $errorMessage, 0);
@@ -370,7 +377,7 @@ trait SA3_control
                 }
             }
         }
-        //Semaphore leave
+        // Semaphore leave
         IPS_SemaphoreLeave($this->InstanceID . '.SetBrightness');
         return $result;
     }

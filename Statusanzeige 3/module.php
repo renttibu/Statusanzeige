@@ -4,7 +4,7 @@
  * @author      Ulrich Bittner
  * @copyright   (c) 2020, 2021
  * @license    	CC BY-NC-SA 4.0
- * @see         https://github.com/ubittner/Statusanzeige
+ * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige%203
  */
 
 /** @noinspection DuplicatedCode */
@@ -160,7 +160,14 @@ class Statusanzeige3 extends IPSModule # HmIP-MP3P
                 if ($this->CheckMaintenanceMode()) {
                     return;
                 }
-                $this->CheckTriggerUpdate($SenderID, $Data[1]);
+
+                // Check trigger
+                $valueChanged = 'false';
+                if ($Data[1]) {
+                    $valueChanged = 'true';
+                }
+                $scriptText = 'SA3_CheckTriggerUpdate(' . $this->InstanceID . ', ' . $SenderID . ', ' . $valueChanged . ');';
+                IPS_RunScriptText($scriptText);
                 break;
 
         }

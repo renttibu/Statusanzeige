@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020, 2021
+ * @license    	CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige%202
+ */
+
+/** @noinspection PhpUnusedPrivateMethodInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
@@ -9,14 +17,6 @@ trait SA2_control
 {
     public function SetColor(int $LightUnit, int $Color, bool $UseSwitchingDelay = false): bool
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
-        if ($this->CheckMaintenanceMode()) {
-            return false;
-        }
-        if ($this->CheckNightMode()) {
-            return false;
-        }
-
         /*
          * $LightUnit
          * 0    = upper light unit
@@ -33,6 +33,13 @@ trait SA2_control
          * 7    = white
          */
 
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
+        if ($this->CheckMaintenanceMode()) {
+            return false;
+        }
+        if ($this->CheckNightMode()) {
+            return false;
+        }
         if ($LightUnit == 0) {
             if (!$this->CheckExistingTrigger(0)) {
                 $this->WriteAttributeInteger('UpperLightUnitLastColor', $Color);
@@ -47,6 +54,12 @@ trait SA2_control
 
     public function SetBrightness(int $LightUnit, int $Brightness, bool $UseSwitchingDelay = false): bool
     {
+        /*
+         * $LightUnit
+         * 0    = upper light unit
+         * 1    = lower light unit
+         */
+
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         if ($this->CheckMaintenanceMode()) {
             return false;
@@ -54,13 +67,6 @@ trait SA2_control
         if ($this->CheckNightMode()) {
             return false;
         }
-
-        /*
-         * $LightUnit
-         * 0    = upper light unit
-         * 1    = lower light unit
-         */
-
         if ($LightUnit == 0) {
             if (!$this->CheckExistingTrigger(0)) {
                 $this->WriteAttributeInteger('UpperLightUnitLastBrightness', $Brightness);
@@ -373,7 +379,7 @@ trait SA2_control
                     IPS_Sleep(self::DELAY_MILLISECONDS);
                     $setColorAgain = @HM_WriteValueInteger($id, 'COLOR', $Color);
                     if (!$setColorAgain) {
-                        //Revert color
+                        // Revert color
                         $this->SetValue($unit . 'Color', $actualColor);
                         $errorMessage = 'Farbwert ' . $Color . ' konnte nicht gesetzt werden!';
                         $this->SendDebug(__FUNCTION__, $errorMessage, 0);
@@ -426,7 +432,7 @@ trait SA2_control
                     IPS_Sleep(self::DELAY_MILLISECONDS);
                     $setBrightnessAgain = @HM_WriteValueFloat($id, 'LEVEL', $deviceBrightness);
                     if (!$setBrightnessAgain) {
-                        //Revert brightness
+                        // Revert brightness
                         $this->SetValue('Brightness', $actualBrightness);
                         $errorMessage = 'Helligkeit ' . $deviceBrightness . ' konnte nicht gesetzt werden!';
                         $this->SendDebug(__FUNCTION__, $errorMessage, 0);
@@ -439,7 +445,7 @@ trait SA2_control
                 }
             }
         }
-        //Semaphore leave
+        // Semaphore leave
         IPS_SemaphoreLeave($this->InstanceID . '.SetBrightness');
         return $result;
     }

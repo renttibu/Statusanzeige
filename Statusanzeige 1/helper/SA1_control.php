@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020, 2021
+ * @license    	CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige%201
+ */
+
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
@@ -457,7 +464,7 @@ trait SA1_control
 
     private function ExecuteInvertedSignalling(bool $State, bool $UseSwitchingDelay = false): bool
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         if ($this->CheckMaintenanceMode()) {
             return false;
         }

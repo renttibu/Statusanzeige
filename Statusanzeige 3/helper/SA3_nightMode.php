@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * @author      Ulrich Bittner
+ * @copyright   (c) 2020, 2021
+ * @license    	CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige%203
+ */
+
 /** @noinspection PhpUnusedPrivateMethodInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
@@ -45,12 +52,14 @@ trait SA3_nightMode
 
     public function StartNightMode(): void
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $this->ToggleNightMode(true);
         $this->SetNightModeTimer();
     }
 
     public function StopNightMode(): void
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $this->ToggleNightMode(false);
         $this->SetNightModeTimer();
     }
@@ -59,6 +68,7 @@ trait SA3_nightMode
 
     private function SetNightModeTimer(): void
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $use = $this->ReadPropertyBoolean('UseAutomaticNightMode');
         // Start
         $milliseconds = 0;
@@ -76,6 +86,7 @@ trait SA3_nightMode
 
     private function GetInterval(string $TimerName): int
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $timer = json_decode($this->ReadPropertyString($TimerName));
         $now = time();
         $hour = $timer->hour;
@@ -92,6 +103,7 @@ trait SA3_nightMode
 
     private function CheckNightModeTimer(): bool
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         if (!$this->ReadPropertyBoolean('UseAutomaticNightMode')) {
             return false;
         }
@@ -108,6 +120,7 @@ trait SA3_nightMode
 
     private function CheckNightMode(): bool
     {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $nightMode = boolval($this->GetValue('NightMode'));
         if ($nightMode) {
             $message = 'Abbruch, der Nachtmodus ist aktiv!';
