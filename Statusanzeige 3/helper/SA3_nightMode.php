@@ -8,95 +8,47 @@ declare(strict_types=1);
 
 trait SA3_nightMode
 {
-    /**
-     * Toggles the night mode off or on.
-     *
-     * @param bool $State
-     * false    = night mode off
-     * true     = night mode on
-     *
-     * @return bool
-     * false    = an error occurred
-     * true     = successful
-     */
-    public function ToggleNightMode(bool $State): bool
+    public function ToggleNightMode(bool $State): void
     {
-        $result = false;
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         if ($this->CheckMaintenanceMode()) {
-            return $result;
+            return;
         }
         $this->SetValue('NightMode', $State);
-        //Night mode off
+
+        // Off
         if (!$State) {
-            $triggerVariables = false;
-            $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
-            if (!empty($variables)) {
-                foreach ($variables as $variable) {
-                    $id = $variable->ID;
-                    if ($id != 0 && @IPS_ObjectExists($id)) {
-                        $use = $variable->Use;
-                        if ($use) {
-                            $triggerVariables = true;
-                        }
-                    }
-                }
-                if ($triggerVariables) {
-                    $result = $this->UpdateLightUnit();
-                }
-            }
-            if (!$triggerVariables) {
-                $lastColor = $this->ReadAttributeInteger('LastColor');
-                $resultColor = $this->SetColor($lastColor);
-                $lastBrightness = $this->ReadAttributeInteger('LastBrightness');
-                $resultBrightness = $this->SetBrightness($lastBrightness);
-                if ($resultColor && $resultBrightness) {
-                    $result = true;
-                }
+            if ($this->CheckExistingTrigger()) {
+                $this->UpdateLightUnit();
+            } else {
+                // Light unit, last color and brightness
+                $this->SetColor($this->ReadAttributeInteger('LightUnitLastColor'));
+                $this->SetBrightness($this->ReadAttributeInteger('LightUnitLastBrightness'), true);
             }
         }
-        //Night mode on
-        if ($State) {
-            // Color
-            $actualColor = $this->GetValue('Color');
-            $color = $this->ReadPropertyInteger('NightModeColor');
-            $lightUnitNewColor = true;
-            if ($color != -1) {
-                $this->SetValue('Color', $color);
-                $lightUnitNewColor = $this->SetDeviceColor($color);
-                if (!$lightUnitNewColor) {
-                    //Revert
-                    $this->SetValue('Color', $actualColor);
-                }
+
+        // On
+        else {
+            if (!$this->CheckExistingTrigger()) {
+                $this->SendDebug(__FUNCTION__, 'Leuchteinheit Attribute letzte Farbe und Helligkeit gesetzt!', 0);
+                $this->WriteAttributeInteger('LightUnitLastColor', $this->GetValue('LightUnitColor'));
+                $this->WriteAttributeInteger('LightUnitLastBrightness', $this->GetValue('LightUnitBrightness'));
             }
-            // Brightness
-            $actualBrightness = $this->GetValue('Brightness');
-            $brightness = $this->ReadPropertyInteger('NightModeBrightness');
-            $this->SetValue('Brightness', $brightness);
-            $lightUnitNewBrightness = $this->SetDeviceBrightness($brightness);
-            if (!$lightUnitNewBrightness) {
-                //Revert
-                $this->SetValue('Brightness', $actualBrightness);
+            if ($this->ReadPropertyBoolean('ChangeNightModeColor')) {
+                $this->SetDeviceColor($this->ReadPropertyInteger('NightModeColor'));
             }
-            if ($lightUnitNewColor && $lightUnitNewBrightness) {
-                $result = true;
+            if ($this->ReadPropertyBoolean('ChangeNightModeBrightness')) {
+                $this->SetDeviceBrightness($this->ReadPropertyInteger('NightModeBrightness'), true);
             }
         }
-        return $result;
     }
 
-    /**
-     * Starts the night mode, used by timer.
-     */
     public function StartNightMode(): void
     {
         $this->ToggleNightMode(true);
         $this->SetNightModeTimer();
     }
 
-    /**
-     * Stops the night mode, used by timer.
-     */
     public function StopNightMode(): void
     {
         $this->ToggleNightMode(false);
@@ -105,13 +57,10 @@ trait SA3_nightMode
 
     #################### Private
 
-    /**
-     * Sets the timer interval for the automatic night mode.
-     */
     private function SetNightModeTimer(): void
     {
         $use = $this->ReadPropertyBoolean('UseAutomaticNightMode');
-        //Start
+        // Start
         $milliseconds = 0;
         if ($use) {
             $milliseconds = $this->GetInterval('NightModeStartTime');
@@ -125,13 +74,6 @@ trait SA3_nightMode
         $this->SetTimerInterval('StopNightMode', $milliseconds);
     }
 
-    /**
-     * Gets the interval for a timer.
-     *
-     * @param string $TimerName
-     *
-     * @return int
-     */
     private function GetInterval(string $TimerName): int
     {
         $timer = json_decode($this->ReadPropertyString($TimerName));
@@ -148,30 +90,22 @@ trait SA3_nightMode
         return ($timestamp - $now) * 1000;
     }
 
-    /**
-     * Checks the state of the automatic night mode.
-     */
-    private function CheckNightModeTimer(): void
+    private function CheckNightModeTimer(): bool
     {
         if (!$this->ReadPropertyBoolean('UseAutomaticNightMode')) {
-            return;
+            return false;
         }
         $start = $this->GetTimerInterval('StartNightMode');
         $stop = $this->GetTimerInterval('StopNightMode');
         if ($start > $stop) {
             $this->ToggleNightMode(true);
+            return true;
         } else {
             $this->ToggleNightMode(false);
+            return false;
         }
     }
 
-    /**
-     * Checks if the night mode is off or on.
-     *
-     * @return bool
-     * false    = off
-     * true     = on
-     */
     private function CheckNightMode(): bool
     {
         $nightMode = boolval($this->GetValue('NightMode'));

@@ -46,10 +46,18 @@ trait SA2_nightMode
                 $this->WriteAttributeInteger('LowerLightUnitLastColor', $this->GetValue('LowerLightUnitColor'));
                 $this->WriteAttributeInteger('LowerLightUnitLastBrightness', $this->GetValue('LowerLightUnitBrightness'));
             }
-            $this->SetDeviceColor(0, $this->ReadPropertyInteger('NightModeColorUpperLightUnit'));
-            $this->SetDeviceBrightness(0, $this->ReadPropertyInteger('NightModeBrightnessUpperLightUnit'), true);
-            $this->SetDeviceColor(1, $this->ReadPropertyInteger('NightModeColorLowerLightUnit'), true);
-            $this->SetDeviceBrightness(1, $this->ReadPropertyInteger('NightModeBrightnessLowerLightUnit'), true);
+            if ($this->ReadPropertyBoolean('ChangeNightModeColorUpperLightUnit')) {
+                $this->SetDeviceColor(0, $this->ReadPropertyInteger('NightModeColorUpperLightUnit'));
+            }
+            if ($this->ReadPropertyBoolean('ChangeNightModeBrightnessUpperLightUnit')) {
+                $this->SetDeviceBrightness(0, $this->ReadPropertyInteger('NightModeBrightnessUpperLightUnit'), true);
+            }
+            if ($this->ReadPropertyBoolean('ChangeNightModeColorLowerLightUnit')) {
+                $this->SetDeviceColor(1, $this->ReadPropertyInteger('NightModeColorLowerLightUnit'), true);
+            }
+            if ($this->ReadPropertyBoolean('ChangeNightModeBrightnessLowerLightUnit')) {
+                $this->SetDeviceBrightness(1, $this->ReadPropertyInteger('NightModeBrightnessLowerLightUnit'), true);
+            }
         }
     }
 

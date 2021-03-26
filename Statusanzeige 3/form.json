@@ -15,18 +15,36 @@
         },
         {
           "type": "CheckBox",
-          "name": "EnableColor",
-          "caption": "Farbe (Farbauswahl)"
+          "name": "LightUnitColor",
+          "caption": "Farbauswahl"
         },
         {
           "type": "CheckBox",
-          "name": "EnableBrightness",
-          "caption": "Helligkeit (0-100%)"
+          "name": "LightUnitBrightness",
+          "caption": "Helligkeit"
         },
         {
           "type": "CheckBox",
           "name": "EnableNightMode",
-          "caption": "Nachtmodus (Aus/An)"
+          "caption": "Nachtmodus"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Leuchteinheit",
+      "items": [
+        {
+          "type": "SelectInstance",
+          "name": "LightUnit",
+          "caption": "HmIP-MP3P Instanz, Kanal 6",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "LightUnitSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
         }
       ]
     },
@@ -37,7 +55,7 @@
         {
           "type": "List",
           "name": "TriggerVariables",
-          "caption": "Variablen",
+          "caption": "Auslösende Variablen",
           "rowCount": 10,
           "add": true,
           "delete": true,
@@ -56,17 +74,13 @@
               }
             },
             {
-              "caption": "Gruppe",
+              "caption": "Prioritätsgruppe",
               "name": "Group",
-              "width": "100px",
-              "add": 0,
+              "width": "150px",
+              "add": 1,
               "edit": {
                 "type": "Select",
                 "options": [
-                  {
-                    "caption": "0",
-                    "value": 0
-                  },
                   {
                     "caption": "1",
                     "value": 1
@@ -94,8 +108,66 @@
                   {
                     "caption": "7",
                     "value": 7
+                  },
+                  {
+                    "caption": "0",
+                    "value": 8
                   }
                 ]
+              }
+            },
+            {
+              "caption": "Auslösende Variable",
+              "name": "ID",
+              "width": "600px",
+              "add": 0,
+              "onClick": "echo 'ID: ' . $UpperLightUnitTriggerVariables['ID'];",
+              "edit": {
+                "type": "SelectVariable"
+              }
+            },
+            {
+              "caption": "Auslöseart",
+              "name": "Trigger",
+              "width": "280px",
+              "add": 4,
+              "edit": {
+                "type": "Select",
+                "options": [
+                  {
+                    "caption": "Bei Grenzunterschreitung (einmalig)",
+                    "value": 0
+                  },
+                  {
+                    "caption": "Bei Grenzunterschreitung (mehrmalig)",
+                    "value": 1
+                  },
+                  {
+                    "caption": "Bei Grenzüberschreitung (einmalig)",
+                    "value": 2
+                  },
+                  {
+                    "caption": "Bei Grenzüberschreitung (mehrmalig)",
+                    "value": 3
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (einmalig)",
+                    "value": 4
+                  },
+                  {
+                    "caption": "Bei bestimmtem Wert (mehrmalig)",
+                    "value": 5
+                  }
+                ]
+              }
+            },
+            {
+              "caption": "Auslösewert",
+              "name": "Value",
+              "width": "160px",
+              "add": "",
+              "edit": {
+                "type": "ValidationTextBox"
               }
             },
             {
@@ -145,49 +217,12 @@
               "caption": "Helligkeit",
               "name": "Brightness",
               "width": "110px",
-              "add": -1,
+              "add": 50,
               "edit": {
                 "type": "NumberSpinner",
                 "suffix": "%",
-                "minimum": -1,
+                "minimum": 0,
                 "maximum": 100
-              }
-            },
-            {
-              "caption": "Variable",
-              "name": "ID",
-              "width": "600px",
-              "add": 0,
-              "onClick": "echo 'ID: ' . $TriggerVariables['ID'];",
-              "edit": {
-                "type": "SelectVariable"
-              }
-            },
-            {
-              "caption": "Auslösender Wert",
-              "name": "TriggerValue",
-              "width": "160px",
-              "add": 0,
-              "edit": {
-                "type": "Select",
-                "options": [
-                  {
-                    "caption": "0 | false",
-                    "value": 0
-                  },
-                  {
-                    "caption": "1 | true",
-                    "value": 1
-                  },
-                  {
-                    "caption": "2",
-                    "value": 2
-                  },
-                  {
-                    "caption": "3",
-                    "value": 3
-                  }
-                ]
               }
             }
           ]
@@ -196,39 +231,37 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Leuchteinheit",
-      "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die Instanz für die Leuchteinheit (HmIP-MP3P, Kanal 6) aus"
-        },
-        {
-          "type": "SelectInstance",
-          "name": "LightUnit",
-          "caption": "Leuchteinheit",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "LightUnitSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
       "caption": "Nachtmodus",
       "items": [
+        {
+          "type": "CheckBox",
+          "name": "UseAutomaticNightMode",
+          "caption": "Automatischer Nachtmodus"
+        },
+        {
+          "type": "SelectTime",
+          "name": "NightModeStartTime",
+          "caption": "Startzeit"
+        },
+        {
+          "type": "SelectTime",
+          "name": "NightModeEndTime",
+          "caption": "Endzeit"
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "CheckBox",
+          "name": "ChangeNightModeColor",
+          "caption": "Farbe ändern"
+        },
         {
           "type": "Select",
           "name": "NightModeColor",
           "caption": "Farbe",
           "options": [
-            {
-              "caption": "Keine Farbveränderung",
-              "value": -1
-            },
             {
               "caption": "Aus",
               "value": 0
@@ -264,31 +297,17 @@
           ]
         },
         {
+          "type": "CheckBox",
+          "name": "ChangeNightModeBrightness",
+          "caption": "Helligkeit ändern"
+        },
+        {
           "type": "NumberSpinner",
           "name": "NightModeBrightness",
           "caption": "Helligkeit",
           "suffix": "%",
-          "minimum": -1,
+          "minimum": 0,
           "maximum": 100
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
-        {
-          "type": "CheckBox",
-          "name": "UseAutomaticNightMode",
-          "caption": "Automatischer Nachtmodus"
-        },
-        {
-          "type": "SelectTime",
-          "name": "NightModeStartTime",
-          "caption": "Startzeit"
-        },
-        {
-          "type": "SelectTime",
-          "name": "NightModeEndTime",
-          "caption": "Endzeit"
         }
       ]
     }
@@ -393,17 +412,12 @@
     },
     {
       "type": "ExpansionPanel",
-      "caption": "Attribute",
+      "caption": "Status",
       "items": [
         {
-          "type": "Label",
-          "caption": "Letzte Farbe:",
-          "name": "AttributeLastColor"
-        },
-        {
-          "type": "Label",
-          "caption": "Letzte Helligkeit:",
-          "name": "AttributeLastBrightness"
+          "type": "Button",
+          "caption": "Status aktualisieren",
+          "onClick": "SA3_CheckActualStatus($id);"
         }
       ]
     },

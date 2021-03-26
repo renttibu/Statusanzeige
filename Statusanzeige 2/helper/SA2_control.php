@@ -397,16 +397,6 @@ trait SA2_control
          * $LightUnit
          * 0    = upper light unit
          * 1    = lower light unit
-         *
-         * $Color
-         * 0    = off
-         * 1    = blue
-         * 2    = green
-         * 3    = turquoise
-         * 4    = red
-         * 5    = violet
-         * 6    = yellow
-         * 7    = white
          */
 
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);

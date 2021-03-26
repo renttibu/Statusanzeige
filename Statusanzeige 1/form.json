@@ -16,12 +16,48 @@
         {
           "type": "CheckBox",
           "name": "EnableSignalling",
-          "caption": "Anzeige (Aus/An)"
+          "caption": "Anzeige"
         },
         {
           "type": "CheckBox",
           "name": "EnableNightMode",
-          "caption": "Nachtmodus (Aus/An)"
+          "caption": "Nachtmodus"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Anzeige",
+      "items": [
+        {
+          "type": "SelectVariable",
+          "name": "SignallingVariable",
+          "caption": "Variable",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "SignallingSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
+        }
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Invertierte Anzeige",
+      "items": [
+        {
+          "type": "SelectVariable",
+          "name": "InvertedSignallingVariable",
+          "caption": "Variable",
+          "width": "600px"
+        },
+        {
+          "type": "NumberSpinner",
+          "name": "InvertedSignallingSwitchingDelay",
+          "caption": "Schaltverzögerung",
+          "suffix": "Millisekunden"
         }
       ]
     },
@@ -50,9 +86,9 @@
               }
             },
             {
-              "caption": "Variable",
+              "caption": "Auslösende Variable",
               "name": "ID",
-              "width": "300px",
+              "width": "600px",
               "add": 0,
               "onClick": "echo 'ID ' . $TriggeringVariables['ID'];",
               "edit": {
@@ -60,9 +96,9 @@
               }
             },
             {
-              "caption": "Auslöser",
+              "caption": "Auslöseart",
               "name": "Trigger",
-              "width": "250px",
+              "width": "280px",
               "add": 6,
               "edit": {
                 "type": "Select",
@@ -103,57 +139,15 @@
               }
             },
             {
-              "caption": "Auslösender Wert",
+              "caption": "Auslösewert",
               "name": "Value",
-              "width": "140px",
-              "add": "true",
+              "width": "160px",
+              "add": "",
               "edit": {
                 "type": "ValidationTextBox"
               }
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "ExpansionPanel",
-      "caption": "Anzeige",
-      "items": [
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die zu schaltende Variable für die Anzeige aus"
-        },
-        {
-          "type": "SelectVariable",
-          "name": "SignallingVariable",
-          "caption": "Variable",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "SignallingSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
-        {
-          "type": "Label",
-          "caption": "Bitte wählen Sie die zu schaltende Variable für die korrespondierende, invertierte Anzeige aus"
-        },
-        {
-          "type": "SelectVariable",
-          "name": "InvertedSignallingVariable",
-          "caption": "Invertierte Anzeige",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "InvertedSignallingSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
         }
       ]
     },

@@ -48,9 +48,13 @@ class Statusanzeige2 extends IPSModule # HmIP-BSL
         $this->RegisterPropertyBoolean('UseAutomaticNightMode', false);
         $this->RegisterPropertyString('NightModeStartTime', '{"hour":22,"minute":0,"second":0}');
         $this->RegisterPropertyString('NightModeEndTime', '{"hour":6,"minute":0,"second":0}');
+        $this->RegisterPropertyBoolean('ChangeNightModeColorUpperLightUnit', false);
         $this->RegisterPropertyInteger('NightModeColorUpperLightUnit', 0);
+        $this->RegisterPropertyBoolean('ChangeNightModeBrightnessUpperLightUnit', false);
         $this->RegisterPropertyInteger('NightModeBrightnessUpperLightUnit', 0);
+        $this->RegisterPropertyBoolean('ChangeNightModeColorLowerLightUnit', false);
         $this->RegisterPropertyInteger('NightModeColorLowerLightUnit', 0);
+        $this->RegisterPropertyBoolean('ChangeNightModeBrightnessLowerLightUnit', false);
         $this->RegisterPropertyInteger('NightModeBrightnessLowerLightUnit', 0);
 
         // Variables

@@ -15,7 +15,7 @@
         },
         {
           "type": "Label",
-          "caption": "Obere Leuchteinheit "
+          "caption": "Obere Leuchteinheit"
         },
         {
           "type": "CheckBox",
@@ -33,7 +33,7 @@
         },
         {
           "type": "Label",
-          "caption": "Untere Leuchteinheit "
+          "caption": "Untere Leuchteinheit"
         },
         {
           "type": "CheckBox",
@@ -478,6 +478,11 @@
           "caption": "Obere Leuchteinheit"
         },
         {
+          "type": "CheckBox",
+          "name": "ChangeNightModeColorUpperLightUnit",
+          "caption": "Farbe ändern"
+        },
+        {
           "type": "Select",
           "name": "NightModeColorUpperLightUnit",
           "caption": "Farbe",
@@ -517,6 +522,11 @@
           ]
         },
         {
+          "type": "CheckBox",
+          "name": "ChangeNightModeBrightnessUpperLightUnit",
+          "caption": "Helligkeit ändern"
+        },
+        {
           "type": "NumberSpinner",
           "name": "NightModeBrightnessUpperLightUnit",
           "caption": "Helligkeit",
@@ -531,6 +541,11 @@
         {
           "type": "Label",
           "caption": "Untere Leuchteinheit"
+        },
+        {
+          "type": "CheckBox",
+          "name": "ChangeNightModeColorLowerLightUnit",
+          "caption": "Farbe ändern"
         },
         {
           "type": "Select",
@@ -570,6 +585,11 @@
               "value": 7
             }
           ]
+        },
+        {
+          "type": "CheckBox",
+          "name": "ChangeNightModeBrightnessLowerLightUnit",
+          "caption": "Helligkeit ändern"
         },
         {
           "type": "NumberSpinner",

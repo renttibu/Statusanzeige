@@ -8,17 +8,6 @@ declare(strict_types=1);
 
 trait SA1_nightMode
 {
-    /**
-     * Toggles the night mode off or on.
-     *
-     * @param bool $State
-     * false    = off
-     * true     = on
-     *
-     * @return bool
-     * false    = an error occurred
-     * true     = successful
-     */
     public function ToggleNightMode(bool $State): bool
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt. (' . microtime(true) . ')', 0);
@@ -28,7 +17,7 @@ trait SA1_nightMode
         $actualNightMode = $this->GetValue('NightMode');
         $this->SetValue('NightMode', $State);
         $result = true;
-        //Night mode off
+        // Off
         if (!$State) {
             $result = $this->UpdateState();
             if (!$result) {
@@ -36,15 +25,15 @@ trait SA1_nightMode
                 $this->SetValue('NightMode', $actualNightMode);
             }
         }
-        //Night mode on
-        if ($State) {
+        // On
+        else {
             $actualSignalling = $this->GetValue('Signalling');
             $this->SetValue('Signalling', false);
-            $signalling = $this->TriggerSignalling(false);
-            $invertedSignalling = $this->TriggerInvertedSignalling(false);
+            $signalling = $this->ExecuteSignalling(false);
+            $invertedSignalling = $this->ExecuteInvertedSignalling(false);
             if (!$signalling || !$invertedSignalling) {
                 $result = false;
-                //Revert value
+                // Revert value
                 $this->SetValue('Signalling', $actualSignalling);
                 $this->SetValue('NightMode', $actualNightMode);
             }
@@ -52,18 +41,12 @@ trait SA1_nightMode
         return $result;
     }
 
-    /**
-     * Starts the night mode, used by timer.
-     */
     public function StartNightMode(): void
     {
         $this->ToggleNightMode(true);
         $this->SetNightModeTimer();
     }
 
-    /**
-     * Stops the night mode, used by timer.
-     */
     public function StopNightMode(): void
     {
         $this->ToggleNightMode(false);
@@ -72,19 +55,16 @@ trait SA1_nightMode
 
     #################### Private
 
-    /**
-     * Sets the timer interval for the automatic night mode.
-     */
     private function SetNightModeTimer(): void
     {
         $use = $this->ReadPropertyBoolean('UseAutomaticNightMode');
-        //Start
+        // Start
         $milliseconds = 0;
         if ($use) {
             $milliseconds = $this->GetInterval('NightModeStartTime');
         }
         $this->SetTimerInterval('StartNightMode', $milliseconds);
-        //End
+        // End
         $milliseconds = 0;
         if ($use) {
             $milliseconds = $this->GetInterval('NightModeEndTime');
@@ -92,13 +72,6 @@ trait SA1_nightMode
         $this->SetTimerInterval('StopNightMode', $milliseconds);
     }
 
-    /**
-     * Gets the interval for a timer.
-     *
-     * @param string $TimerName
-     *
-     * @return int
-     */
     private function GetInterval(string $TimerName): int
     {
         $timer = json_decode($this->ReadPropertyString($TimerName));
@@ -115,30 +88,22 @@ trait SA1_nightMode
         return ($timestamp - $now) * 1000;
     }
 
-    /**
-     * Checks the state of the automatic night mode.
-     */
-    private function CheckNightModeTimer(): void
+    private function CheckNightModeTimer(): bool
     {
         if (!$this->ReadPropertyBoolean('UseAutomaticNightMode')) {
-            return;
+            return false;
         }
         $start = $this->GetTimerInterval('StartNightMode');
         $stop = $this->GetTimerInterval('StopNightMode');
         if ($start > $stop) {
             $this->ToggleNightMode(true);
+            return true;
         } else {
             $this->ToggleNightMode(false);
+            return false;
         }
     }
 
-    /**
-     * Checks if the night mode is off or on.
-     *
-     * @return bool
-     * false    = off
-     * true     = on
-     */
     private function CheckNightMode(): bool
     {
         $nightMode = boolval($this->GetValue('NightMode'));

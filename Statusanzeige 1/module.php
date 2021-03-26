@@ -13,49 +13,92 @@
 declare(strict_types=1);
 include_once __DIR__ . '/helper/autoload.php';
 
-class Statusanzeige1 extends IPSModule
+class Statusanzeige1 extends IPSModule # Variable
 {
-    //Helper
+    // Helper
     use SA1_backupRestore;
     use SA1_control;
     use SA1_nightMode;
 
-    //Constants
+    // Constants
     private const DELAY_MILLISECONDS = 100;
 
     public function Create()
     {
-        //Never delete this line!
+        // Never delete this line!
         parent::Create();
-        $this->RegisterProperties();
-        $this->RegisterVariables();
+
+        // Properties
+        // Functions
+        $this->RegisterPropertyBoolean('MaintenanceMode', false);
+        $this->RegisterPropertyBoolean('EnableSignalling', true);
+        $this->RegisterPropertyBoolean('EnableNightMode', true);
+        // Signalling
+        $this->RegisterPropertyInteger('SignallingVariable', 0);
+        $this->RegisterPropertyInteger('SignallingSwitchingDelay', 0);
+        $this->RegisterPropertyInteger('InvertedSignallingVariable', 0);
+        $this->RegisterPropertyInteger('InvertedSignallingSwitchingDelay', 0);
+        // Trigger variables
+        $this->RegisterPropertyString('TriggerVariables', '[]');
+        // Night mode
+        $this->RegisterPropertyBoolean('UseAutomaticNightMode', false);
+        $this->RegisterPropertyString('NightModeStartTime', '{"hour":22,"minute":0,"second":0}');
+        $this->RegisterPropertyString('NightModeEndTime', '{"hour":6,"minute":0,"second":0}');
+
+        // Variables
+        // Signalling
+        $id = @$this->GetIDForIdent('Signalling');
+        $this->RegisterVariableBoolean('Signalling', 'Anzeige', '~Switch', 10);
+        $this->EnableAction('Signalling');
+        if ($id == false) {
+            IPS_SetIcon($this->GetIDForIdent('Signalling'), 'Bulb');
+        }
+        // Night mode
+        $id = @$this->GetIDForIdent('Signalling');
+        $this->RegisterVariableBoolean('NightMode', 'Nachtmodus', '~Switch', 20);
+        $this->EnableAction('NightMode');
+        if ($id == false) {
+            IPS_SetIcon($this->GetIDForIdent('NightMode'), 'Moon');
+        }
+
+        // Timers
         $this->RegisterTimer('StartNightMode', 0, 'SA1_StartNightMode(' . $this->InstanceID . ');');
         $this->RegisterTimer('StopNightMode', 0, 'SA1_StopNightMode(' . $this->InstanceID . ',);');
     }
 
-    public function Destroy()
-    {
-        //Never delete this line!
-        parent::Destroy();
-    }
-
     public function ApplyChanges()
     {
-        //Wait until IP-Symcon is started
+        // Wait until IP-Symcon is started
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
-        //Never delete this line!
+
+        // Never delete this line!
         parent::ApplyChanges();
-        //Check runlevel
+
+        // Check runlevel
         if (IPS_GetKernelRunlevel() != KR_READY) {
             return;
         }
-        $this->SetOptions();
-        $this->RegisterMessages();
-        if ($this->CheckMaintenanceMode()) {
+
+        // Options
+        IPS_SetHidden($this->GetIDForIdent('Signalling'), !$this->ReadPropertyBoolean('EnableSignalling'));
+        IPS_SetHidden($this->GetIDForIdent('NightMode'), !$this->ReadPropertyBoolean('EnableNightMode'));
+
+        // Validation
+        if (!$this->ValidateConfiguration()) {
             return;
         }
+
+        $this->RegisterMessages();
         $this->SetNightModeTimer();
-        $this->CheckNightModeTimer();
+        if (!$this->CheckNightModeTimer()) {
+            $this->UpdateState();
+        }
+    }
+
+    public function Destroy()
+    {
+        // Never delete this line!
+        parent::Destroy();
     }
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
@@ -72,16 +115,19 @@ class Statusanzeige1 extends IPSModule
                 break;
 
             case VM_UPDATE:
+
                 //$Data[0] = actual value
                 //$Data[1] = value changed
                 //$Data[2] = last value
                 //$Data[3] = timestamp actual value
                 //$Data[4] = timestamp value changed
                 //$Data[5] = timestamp last value
+
                 if ($this->CheckMaintenanceMode()) {
                     return;
                 }
-                //Trigger action
+
+                // Check trigger
                 $valueChanged = 'false';
                 if ($Data[1]) {
                     $valueChanged = 'true';
@@ -96,7 +142,8 @@ class Statusanzeige1 extends IPSModule
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-        //Trigger
+
+        // Trigger variables
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
@@ -109,7 +156,7 @@ class Statusanzeige1 extends IPSModule
                 if ($id == 0 || @!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; # red
                 }
-                $formData['elements'][1]['items'][0]['values'][] = [
+                $formData['elements'][3]['items'][0]['values'][] = [
                     'Use'       => $use,
                     'ID'        => $id,
                     'Trigger'   => $variable->Trigger,
@@ -117,14 +164,15 @@ class Statusanzeige1 extends IPSModule
                     'rowColor'  => $rowColor];
             }
         }
-        //Registered messages
+
+        // Registered messages
         $messages = $this->GetMessageList();
         foreach ($messages as $senderID => $messageID) {
             $senderName = 'Objekt #' . $senderID . ' existiert nicht';
             $rowColor = '#FFC0C0'; # red
             if (@IPS_ObjectExists($senderID)) {
                 $senderName = IPS_GetName($senderID);
-                $rowColor = ''; # '#C0FFC0' # green
+                $rowColor = '#C0FFC0'; # green
             }
             switch ($messageID) {
                 case [10001]:
@@ -145,6 +193,7 @@ class Statusanzeige1 extends IPSModule
                 'MessageDescription' => $messageDescription,
                 'rowColor'           => $rowColor];
         }
+
         return json_encode($formData);
     }
 
@@ -176,61 +225,34 @@ class Statusanzeige1 extends IPSModule
         $this->ApplyChanges();
     }
 
-    private function RegisterProperties(): void
+    private function ValidateConfiguration(): bool
     {
-        //Functions
-        $this->RegisterPropertyBoolean('MaintenanceMode', false);
-        $this->RegisterPropertyBoolean('EnableSignalling', true);
-        $this->RegisterPropertyBoolean('EnableNightMode', true);
-        //Trigger
-        $this->RegisterPropertyString('TriggerVariables', '[]');
-        //Signalling
-        $this->RegisterPropertyInteger('SignallingVariable', 0);
-        $this->RegisterPropertyInteger('SignallingSwitchingDelay', 0);
-        $this->RegisterPropertyInteger('InvertedSignallingVariable', 0);
-        $this->RegisterPropertyInteger('InvertedSignallingSwitchingDelay', 0);
-        //Night mode
-        $this->RegisterPropertyBoolean('UseAutomaticNightMode', false);
-        $this->RegisterPropertyString('NightModeStartTime', '{"hour":22,"minute":0,"second":0}');
-        $this->RegisterPropertyString('NightModeEndTime', '{"hour":6,"minute":0,"second":0}');
-    }
-
-    private function RegisterVariables(): void
-    {
-        //Signalling
-        $this->RegisterVariableBoolean('Signalling', 'Anzeige', '~Switch', 10);
-        $this->EnableAction('Signalling');
-        IPS_SetIcon($this->GetIDForIdent('Signalling'), 'Bulb');
-        //Night mode
-        $this->RegisterVAriableBoolean('NightMode', 'Nachtmodus', '~Switch', 20);
-        $this->EnableAction('NightMode');
-        IPS_SetIcon($this->GetIDForIdent('NightMode'), 'Moon');
-    }
-
-    private function SetOptions(): void
-    {
-        IPS_SetHidden($this->GetIDForIdent('Signalling'), !$this->ReadPropertyBoolean('EnableSignalling'));
-        IPS_SetHidden($this->GetIDForIdent('NightMode'), !$this->ReadPropertyBoolean('EnableNightMode'));
+        $result = true;
+        $status = 102;
+        // Maintenance mode
+        $maintenance = $this->CheckMaintenanceMode();
+        if ($maintenance) {
+            $result = false;
+            $status = 104;
+        }
+        IPS_SetDisabled($this->InstanceID, $maintenance);
+        $this->SetStatus($status);
+        return $result;
     }
 
     private function CheckMaintenanceMode(): bool
     {
-        $result = false;
-        $status = 102;
-        if ($this->ReadPropertyBoolean('MaintenanceMode')) {
-            $result = true;
-            $status = 104;
+        $result = $this->ReadPropertyBoolean('MaintenanceMode');
+        if ($result) {
             $this->SendDebug(__FUNCTION__, 'Abbruch, der Wartungsmodus ist aktiv!', 0);
             $this->LogMessage('ID ' . $this->InstanceID . ', ' . __FUNCTION__ . ', Abbruch, der Wartungsmodus ist aktiv!', KL_WARNING);
         }
-        $this->SetStatus($status);
-        IPS_SetDisabled($this->InstanceID, $result);
         return $result;
     }
 
     private function RegisterMessages(): void
     {
-        //Unregister
+        // Unregister VM_UPDATE
         $messages = $this->GetMessageList();
         if (!empty($messages)) {
             foreach ($messages as $id => $message) {
@@ -241,7 +263,8 @@ class Statusanzeige1 extends IPSModule
                 }
             }
         }
-        //Register
+
+        // Register VM_UPDATE
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {
