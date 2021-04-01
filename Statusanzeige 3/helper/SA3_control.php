@@ -365,7 +365,7 @@ trait SA3_control
                     $setBrightnessAgain = @HM_WriteValueFloat($id, 'LEVEL', $deviceBrightness);
                     if (!$setBrightnessAgain) {
                         // Revert brightness
-                        $this->SetValue('Brightness', $actualBrightness);
+                        $this->SetValue('LightUnitBrightness', $actualBrightness);
                         $errorMessage = 'Helligkeit ' . $deviceBrightness . ' konnte nicht gesetzt werden!';
                         $this->SendDebug(__FUNCTION__, $errorMessage, 0);
                         $errorMessage = 'ID ' . $id . ' , ' . $errorMessage;
