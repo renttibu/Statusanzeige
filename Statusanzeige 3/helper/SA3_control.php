@@ -69,39 +69,6 @@ trait SA3_control
         $this->UpdateLightUnit();
     }
 
-    #################### Private
-
-    private function UpdateLightUnit(): void
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
-        if ($this->CheckMaintenanceMode()) {
-            return;
-        }
-        if ($this->CheckNightMode()) {
-            return;
-        }
-        $this->CheckTrigger();
-    }
-
-    private function CheckExistingTrigger(): bool
-    {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
-        $result = false;
-        $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
-        if (!empty($variables)) {
-            foreach ($variables as $variable) {
-                $id = $variable->ID;
-                if ($id != 0 && @IPS_ObjectExists($id)) {
-                    $use = $variable->Use;
-                    if ($use) {
-                        $result = true;
-                    }
-                }
-            }
-        }
-        return $result;
-    }
-
     public function CheckTriggerUpdate(int $SenderID, bool $ValueChanged): void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
@@ -283,6 +250,39 @@ trait SA3_control
                 }
             }
         }
+    }
+
+    #################### Private
+
+    private function UpdateLightUnit(): void
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
+        if ($this->CheckMaintenanceMode()) {
+            return;
+        }
+        if ($this->CheckNightMode()) {
+            return;
+        }
+        $this->CheckTrigger();
+    }
+
+    private function CheckExistingTrigger(): bool
+    {
+        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
+        $result = false;
+        $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
+        if (!empty($variables)) {
+            foreach ($variables as $variable) {
+                $id = $variable->ID;
+                if ($id != 0 && @IPS_ObjectExists($id)) {
+                    $use = $variable->Use;
+                    if ($use) {
+                        $result = true;
+                    }
+                }
+            }
+        }
+        return $result;
     }
 
     private function SetDeviceColor(int $Color, bool $UseSwitchingDelay = false): bool

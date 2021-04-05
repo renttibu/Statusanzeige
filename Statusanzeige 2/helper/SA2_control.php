@@ -92,6 +92,47 @@ trait SA2_control
         $this->UpdateLowerLightUnit();
     }
 
+    public function CheckTriggerUpdate(int $SenderID, bool $ValueChanged): void
+    {
+        $this->SendDebug(__FUNCTION__, 'Methode wird ausgeführt.', 0);
+        $triggers = ['UpperLightUnitTriggerVariables', 'LowerLightUnitTriggerVariables'];
+        foreach ($triggers as $trigger) {
+            $lightUnit = 0;
+            if ($trigger == 'LowerLightUnitTriggerVariables') {
+                $lightUnit = 1;
+            }
+            $variables = json_decode($this->ReadPropertyString($trigger));
+            if (!empty($variables)) {
+                $update = false;
+                foreach ($variables as $variable) {
+                    $id = $variable->ID;
+                    if ($SenderID == $id) {
+                        if ($id != 0 && @IPS_ObjectExists($id)) {
+                            if ($variable->Use) {
+                                switch ($variable->Trigger) {
+                                    // Once
+                                    case 0:
+                                    case 2:
+                                    case 4:
+                                        if ($ValueChanged) {
+                                            $update = true;
+                                        }
+                                        break;
+
+                                    default:
+                                        $update = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                if ($update) {
+                    $this->CheckTrigger($lightUnit);
+                }
+            }
+        }
+    }
+
     #################### Private
 
     private function UpdateUpperLightUnit(): void
@@ -139,47 +180,6 @@ trait SA2_control
             }
         }
         return $result;
-    }
-
-    public function CheckTriggerUpdate(int $SenderID, bool $ValueChanged): void
-    {
-        $this->SendDebug(__FUNCTION__, 'Methode wird ausgeführt.', 0);
-        $triggers = ['UpperLightUnitTriggerVariables', 'LowerLightUnitTriggerVariables'];
-        foreach ($triggers as $trigger) {
-            $lightUnit = 0;
-            if ($trigger == 'LowerLightUnitTriggerVariables') {
-                $lightUnit = 1;
-            }
-            $variables = json_decode($this->ReadPropertyString($trigger));
-            if (!empty($variables)) {
-                $update = false;
-                foreach ($variables as $variable) {
-                    $id = $variable->ID;
-                    if ($SenderID == $id) {
-                        if ($id != 0 && @IPS_ObjectExists($id)) {
-                            if ($variable->Use) {
-                                switch ($variable->Trigger) {
-                                    // Once
-                                    case 0:
-                                    case 2:
-                                    case 4:
-                                        if ($ValueChanged) {
-                                            $update = true;
-                                        }
-                                        break;
-
-                                    default:
-                                        $update = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                if ($update) {
-                    $this->CheckTrigger($lightUnit);
-                }
-            }
-        }
     }
 
     private function CheckTrigger(int $LightUnit): void
