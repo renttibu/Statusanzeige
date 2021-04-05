@@ -141,7 +141,7 @@ trait SA2_control
         return $result;
     }
 
-    private function CheckTriggerUpdate(int $SenderID, bool $ValueChanged): void
+    public function CheckTriggerUpdate(int $SenderID, bool $ValueChanged): void
     {
         $this->SendDebug(__FUNCTION__, 'Methode wird ausgeführt.', 0);
         $triggers = ['UpperLightUnitTriggerVariables', 'LowerLightUnitTriggerVariables'];

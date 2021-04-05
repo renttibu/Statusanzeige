@@ -102,7 +102,7 @@ trait SA3_control
         return $result;
     }
 
-    private function CheckTriggerUpdate(int $SenderID, bool $ValueChanged): void
+    public function CheckTriggerUpdate(int $SenderID, bool $ValueChanged): void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
@@ -136,7 +136,7 @@ trait SA3_control
         }
     }
 
-    private function CheckTrigger(): void
+    public function CheckTrigger(): void
     {
         $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt.', 0);
         if ($this->CheckMaintenanceMode()) {
