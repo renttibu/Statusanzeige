@@ -1,0 +1,14 @@
+{
+  "id": "{2A9E3869-0F28-3B0A-1665-7E88F8EB632E}",
+  "name": "Statusanzeige HmIPBSL",
+  "type": 3,
+  "vendor": "Ulrich Bittner",
+  "aliases": [
+    "Statusanzeige HmIP-BSL"
+  ],
+  "url": "https://github.com/ubittner/Statusanzeige/tree/master/HmIP-BSL",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "SAHMIPBSL"
+}

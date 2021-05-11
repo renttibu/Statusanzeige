@@ -1,0 +1,14 @@
+{
+  "id": "{0F2E55A5-7F51-4103-E7BC-519AC7EA87F7}",
+  "name": "Statusanzeige",
+  "type": 3,
+  "vendor": "Ulrich Bittner",
+  "aliases": [
+    "Statusanzeige"
+  ],
+  "url": "https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "SA"
+}

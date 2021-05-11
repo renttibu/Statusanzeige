@@ -6,23 +6,23 @@ include_once __DIR__ . '/stubs/Validator.php';
 
 class StatusanzeigeValidationTest extends TestCaseSymconValidation
 {
-    public function testValidateStatusanzeige(): void
+    public function testValidateLibrary_Statusanzeige(): void
     {
         $this->validateLibrary(__DIR__ . '/..');
     }
 
-    public function testValidateStatusanzeige1Module(): void
+    public function testValidateModule_Statusanzeige(): void
     {
-        $this->validateModule(__DIR__ . '/../Statusanzeige 1');
+        $this->validateModule(__DIR__ . '/../Statusanzeige');
     }
 
-    public function testValidateStatusanzeige2Module(): void
+    public function testValidateModule_HmIPBSL(): void
     {
-        $this->validateModule(__DIR__ . '/../Statusanzeige 2');
+        $this->validateModule(__DIR__ . '/../HmIP-BSL');
     }
 
-    public function testValidateStatusanzeige3Module(): void
+    public function testValidateModule_HmIPMP3P(): void
     {
-        $this->validateModule(__DIR__ . '/../Statusanzeige 3');
+        $this->validateModule(__DIR__ . '/../HmIP-MP3P');
     }
 }

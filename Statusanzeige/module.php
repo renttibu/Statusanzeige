@@ -3,8 +3,8 @@
 /*
  * @author      Ulrich Bittner
  * @copyright   (c) 2020, 2021
- * @license    	CC BY-NC-SA 4.0
- * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige%201
+ * @license     CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige
  */
 
 /** @noinspection DuplicatedCode */
@@ -13,12 +13,12 @@
 declare(strict_types=1);
 include_once __DIR__ . '/helper/autoload.php';
 
-class Statusanzeige1 extends IPSModule # Variable
+class Statusanzeige extends IPSModule
 {
     // Helper
-    use SA1_backupRestore;
-    use SA1_control;
-    use SA1_nightMode;
+    use SA_backupRestore;
+    use SA_control;
+    use SA_nightMode;
 
     // Constants
     private const DELAY_MILLISECONDS = 100;
@@ -44,6 +44,8 @@ class Statusanzeige1 extends IPSModule # Variable
         $this->RegisterPropertyBoolean('UseAutomaticNightMode', false);
         $this->RegisterPropertyString('NightModeStartTime', '{"hour":22,"minute":0,"second":0}');
         $this->RegisterPropertyString('NightModeEndTime', '{"hour":6,"minute":0,"second":0}');
+        // Test
+        $this->RegisterPropertyString(' TestList', '[]');
 
         // Variables
         // Signalling
@@ -62,8 +64,8 @@ class Statusanzeige1 extends IPSModule # Variable
         }
 
         // Timers
-        $this->RegisterTimer('StartNightMode', 0, 'SA1_StartNightMode(' . $this->InstanceID . ');');
-        $this->RegisterTimer('StopNightMode', 0, 'SA1_StopNightMode(' . $this->InstanceID . ',);');
+        $this->RegisterTimer('StartNightMode', 0, 'SA_StartNightMode(' . $this->InstanceID . ');');
+        $this->RegisterTimer('StopNightMode', 0, 'SA_StopNightMode(' . $this->InstanceID . ',);');
     }
 
     public function ApplyChanges()
@@ -90,9 +92,7 @@ class Statusanzeige1 extends IPSModule # Variable
 
         $this->RegisterMessages();
         $this->SetNightModeTimer();
-        if (!$this->CheckNightModeTimer()) {
-            $this->UpdateState();
-        }
+        $this->UpdateState();
     }
 
     public function Destroy()
@@ -123,17 +123,10 @@ class Statusanzeige1 extends IPSModule # Variable
                 //$Data[4] = timestamp value changed
                 //$Data[5] = timestamp last value
 
-                if ($this->CheckMaintenanceMode()) {
-                    return;
-                }
-
-                // Check trigger
-                $valueChanged = 'false';
                 if ($Data[1]) {
-                    $valueChanged = 'true';
+                    $scriptText = 'SA_UpdateState(' . $this->InstanceID . ');';
+                    IPS_RunScriptText($scriptText);
                 }
-                $scriptText = 'SA1_CheckTrigger(' . $this->InstanceID . ', ' . $SenderID . ', ' . $valueChanged . ');';
-                IPS_RunScriptText($scriptText);
                 break;
 
         }
@@ -142,7 +135,6 @@ class Statusanzeige1 extends IPSModule # Variable
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
-
         // Trigger variables
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
@@ -157,14 +149,13 @@ class Statusanzeige1 extends IPSModule # Variable
                     $rowColor = '#FFC0C0'; # red
                 }
                 $formData['elements'][3]['items'][0]['values'][] = [
-                    'Use'       => $use,
-                    'ID'        => $id,
-                    'Trigger'   => $variable->Trigger,
-                    'Value'     => $variable->Value,
-                    'rowColor'  => $rowColor];
+                    'Use'           => $use,
+                    'ID'            => $id,
+                    'TriggerType'   => $variable->TriggerType,
+                    'TriggerValue'  => $variable->TriggerValue,
+                    'rowColor'      => $rowColor];
             }
         }
-
         // Registered messages
         $messages = $this->GetMessageList();
         foreach ($messages as $senderID => $messageID) {
@@ -172,7 +163,7 @@ class Statusanzeige1 extends IPSModule # Variable
             $rowColor = '#FFC0C0'; # red
             if (@IPS_ObjectExists($senderID)) {
                 $senderName = IPS_GetName($senderID);
-                $rowColor = '#C0FFC0'; # green
+                $rowColor = '#C0FFC0'; # light green
             }
             switch ($messageID) {
                 case [10001]:
@@ -193,7 +184,6 @@ class Statusanzeige1 extends IPSModule # Variable
                 'MessageDescription' => $messageDescription,
                 'rowColor'           => $rowColor];
         }
-
         return json_encode($formData);
     }
 
@@ -252,7 +242,7 @@ class Statusanzeige1 extends IPSModule # Variable
 
     private function RegisterMessages(): void
     {
-        // Unregister VM_UPDATE
+        // Unregister
         $messages = $this->GetMessageList();
         if (!empty($messages)) {
             foreach ($messages as $id => $message) {
@@ -263,8 +253,7 @@ class Statusanzeige1 extends IPSModule # Variable
                 }
             }
         }
-
-        // Register VM_UPDATE
+        // Register
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
             foreach ($variables as $variable) {

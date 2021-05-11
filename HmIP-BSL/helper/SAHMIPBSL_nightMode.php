@@ -3,8 +3,8 @@
 /*
  * @author      Ulrich Bittner
  * @copyright   (c) 2020, 2021
- * @license    	CC BY-NC-SA 4.0
- * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige%202
+ * @license     CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Statusanzeige/tree/master/HmIP-BSL
  */
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
@@ -13,11 +13,10 @@
 
 declare(strict_types=1);
 
-trait SA2_nightMode
+trait SAHMIPBSL_nightMode
 {
     public function ToggleNightMode(bool $State): void
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         if ($this->CheckMaintenanceMode()) {
             return;
         }
@@ -44,12 +43,12 @@ trait SA2_nightMode
         // On
         else {
             if (!$this->CheckExistingTrigger(0)) {
-                $this->SendDebug(__FUNCTION__, 'Obere Leuchteinheit Attribute letzte Farbe und Helligkeit gesetzt!', 0);
+                $this->SendDebug(__FUNCTION__, 'Obere Leuchteinheit: Attribut letzte Farbe und Helligkeit gesetzt!', 0);
                 $this->WriteAttributeInteger('UpperLightUnitLastColor', $this->GetValue('UpperLightUnitColor'));
                 $this->WriteAttributeInteger('UpperLightUnitLastBrightness', $this->GetValue('UpperLightUnitBrightness'));
             }
             if (!$this->CheckExistingTrigger(1)) {
-                $this->SendDebug(__FUNCTION__, 'Untere Leuchteinheit Attribute letzte Farbe und Helligkeit gesetzt!', 0);
+                $this->SendDebug(__FUNCTION__, 'Untere Leuchteinheit: Attribut letzte Farbe und Helligkeit gesetzt!', 0);
                 $this->WriteAttributeInteger('LowerLightUnitLastColor', $this->GetValue('LowerLightUnitColor'));
                 $this->WriteAttributeInteger('LowerLightUnitLastBrightness', $this->GetValue('LowerLightUnitBrightness'));
             }
@@ -70,14 +69,12 @@ trait SA2_nightMode
 
     public function StartNightMode(): void
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $this->ToggleNightMode(true);
         $this->SetNightModeTimer();
     }
 
     public function StopNightMode(): void
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $this->ToggleNightMode(false);
         $this->SetNightModeTimer();
     }
@@ -86,7 +83,6 @@ trait SA2_nightMode
 
     private function SetNightModeTimer(): void
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $use = $this->ReadPropertyBoolean('UseAutomaticNightMode');
         // Start
         $milliseconds = 0;
@@ -104,7 +100,6 @@ trait SA2_nightMode
 
     private function GetInterval(string $TimerName): int
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $timer = json_decode($this->ReadPropertyString($TimerName));
         $now = time();
         $hour = $timer->hour;
@@ -121,7 +116,6 @@ trait SA2_nightMode
 
     private function CheckNightModeTimer(): bool
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         if (!$this->ReadPropertyBoolean('UseAutomaticNightMode')) {
             return false;
         }
@@ -138,7 +132,6 @@ trait SA2_nightMode
 
     private function CheckNightMode(): bool
     {
-        $this->SendDebug(__FUNCTION__, 'Die Methode wird ausgeführt', 0);
         $nightMode = boolval($this->GetValue('NightMode'));
         if ($nightMode) {
             $message = 'Abbruch, der Nachtmodus ist aktiv!';

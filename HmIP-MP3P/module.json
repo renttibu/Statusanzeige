@@ -1,0 +1,14 @@
+{
+  "id": "{4342AE1B-BCBA-F99E-4751-F19B0550ED79}",
+  "name": "Statusanzeige HmIPMP3P",
+  "type": 3,
+  "vendor": "Ulrich Bittner",
+  "aliases": [
+    "Statusanzeige HmIP-MP3P"
+  ],
+  "url": "https://github.com/ubittner/Statusanzeige/tree/master/HmIP-MP3P",
+  "parentRequirements": [],
+  "childRequirements": [],
+  "implemented": [],
+  "prefix": "SAHMIPMP3P"
+}

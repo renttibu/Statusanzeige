@@ -1,4 +1,4 @@
-# Statusanzeige 2 (HmIP-MP3P)
+# Statusanzeige HmIP-MP3P  
 
 Für dieses Modul besteht kein Anspruch auf Fehlerfreiheit, Weiterentwicklung, sonstige Unterstützung oder Support.
 Bevor das Modul installiert wird, sollte unbedingt ein Backup von IP-Symcon durchgeführt werden.

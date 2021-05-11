@@ -3,8 +3,8 @@
 /*
  * @author      Ulrich Bittner
  * @copyright   (c) 2020, 2021
- * @license    	CC BY-NC-SA 4.0
- * @see         https://github.com/ubittner/Statusanzeige/tree/master/Statusanzeige%203
+ * @license     CC BY-NC-SA 4.0
+ * @see         https://github.com/ubittner/Statusanzeige/tree/master/HmIP-MP3P
  */
 
 /** @noinspection DuplicatedCode */
@@ -12,10 +12,8 @@
 
 declare(strict_types=1);
 
-trait SA3_backupRestore
+trait SAHMIPMP3P_backupRestore
 {
-    #################### Backup
-
     public function CreateBackup(int $BackupCategory): void
     {
         if (IPS_GetInstance($this->InstanceID)['InstanceStatus'] == 102) {
@@ -31,8 +29,6 @@ trait SA3_backupRestore
             echo 'Die Konfiguration wurde erfolgreich gesichert!';
         }
     }
-
-    #################### Restore
 
     public function RestoreConfiguration(int $ConfigurationScript): void
     {

@@ -143,51 +143,50 @@
             {
               "caption": "Auslösende Variable",
               "name": "ID",
-              "width": "600px",
+              "width": "auto",
               "add": 0,
-              "onClick": "echo 'ID: ' . $UpperLightUnitTriggerVariables['ID'];",
+              "onClick": "if($UpperLightUnitTriggerVariables['ID'] != 0){print_r(IPS_GetVariable($UpperLightUnitTriggerVariables['ID']));}",
               "edit": {
                 "type": "SelectVariable"
               }
             },
             {
+              "caption": "Info",
+              "name": "Info",
+              "width": "160px",
+              "add": "",
+              "visible": false,
+              "edit": {
+                "type": "Button",
+                "onClick": "if($ID != 0){print_r(IPS_GetVariable($ID));}"
+              }
+            },
+            {
               "caption": "Auslöseart",
-              "name": "Trigger",
+              "name": "TriggerType",
               "width": "280px",
-              "add": 4,
+              "add": 1,
               "edit": {
                 "type": "Select",
                 "options": [
                   {
-                    "caption": "Bei Grenzunterschreitung (einmalig)",
+                    "caption": "Bei Grenzunterschreitung",
                     "value": 0
                   },
                   {
-                    "caption": "Bei Grenzunterschreitung (mehrmalig)",
+                    "caption": "Bei bestimmtem Wert",
                     "value": 1
                   },
                   {
-                    "caption": "Bei Grenzüberschreitung (einmalig)",
+                    "caption": "Bei Grenzüberschreitung",
                     "value": 2
-                  },
-                  {
-                    "caption": "Bei Grenzüberschreitung (mehrmalig)",
-                    "value": 3
-                  },
-                  {
-                    "caption": "Bei bestimmtem Wert (einmalig)",
-                    "value": 4
-                  },
-                  {
-                    "caption": "Bei bestimmtem Wert (mehrmalig)",
-                    "value": 5
                   }
                 ]
               }
             },
             {
               "caption": "Auslösewert",
-              "name": "Value",
+              "name": "TriggerValue",
               "width": "160px",
               "add": "",
               "edit": {
@@ -241,7 +240,7 @@
               "caption": "Helligkeit",
               "name": "Brightness",
               "width": "110px",
-              "add": 50,
+              "add": 100,
               "edit": {
                 "type": "NumberSpinner",
                 "suffix": "%",
@@ -340,51 +339,50 @@
             {
               "caption": "Variable",
               "name": "ID",
-              "width": "600px",
+              "width": "auto",
               "add": 0,
-              "onClick": "echo 'ID: ' . $LowerLightUnitTriggerVariables['ID'];",
+              "onClick": "if($LowerLightUnitTriggerVariables['ID'] != 0){print_r(IPS_GetVariable($LowerLightUnitTriggerVariables['ID']));}",
               "edit": {
                 "type": "SelectVariable"
               }
             },
             {
+              "caption": "Info",
+              "name": "Info",
+              "width": "160px",
+              "add": "",
+              "visible": false,
+              "edit": {
+                "type": "Button",
+                "onClick": "if($ID != 0){print_r(IPS_GetVariable($ID));}"
+              }
+            },
+            {
               "caption": "Auslöseart",
-              "name": "Trigger",
+              "name": "TriggerType",
               "width": "280px",
-              "add": 4,
+              "add": 1,
               "edit": {
                 "type": "Select",
                 "options": [
                   {
-                    "caption": "Bei Grenzunterschreitung (einmalig)",
+                    "caption": "Bei Grenzunterschreitung",
                     "value": 0
                   },
                   {
-                    "caption": "Bei Grenzunterschreitung (mehrmalig)",
+                    "caption": "Bei bestimmtem Wert",
                     "value": 1
                   },
                   {
-                    "caption": "Bei Grenzüberschreitung (einmalig)",
+                    "caption": "Bei Grenzüberschreitung",
                     "value": 2
-                  },
-                  {
-                    "caption": "Bei Grenzüberschreitung (mehrmalig)",
-                    "value": 3
-                  },
-                  {
-                    "caption": "Bei bestimmtem Wert (einmalig)",
-                    "value": 4
-                  },
-                  {
-                    "caption": "Bei bestimmtem Wert (mehrmalig)",
-                    "value": 5
                   }
                 ]
               }
             },
             {
               "caption": "Auslösewert",
-              "name": "Value",
+              "name": "TriggerValue",
               "width": "160px",
               "add": "",
               "edit": {
@@ -438,7 +436,7 @@
               "caption": "Helligkeit",
               "name": "Brightness",
               "width": "110px",
-              "add": 50,
+              "add": 100,
               "edit": {
                 "type": "NumberSpinner",
                 "suffix": "%",
@@ -454,25 +452,6 @@
       "type": "ExpansionPanel",
       "caption": "Nachtmodus",
       "items": [
-        {
-          "type": "CheckBox",
-          "name": "UseAutomaticNightMode",
-          "caption": "Automatischer Nachtmodus"
-        },
-        {
-          "type": "SelectTime",
-          "name": "NightModeStartTime",
-          "caption": "Startzeit"
-        },
-        {
-          "type": "SelectTime",
-          "name": "NightModeEndTime",
-          "caption": "Endzeit"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
         {
           "type": "Label",
           "caption": "Obere Leuchteinheit"
@@ -598,6 +577,25 @@
           "suffix": "%",
           "minimum": 0,
           "maximum": 100
+        },
+        {
+          "type": "Label",
+          "caption": " "
+        },
+        {
+          "type": "CheckBox",
+          "name": "UseAutomaticNightMode",
+          "caption": "Automatischer Nachtmodus"
+        },
+        {
+          "type": "SelectTime",
+          "name": "NightModeStartTime",
+          "caption": "Startzeit"
+        },
+        {
+          "type": "SelectTime",
+          "name": "NightModeEndTime",
+          "caption": "Endzeit"
         }
       ]
     }
@@ -610,7 +608,7 @@
         {
           "type": "Button",
           "caption": "Neu einlesen",
-          "onClick": "SA2_ReloadConfiguration($id);"
+          "onClick": "SAHMIPBSL_ReloadConfiguration($id);"
         },
         {
           "type": "RowLayout",
@@ -628,7 +626,7 @@
             {
               "type": "Button",
               "caption": "Sichern",
-              "onClick": "SA2_CreateBackup($id, $BackupCategory);"
+              "onClick": "SAHMIPBSL_CreateBackup($id, $BackupCategory);"
             }
           ]
         },
@@ -654,7 +652,7 @@
                   {
                     "type": "Button",
                     "caption": "Wiederherstellen",
-                    "onClick": "SA2_RestoreConfiguration($id, $ConfigurationScript);"
+                    "onClick": "SAHMIPBSL_RestoreConfiguration($id, $ConfigurationScript);"
                   }
                 ]
               }
@@ -684,7 +682,7 @@
             {
               "caption": "Sender Name",
               "name": "SenderName",
-              "width": "250px"
+              "width": "auto"
             },
             {
               "caption": "Nachrichten ID",
@@ -707,7 +705,7 @@
         {
           "type": "Button",
           "caption": "Status aktualisieren",
-          "onClick": "SA2_CheckActualStatus($id);"
+          "onClick": "SAHMIPBSL_CheckActualStatus($id);"
         }
       ]
     },
@@ -725,22 +723,22 @@
     {
       "code": 101,
       "icon": "active",
-      "caption": "Statusanzeige (HmIP-BSL) wird erstellt"
+      "caption": "Statusanzeige HmIP-BSL wird erstellt"
     },
     {
       "code": 102,
       "icon": "active",
-      "caption": "Statusanzeige (HmIP-BSL) ist aktiv"
+      "caption": "Statusanzeige HmIP-BSL ist aktiv"
     },
     {
       "code": 103,
       "icon": "active",
-      "caption": "Statusanzeige (HmIP-BSL) wird gelöscht"
+      "caption": "Statusanzeige HmIP-BSL wird gelöscht"
     },
     {
       "code": 104,
       "icon": "inactive",
-      "caption": "Statusanzeige (HmIP-BSL) ist inaktiv"
+      "caption": "Statusanzeige HmIP-BSL ist inaktiv"
     },
     {
       "code": 200,
