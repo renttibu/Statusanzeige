@@ -145,7 +145,7 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "if($UpperLightUnitTriggerVariables['ID'] != 0){print_r(IPS_GetVariable($UpperLightUnitTriggerVariables['ID']));}",
+              "onClick": "SAHMIPBSL_ShowVariableDetails($id, $UpperLightUnitTriggerVariables['ID']);",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -158,7 +158,7 @@
               "visible": false,
               "edit": {
                 "type": "Button",
-                "onClick": "if($ID != 0){print_r(IPS_GetVariable($ID));}"
+                "onClick": "SAHMIPBSL_ShowVariableDetails($id, $ID);"
               }
             },
             {
@@ -341,7 +341,7 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "if($LowerLightUnitTriggerVariables['ID'] != 0){print_r(IPS_GetVariable($LowerLightUnitTriggerVariables['ID']));}",
+              "onClick": "SAHMIPBSL_ShowVariableDetails($id, $LowerLightUnitTriggerVariables['ID']);",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -354,7 +354,7 @@
               "visible": false,
               "edit": {
                 "type": "Button",
-                "onClick": "if($ID != 0){print_r(IPS_GetVariable($ID));}"
+                "onClick": "SAHMIPBSL_ShowVariableDetails($id, $ID);"
               }
             },
             {

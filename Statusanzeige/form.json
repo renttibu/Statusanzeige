@@ -91,7 +91,7 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "if($TriggerVariables['ID'] != 0){print_r(IPS_GetVariable($TriggerVariables['ID']));}",
+              "onClick": "SA_ShowVariableDetails($id, $TriggerVariables['ID']);",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -104,7 +104,7 @@
               "visible": false,
               "edit": {
                 "type": "Button",
-                "onClick": "if($ID != 0){print_r(IPS_GetVariable($ID));}"
+                "onClick": "SA_ShowVariableDetails($id, $ID);"
               }
             },
             {
