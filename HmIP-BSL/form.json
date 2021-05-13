@@ -145,7 +145,7 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "SAHMIPBSL_ShowVariableDetails($id, $UpperLightUnitTriggerVariables['ID']);",
+              "onClick": "SAHMIPBSL_EnableUpperLightUnitTriggerVariableConfigurationButton($id, $UpperLightUnitTriggerVariables['ID']);",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -249,6 +249,14 @@
               }
             }
           ]
+        },
+        {
+          "type": "OpenObjectButton",
+          "caption": "Bearbeiten",
+          "name": "UpperLightUnitTriggerVariableConfigurationButton",
+          "enabled": false,
+          "visible": false,
+          "objectID": 0
         }
       ]
     },
@@ -341,7 +349,7 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "SAHMIPBSL_ShowVariableDetails($id, $LowerLightUnitTriggerVariables['ID']);",
+              "onClick": "SAHMIPBSL_EnableLowerLightUnitTriggerVariableConfigurationButton($id, $LowerLightUnitTriggerVariables['ID']);",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -445,6 +453,14 @@
               }
             }
           ]
+        },
+        {
+          "type": "OpenObjectButton",
+          "caption": "Bearbeiten",
+          "name": "LowerLightUnitTriggerVariableConfigurationButton",
+          "enabled": false,
+          "visible": false,
+          "objectID": 0
         }
       ]
     },

@@ -121,7 +121,7 @@
               "name": "ID",
               "width": "auto",
               "add": 0,
-              "onClick": "SAHMIPMP3P_ShowVariableDetails($id, $TriggerVariables['ID']);",
+              "onClick": "SAHMIPMP3P_EnableTriggerVariableConfigurationButton($id, $TriggerVariables['ID']);",
               "edit": {
                 "type": "SelectVariable"
               }
@@ -225,6 +225,14 @@
               }
             }
           ]
+        },
+        {
+          "type": "OpenObjectButton",
+          "caption": "Bearbeiten",
+          "name": "TriggerVariableConfigurationButton",
+          "enabled": false,
+          "visible": false,
+          "objectID": 0
         }
       ]
     },

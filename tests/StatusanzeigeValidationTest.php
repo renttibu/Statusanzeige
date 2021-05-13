@@ -11,11 +11,6 @@ class StatusanzeigeValidationTest extends TestCaseSymconValidation
         $this->validateLibrary(__DIR__ . '/..');
     }
 
-    public function testValidateModule_Statusanzeige(): void
-    {
-        $this->validateModule(__DIR__ . '/../Statusanzeige');
-    }
-
     public function testValidateModule_HmIPBSL(): void
     {
         $this->validateModule(__DIR__ . '/../HmIP-BSL');
@@ -24,5 +19,10 @@ class StatusanzeigeValidationTest extends TestCaseSymconValidation
     public function testValidateModule_HmIPMP3P(): void
     {
         $this->validateModule(__DIR__ . '/../HmIP-MP3P');
+    }
+
+    public function testValidateModule_Statusanzeige(): void
+    {
+        $this->validateModule(__DIR__ . '/../Statusanzeige');
     }
 }

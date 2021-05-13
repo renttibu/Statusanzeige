@@ -280,6 +280,22 @@ class StatusanzeigeHmIPBSL extends IPSModule
         $this->ReloadForm();
     }
 
+    public function EnableUpperLightUnitTriggerVariableConfigurationButton(int $ObjectID): void
+    {
+        $this->UpdateFormField('UpperLightUnitTriggerVariableConfigurationButton', 'caption', 'Variable ' . $ObjectID . ' Bearbeiten');
+        $this->UpdateFormField('UpperLightUnitTriggerVariableConfigurationButton', 'visible', true);
+        $this->UpdateFormField('UpperLightUnitTriggerVariableConfigurationButton', 'enabled', true);
+        $this->UpdateFormField('UpperLightUnitTriggerVariableConfigurationButton', 'objectID', $ObjectID);
+    }
+
+    public function EnableLowerLightUnitTriggerVariableConfigurationButton(int $ObjectID): void
+    {
+        $this->UpdateFormField('LowerLightUnitTriggerVariableConfigurationButton', 'caption', 'Variable ' . $ObjectID . ' Bearbeiten');
+        $this->UpdateFormField('LowerLightUnitTriggerVariableConfigurationButton', 'visible', true);
+        $this->UpdateFormField('LowerLightUnitTriggerVariableConfigurationButton', 'enabled', true);
+        $this->UpdateFormField('LowerLightUnitTriggerVariableConfigurationButton', 'objectID', $ObjectID);
+    }
+
     public function ShowVariableDetails(int $VariableID): void
     {
         if ($VariableID == 0 || !@IPS_ObjectExists($VariableID)) {
