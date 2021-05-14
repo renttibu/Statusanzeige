@@ -256,32 +256,5 @@
         }
       ]
     }
-  ],
-  "status": [
-    {
-      "code": 101,
-      "icon": "active",
-      "caption": "Statusanzeige wird erstellt"
-    },
-    {
-      "code": 102,
-      "icon": "active",
-      "caption": "Statusanzeige ist aktiv"
-    },
-    {
-      "code": 103,
-      "icon": "active",
-      "caption": "Statusanzeige wird gelöscht"
-    },
-    {
-      "code": 104,
-      "icon": "inactive",
-      "caption": "Statusanzeige ist inaktiv"
-    },
-    {
-      "code": 200,
-      "icon": "inactive",
-      "caption": "Es ist Fehler aufgetreten, weitere Informationen unter Meldungen, im Log oder Debug!"
-    }
   ]
 }
