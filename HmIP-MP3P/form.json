@@ -34,18 +34,6 @@
       "type": "ExpansionPanel",
       "caption": "Leuchteinheit",
       "items": [
-        {
-          "type": "SelectInstance",
-          "name": "LightUnit",
-          "caption": "HmIP-MP3P Instanz, Kanal 6",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "LightUnitSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
-        }
       ]
     },
     {

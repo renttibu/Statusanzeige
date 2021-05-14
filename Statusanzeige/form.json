@@ -29,36 +29,12 @@
       "type": "ExpansionPanel",
       "caption": "Anzeige",
       "items": [
-        {
-          "type": "SelectVariable",
-          "name": "SignallingVariable",
-          "caption": "Variable",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "SignallingSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
-        }
       ]
     },
     {
       "type": "ExpansionPanel",
       "caption": "Invertierte Anzeige",
       "items": [
-        {
-          "type": "SelectVariable",
-          "name": "InvertedSignallingVariable",
-          "caption": "Variable",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "InvertedSignallingSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
-        }
       ]
     },
     {

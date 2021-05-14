@@ -329,7 +329,7 @@ trait SAHMIPBSL_control
                     // Revert color
                     $this->SetValue($unit . 'Color', $actualColor);
                     $this->SendDebug(__FUNCTION__, 'Der Farbwert: ' . $Color . ' konnte für die Leuchteinheit: ' . $LightUnit . ' nicht gesetzt werden!', 0);
-                    $this->LogMessage('Instanz ' . $this->InstanceID . 'Der Farbwert: ' . $Color . ' konnte für die Leuchteinheit: ' . $id . ' nicht gesetzt werden!', KL_ERROR);
+                    $this->LogMessage('Instanz ' . $this->InstanceID . ', der Farbwert: ' . $Color . ' konnte für die Leuchteinheit: ' . $id . ' nicht gesetzt werden!', KL_ERROR);
                 }
             }
             if ($result) {
@@ -373,7 +373,7 @@ trait SAHMIPBSL_control
                     // Revert brightness
                     $this->SetValue($unit . 'Brightness', $actualBrightness);
                     $this->SendDebug(__FUNCTION__, 'Der Helligkeitswert: ' . $deviceBrightness . ' konnte für die Leuchteinheit: ' . $LightUnit . ' nicht gesetzt werden!', 0);
-                    $this->LogMessage('Instanz ' . $this->InstanceID . 'der Helligkeitswert: ' . $deviceBrightness . ' konnte für die Leuchteinheit: ' . $id . ' nicht gesetzt werden!', KL_ERROR);
+                    $this->LogMessage('Instanz ' . $this->InstanceID . ', der Helligkeitswert: ' . $deviceBrightness . ' konnte für die Leuchteinheit: ' . $id . ' nicht gesetzt werden!', KL_ERROR);
                 }
             }
             if ($result) {

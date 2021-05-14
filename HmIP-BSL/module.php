@@ -196,6 +196,40 @@ class StatusanzeigeHmIPBSL extends IPSModule
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        // Upper light unit
+        $id = $this->ReadPropertyInteger('UpperLightUnit');
+        $enabled = false;
+        if ($id != 0 && @IPS_ObjectExists($id)) {
+            $enabled = true;
+        }
+        $formData['elements'][1]['items'][0] = [
+            'type'  => 'RowLayout',
+            'items' => [$formData['elements'][1]['items'][0]['items'][0] = [
+                'type'    => 'SelectInstance',
+                'name'    => 'UpperLightUnit',
+                'caption' => 'HmIP-BSL Instanz, Kanal 8',
+                'width'   => '600px',
+            ],
+                $formData['elements'][1]['items'][0]['items'][1] = [
+                    'type'    => 'Label',
+                    'caption' => ' ',
+                    'visible' => $enabled
+                ],
+                $formData['elements'][1]['items'][0]['items'][2] = [
+                    'type'     => 'OpenObjectButton',
+                    'caption'  => 'ID ' . $id . ' konfigurieren',
+                    'visible'  => $enabled,
+                    'objectID' => $id
+                ]
+            ]
+        ];
+        $formData['elements'][1]['items'][1] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'UpperLightUnitSwitchingDelay',
+            'caption' => 'Schaltverzögerung',
+            'minimum' => 0,
+            'suffix'  => 'Millisekunden'
+        ];
         // Trigger variables upper light unit
         $variables = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'));
         if (!empty($variables)) {
@@ -209,7 +243,7 @@ class StatusanzeigeHmIPBSL extends IPSModule
                 if (@!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; # red
                 }
-                $formData['elements'][1]['items'][3]['values'][] = [
+                $formData['elements'][2]['items'][0]['values'][] = [
                     'Use'          => $use,
                     'Group'        => $variable->Group,
                     'ID'           => $id,
@@ -220,6 +254,40 @@ class StatusanzeigeHmIPBSL extends IPSModule
                     'rowColor'     => $rowColor];
             }
         }
+        // Lower light unit
+        $id = $this->ReadPropertyInteger('LowerLightUnit');
+        $enabled = false;
+        if ($id != 0 && @IPS_ObjectExists($id)) {
+            $enabled = true;
+        }
+        $formData['elements'][3]['items'][0] = [
+            'type'  => 'RowLayout',
+            'items' => [$formData['elements'][3]['items'][0]['items'][0] = [
+                'type'    => 'SelectInstance',
+                'name'    => 'LowerLightUnit',
+                'caption' => 'HmIP-BSL Instanz, Kanal 12',
+                'width'   => '600px',
+            ],
+                $formData['elements'][3]['items'][0]['items'][1] = [
+                    'type'    => 'Label',
+                    'caption' => ' ',
+                    'visible' => $enabled
+                ],
+                $formData['elements'][3]['items'][0]['items'][2] = [
+                    'type'     => 'OpenObjectButton',
+                    'caption'  => 'ID ' . $id . ' konfigurieren',
+                    'visible'  => $enabled,
+                    'objectID' => $id
+                ]
+            ]
+        ];
+        $formData['elements'][3]['items'][1] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'LowerLightUnitSwitchingDelay',
+            'caption' => 'Schaltverzögerung',
+            'minimum' => 0,
+            'suffix'  => 'Millisekunden'
+        ];
         // Trigger variables lower light unit
         $variables = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'));
         if (!empty($variables)) {
@@ -233,7 +301,7 @@ class StatusanzeigeHmIPBSL extends IPSModule
                 if (@!IPS_ObjectExists($id)) {
                     $rowColor = '#FFC0C0'; # red
                 }
-                $formData['elements'][2]['items'][3]['values'][] = [
+                $formData['elements'][4]['items'][0]['values'][] = [
                     'Use'          => $use,
                     'Group'        => $variable->Group,
                     'ID'           => $id,

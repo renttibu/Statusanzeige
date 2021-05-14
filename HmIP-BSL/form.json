@@ -60,22 +60,12 @@
       "type": "ExpansionPanel",
       "caption": "Obere Leuchteinheit",
       "items": [
-        {
-          "type": "SelectInstance",
-          "name": "UpperLightUnit",
-          "caption": "HmIP-BSL Instanz, Kanal 8",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "UpperLightUnitSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Auslöser obere Leuchteinheit",
+      "items": [
         {
           "type": "List",
           "name": "UpperLightUnitTriggerVariables",
@@ -264,22 +254,12 @@
       "type": "ExpansionPanel",
       "caption": "Untere Leuchteinheit",
       "items": [
-        {
-          "type": "SelectInstance",
-          "name": "LowerLightUnit",
-          "caption": "HmIP-BSL Instanz, Kanal 12",
-          "width": "600px"
-        },
-        {
-          "type": "NumberSpinner",
-          "name": "LowerLightUnitSwitchingDelay",
-          "caption": "Schaltverzögerung",
-          "suffix": "Millisekunden"
-        },
-        {
-          "type": "Label",
-          "caption": " "
-        },
+      ]
+    },
+    {
+      "type": "ExpansionPanel",
+      "caption": "Auslöser untere Leuchteinheit",
+      "items": [
         {
           "type": "List",
           "name": "LowerLightUnitTriggerVariables",

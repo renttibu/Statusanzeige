@@ -135,6 +135,74 @@ class Statusanzeige extends IPSModule
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        // Signalling
+        $id = $this->ReadPropertyInteger('SignallingVariable');
+        $enabled = false;
+        if ($id != 0 && @IPS_ObjectExists($id)) {
+            $enabled = true;
+        }
+        $formData['elements'][1]['items'][0] = [
+            'type'  => 'RowLayout',
+            'items' => [$formData['elements'][1]['items'][0]['items'][0] = [
+                'type'    => 'SelectVariable',
+                'name'    => 'SignallingVariable',
+                'caption' => 'Variable',
+                'width'   => '600px',
+            ],
+                $formData['elements'][1]['items'][0]['items'][1] = [
+                    'type'    => 'Label',
+                    'caption' => ' ',
+                    'visible' => $enabled
+                ],
+                $formData['elements'][1]['items'][0]['items'][2] = [
+                    'type'     => 'OpenObjectButton',
+                    'caption'  => 'ID ' . $id . ' bearbeiten',
+                    'visible'  => $enabled,
+                    'objectID' => $id
+                ]
+            ]
+        ];
+        $formData['elements'][1]['items'][1] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'SignallingSwitchingDelay',
+            'caption' => 'Schaltverzögerung',
+            'minimum' => 0,
+            'suffix'  => 'Millisekunden'
+        ];
+        // Inverted signalling
+        $id = $this->ReadPropertyInteger('InvertedSignallingVariable');
+        $enabled = false;
+        if ($id != 0 && @IPS_ObjectExists($id)) {
+            $enabled = true;
+        }
+        $formData['elements'][2]['items'][0] = [
+            'type'  => 'RowLayout',
+            'items' => [$formData['elements'][2]['items'][0]['items'][0] = [
+                'type'    => 'SelectVariable',
+                'name'    => 'InvertedSignallingVariable',
+                'caption' => 'Variable',
+                'width'   => '600px',
+            ],
+                $formData['elements'][2]['items'][0]['items'][1] = [
+                    'type'    => 'Label',
+                    'caption' => ' ',
+                    'visible' => $enabled
+                ],
+                $formData['elements'][2]['items'][0]['items'][2] = [
+                    'type'     => 'OpenObjectButton',
+                    'caption'  => 'ID ' . $id . ' bearbeiten',
+                    'visible'  => $enabled,
+                    'objectID' => $id
+                ]
+            ]
+        ];
+        $formData['elements'][2]['items'][1] = [
+            'type'    => 'NumberSpinner',
+            'name'    => 'InvertedSignallingSwitchingDelay',
+            'caption' => 'Schaltverzögerung',
+            'minimum' => 0,
+            'suffix'  => 'Millisekunden'
+        ];
         // Trigger variables
         $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
         if (!empty($variables)) {
