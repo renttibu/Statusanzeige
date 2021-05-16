@@ -37,6 +37,7 @@ class StatusanzeigeHmIPMP3P extends IPSModule
         // Light unit
         $this->RegisterPropertyInteger('LightUnit', 0);
         $this->RegisterPropertyInteger('LightUnitSwitchingDelay', 0);
+        // Trigger variables
         $this->RegisterPropertyString('TriggerVariables', '[]');
         // Night mode
         $this->RegisterPropertyBoolean('ChangeNightModeColor', true);
@@ -106,12 +107,40 @@ class StatusanzeigeHmIPMP3P extends IPSModule
         IPS_SetHidden($this->GetIDForIdent('LightUnitBrightness'), !$this->ReadPropertyBoolean('LightUnitBrightness'));
         IPS_SetHidden($this->GetIDForIdent('NightMode'), !$this->ReadPropertyBoolean('EnableNightMode'));
 
+        // Delete all references
+        foreach ($this->GetReferenceList() as $referenceID) {
+            $this->UnregisterReference($referenceID);
+        }
+
+        // Delete all registrations
+        foreach ($this->GetMessageList() as $senderID => $messages) {
+            foreach ($messages as $message) {
+                if ($message == VM_UPDATE) {
+                    $this->UnregisterMessage($senderID, VM_UPDATE);
+                }
+            }
+        }
+
         // Validation
         if (!$this->ValidateConfiguration()) {
             return;
         }
 
-        $this->RegisterMessages();
+        // Register references and update messages
+        $id = $this->ReadPropertyInteger('LightUnit');
+        if ($id != 0 && @IPS_ObjectExists($id)) {
+            $this->RegisterReference($id);
+        }
+        $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
+        foreach ($variables as $variable) {
+            if ($variable->Use) {
+                if ($variable->ID != 0 && @IPS_ObjectExists($variable->ID)) {
+                    $this->RegisterReference($variable->ID);
+                    $this->RegisterMessage($variable->ID, VM_UPDATE);
+                }
+            }
+        }
+
         $this->SetNightModeTimer();
         if (!$this->CheckNightModeTimer()) {
             $this->WriteAttributeInteger('LightUnitLastColor', 0);
@@ -397,32 +426,6 @@ class StatusanzeigeHmIPMP3P extends IPSModule
     private function KernelReady()
     {
         $this->ApplyChanges();
-    }
-
-    private function RegisterMessages(): void
-    {
-        // Unregister
-        $messages = $this->GetMessageList();
-        if (!empty($messages)) {
-            foreach ($messages as $id => $message) {
-                foreach ($message as $messageType) {
-                    if ($messageType == VM_UPDATE) {
-                        $this->UnregisterMessage($id, VM_UPDATE);
-                    }
-                }
-            }
-        }
-        // Register
-        $variables = json_decode($this->ReadPropertyString('TriggerVariables'));
-        if (!empty($variables)) {
-            foreach ($variables as $variable) {
-                if ($variable->Use) {
-                    if ($variable->ID != 0 && @IPS_ObjectExists($variable->ID)) {
-                        $this->RegisterMessage($variable->ID, VM_UPDATE);
-                    }
-                }
-            }
-        }
     }
 
     private function ValidateConfiguration(): bool

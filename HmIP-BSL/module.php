@@ -131,12 +131,46 @@ class StatusanzeigeHmIPBSL extends IPSModule
         IPS_SetHidden($this->GetIDForIdent('LowerLightUnitBrightness'), !$this->ReadPropertyBoolean('EnableLowerLightUnitBrightness'));
         IPS_SetHidden($this->GetIDForIdent('NightMode'), !$this->ReadPropertyBoolean('EnableNightMode'));
 
+        // Delete all references
+        foreach ($this->GetReferenceList() as $referenceID) {
+            $this->UnregisterReference($referenceID);
+        }
+
+        // Delete all registrations
+        foreach ($this->GetMessageList() as $senderID => $messages) {
+            foreach ($messages as $message) {
+                if ($message == VM_UPDATE) {
+                    $this->UnregisterMessage($senderID, VM_UPDATE);
+                }
+            }
+        }
+
         // Validation
         if (!$this->ValidateConfiguration()) {
             return;
         }
 
-        $this->RegisterMessages();
+        // Register references and update messages
+        $properties = ['UpperLightUnit', 'LowerLightUnit'];
+        foreach ($properties as $property) {
+            $id = $this->ReadPropertyInteger($property);
+            if ($id != 0 && @IPS_ObjectExists($id)) {
+                $this->RegisterReference($id);
+            }
+        }
+        $properties = ['UpperLightUnitTriggerVariables', 'LowerLightUnitTriggerVariables'];
+        foreach ($properties as $property) {
+            $variables = json_decode($this->ReadPropertyString($property));
+            foreach ($variables as $variable) {
+                if ($variable->Use) {
+                    if ($variable->ID != 0 && @IPS_ObjectExists($variable->ID)) {
+                        $this->RegisterReference($variable->ID);
+                        $this->RegisterMessage($variable->ID, VM_UPDATE);
+                    }
+                }
+            }
+        }
+
         $this->SetNightModeTimer();
         if (!$this->CheckNightModeTimer()) {
             $this->WriteAttributeInteger('UpperLightUnitLastColor', 0);
@@ -498,45 +532,6 @@ class StatusanzeigeHmIPBSL extends IPSModule
     private function KernelReady()
     {
         $this->ApplyChanges();
-    }
-
-    private function RegisterMessages(): void
-    {
-        // Unregister
-        $messages = $this->GetMessageList();
-        if (!empty($messages)) {
-            foreach ($messages as $id => $message) {
-                foreach ($message as $messageType) {
-                    if ($messageType == VM_UPDATE) {
-                        $this->UnregisterMessage($id, VM_UPDATE);
-                    }
-                    if ($messageType == IM_CHANGESTATUS) {
-                        $this->UnregisterMessage($id, IM_CHANGESTATUS);
-                    }
-                }
-            }
-        }
-        // Register
-        $variables = json_decode($this->ReadPropertyString('UpperLightUnitTriggerVariables'));
-        if (!empty($variables)) {
-            foreach ($variables as $variable) {
-                if ($variable->Use) {
-                    if ($variable->ID != 0 && @IPS_ObjectExists($variable->ID)) {
-                        $this->RegisterMessage($variable->ID, VM_UPDATE);
-                    }
-                }
-            }
-        }
-        $variables = json_decode($this->ReadPropertyString('LowerLightUnitTriggerVariables'));
-        if (!empty($variables)) {
-            foreach ($variables as $variable) {
-                if ($variable->Use) {
-                    if ($variable->ID != 0 && @IPS_ObjectExists($variable->ID)) {
-                        $this->RegisterMessage($variable->ID, VM_UPDATE);
-                    }
-                }
-            }
-        }
     }
 
     private function ValidateConfiguration(): bool
