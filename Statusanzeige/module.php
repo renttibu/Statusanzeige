@@ -54,7 +54,7 @@ class Statusanzeige extends IPSModule
             IPS_SetIcon($this->GetIDForIdent('Signalling'), 'Bulb');
         }
         // Night mode
-        $id = @$this->GetIDForIdent('Signalling');
+        $id = @$this->GetIDForIdent('NightMode');
         $this->RegisterVariableBoolean('NightMode', 'Nachtmodus', '~Switch', 20);
         $this->EnableAction('NightMode');
         if ($id == false) {
